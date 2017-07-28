@@ -8,6 +8,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class BuildStartedHandler : IBuildEventHandler<BuildStartedEventArgs>
     {
+        [NotNull] private readonly IStringService _stringService;
         [NotNull] private readonly IHierarchicalMessageWriter _hierarchicalMessageWriter;
         [NotNull] private readonly IMessageWriter _messageWriter;
         [NotNull] private readonly ILoggerContext _context;
@@ -17,8 +18,10 @@
             [NotNull] ILoggerContext context,
             [NotNull] ILogWriter logWriter,
             [NotNull] IMessageWriter messageWriter,
-            [NotNull] IHierarchicalMessageWriter hierarchicalMessageWriter)
+            [NotNull] IHierarchicalMessageWriter hierarchicalMessageWriter,
+            [NotNull] IStringService stringService)
         {
+            _stringService = stringService ?? throw new ArgumentNullException(nameof(stringService));
             _hierarchicalMessageWriter = hierarchicalMessageWriter ?? throw new ArgumentNullException(nameof(hierarchicalMessageWriter));
             _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -58,7 +61,7 @@
         {
             if (environment == null) throw new ArgumentNullException(nameof(environment));
             _logWriter.SetColor(Color.SummaryHeader);
-            _hierarchicalMessageWriter.StartBlock(WellknownHierarchicalKeys.EnvironmentHeader, "Environment", ResourceUtilities.FormatResourceString("EnvironmentHeader"));
+            _hierarchicalMessageWriter.StartBlock(WellknownHierarchicalKeys.EnvironmentHeader, "Environment", _stringService.FormatResourceString("EnvironmentHeader"));
             foreach (var keyValuePair in environment)
             {
                 _logWriter.SetColor(Color.SummaryInfo);

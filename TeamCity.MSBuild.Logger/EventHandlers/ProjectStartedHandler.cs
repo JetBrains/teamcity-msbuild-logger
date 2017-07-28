@@ -11,6 +11,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ProjectStartedHandler : IBuildEventHandler<ProjectStartedEventArgs>
     {
+        [NotNull] private readonly IStringService _stringService;
         [NotNull] private readonly IBuildEventManager _buildEventManager;
         [NotNull] private readonly IDeferredMessageWriter _deferredMessageWriter;
         [NotNull] private readonly IMessageWriter _messageWriter;
@@ -26,8 +27,10 @@
             [NotNull] IBuildEventHandler<BuildMessageEventArgs> messageHandler,
             [NotNull] IMessageWriter messageWriter,
             [NotNull] IDeferredMessageWriter deferredMessageWriter,
-            [NotNull] IBuildEventManager buildEventManager)
+            [NotNull] IBuildEventManager buildEventManager,
+            [NotNull] IStringService stringService)
         {
+            _stringService = stringService ?? throw new ArgumentNullException(nameof(stringService));
             _buildEventManager = buildEventManager ?? throw new ArgumentNullException(nameof(buildEventManager));
             _deferredMessageWriter = deferredMessageWriter ?? throw new ArgumentNullException(nameof(deferredMessageWriter));
             _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
@@ -110,7 +113,7 @@
             }
 
             _logWriter.SetColor(Color.Items);
-            _messageWriter.WriteLinePretty(_context.CurrentIndentLevel, ResourceUtilities.FormatResourceString("ItemListHeader"));
+            _messageWriter.WriteLinePretty(_context.CurrentIndentLevel, _stringService.FormatResourceString("ItemListHeader"));
 
             var groupedItems = from item in items
                 group item by item.Name
@@ -186,11 +189,11 @@
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
             _logWriter.SetColor(Color.Items);
-            _messageWriter.WriteMessageAligned(ResourceUtilities.FormatResourceString("PropertyListHeader"), true);
+            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("PropertyListHeader"), true);
             foreach (var property in properties.OrderBy(i => i, DictionaryEntryKeyComparer.Shared))
             {
                 _logWriter.SetColor(Color.SummaryInfo);
-                _messageWriter.WriteMessageAligned(string.Format(CultureInfo.CurrentCulture, "{0} = {1}", property.Name, EscapingUtilities.UnescapeAll(property.Value)), false);
+                _messageWriter.WriteMessageAligned(string.Format(CultureInfo.CurrentCulture, "{0} = {1}", property.Name, _stringService.UnescapeAll(property.Value)), false);
             }
 
             _logWriter.ResetColor();

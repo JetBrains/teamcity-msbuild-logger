@@ -8,11 +8,18 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class BuildEventManager: IBuildEventManager
     {
+        [NotNull] private readonly IStringService _stringService;
         private readonly IDictionary<string, int> _projectTargetKey = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private readonly IDictionary<string, int> _projectKey = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private readonly IDictionary<BuildEventContext, ProjectStartedEventMinimumFields> _projectStartedEvents = new Dictionary<BuildEventContext, ProjectStartedEventMinimumFields>(ComparerContextNodeId.Shared);
         private readonly IDictionary<BuildEventContext, TargetStartedEventMinimumFields> _targetStartedEvents = new Dictionary<BuildEventContext, TargetStartedEventMinimumFields>(ComparerContextNodeIdTargetId.Shared);
         private int _projectIncrementKey;
+
+        public BuildEventManager(
+            [NotNull] IStringService stringService)
+        {
+            _stringService = stringService ?? throw new ArgumentNullException(nameof(stringService));
+        }
 
         public void AddProjectStartedEvent(ProjectStartedEventArgs e, bool requireTimestamp)
         {
@@ -80,8 +87,8 @@
             return (
                 from projectCall in GetProjectCallStack(e)
                 select string.IsNullOrEmpty(projectCall.TargetNames)
-                    ? ResourceUtilities.FormatResourceString("ProjectStackWithTargetNames", projectCall.ProjectFile, projectCall.TargetNames, projectCall.FullProjectKey)
-                    : ResourceUtilities.FormatResourceString("ProjectStackWithDefaultTargets", projectCall.ProjectFile, projectCall.FullProjectKey))
+                    ? _stringService.FormatResourceString("ProjectStackWithTargetNames", projectCall.ProjectFile, projectCall.TargetNames, projectCall.FullProjectKey)
+                    : _stringService.FormatResourceString("ProjectStackWithDefaultTargets", projectCall.ProjectFile, projectCall.FullProjectKey))
                     .Reverse();
         }
 

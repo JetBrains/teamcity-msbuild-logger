@@ -23,6 +23,7 @@
             yield return container.Register().Tag(ColorThemeMode.Default).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IColorTheme, DefaultColorTheme>();
             yield return container.Register().Tag(ColorThemeMode.TeamCity).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IColorTheme, TeamCityColorTheme>();
             yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IConsole, DefaultConsole>();
+            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IStringService, StringService>();
             yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IPathService, PathService>();
             yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IEnvironmentService, EnvironmentService>();
             yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<ILogWriter, LogWriter>();

@@ -16,6 +16,6 @@
 
         void AddEventStarted([CanBeNull] string projectTargetNames, BuildEventContext buildEventContext, DateTime eventTimeStamp, [CanBeNull] IEqualityComparer<BuildEventContext> comparer);
 
-        void PrintCounterMessage(WriteLinePrettyFromResourceDelegate writeLinePrettyFromResource);
+        void PrintCounterMessage();
     }
 }

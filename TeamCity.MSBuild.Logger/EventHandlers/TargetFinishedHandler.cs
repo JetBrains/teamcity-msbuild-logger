@@ -7,6 +7,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class TargetFinishedHandler : IBuildEventHandler<TargetFinishedEventArgs>
     {
+        [NotNull] private readonly IStringService _stringService;
         [NotNull] private readonly IHierarchicalMessageWriter _hierarchicalMessageWriter;
         [NotNull] private readonly IBuildEventManager _buildEventManager;
         [NotNull] private readonly IDeferredMessageWriter _deferredMessageWriter;
@@ -22,8 +23,10 @@
             [NotNull] IMessageWriter messageWriter,
             [NotNull] IHierarchicalMessageWriter hierarchicalMessageWriter,
             [NotNull] IDeferredMessageWriter deferredMessageWriter,
-            [NotNull] IBuildEventManager buildEventManager)
+            [NotNull] IBuildEventManager buildEventManager,
+            [NotNull] IStringService stringService)
         {
+            _stringService = stringService ?? throw new ArgumentNullException(nameof(stringService));
             _hierarchicalMessageWriter = hierarchicalMessageWriter ?? throw new ArgumentNullException(nameof(hierarchicalMessageWriter));
             _buildEventManager = buildEventManager ?? throw new ArgumentNullException(nameof(buildEventManager));
             _deferredMessageWriter = deferredMessageWriter ?? throw new ArgumentNullException(nameof(deferredMessageWriter));
@@ -54,10 +57,10 @@
                         var targetOutputs = e.TargetOutputs;
                         if (targetOutputs != null)
                         {
-                            _messageWriter.WriteMessageAligned(ResourceUtilities.FormatResourceString("TargetOutputItemsHeader"), false);
+                            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetOutputItemsHeader"), false);
                             foreach (ITaskItem taskItem in targetOutputs)
                             {
-                                _messageWriter.WriteMessageAligned(ResourceUtilities.FormatResourceString("TargetOutputItem", taskItem.ItemSpec), false);
+                                _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetOutputItem", taskItem.ItemSpec), false);
                                 foreach (DictionaryEntry dictionaryEntry in taskItem.CloneCustomMetadata())
                                 {
                                     _messageWriter.WriteMessageAligned(new string(' ', 8) + dictionaryEntry.Key + " = " + taskItem.GetMetadata(dictionaryEntry.Key as string), false);
@@ -73,7 +76,7 @@
                         _logWriter.SetColor(Color.BuildStage);
                         if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || (_context.Parameters.ShowEventId ?? false))
                         {
-                            _messageWriter.WriteMessageAligned(ResourceUtilities.FormatResourceString("TargetMessageWithId", (object)e.Message, (object)e.BuildEventContext.TargetId), true);
+                            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetMessageWithId", (object)e.Message, (object)e.BuildEventContext.TargetId), true);
                         }
                         else
                         {

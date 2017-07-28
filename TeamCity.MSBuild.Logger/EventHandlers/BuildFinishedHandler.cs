@@ -8,6 +8,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class BuildFinishedHandler : IBuildEventHandler<BuildFinishedEventArgs>
     {
+        [NotNull] private readonly IStringService _stringService;
         [NotNull] private readonly IHierarchicalMessageWriter _hierarchicalMessageWriter;
         [NotNull] private readonly IEventFormatter _eventFormatter;
         [NotNull] private readonly ILogFormatter _logFormatter;
@@ -23,8 +24,10 @@
             [NotNull] IBuildEventManager buildEventManager,
             [NotNull] ILogFormatter logFormatter,
             [NotNull] IEventFormatter eventFormatter,
-            [NotNull] IHierarchicalMessageWriter hierarchicalMessageWriter)
+            [NotNull] IHierarchicalMessageWriter hierarchicalMessageWriter,
+            [NotNull] IStringService stringService)
         {
+            _stringService = stringService ?? throw new ArgumentNullException(nameof(stringService));
             _hierarchicalMessageWriter = hierarchicalMessageWriter ?? throw new ArgumentNullException(nameof(hierarchicalMessageWriter));
             _eventFormatter = eventFormatter ?? throw new ArgumentNullException(nameof(eventFormatter));
             _logFormatter = logFormatter ?? throw new ArgumentNullException(nameof(logFormatter));
@@ -229,7 +232,7 @@
                 {
                     if (!string.IsNullOrEmpty(keyValuePair.Key.TargetName))
                     {
-                        _messageWriter.WriteMessageAligned(ResourceUtilities.FormatResourceString("ErrorWarningInTarget", (object)keyValuePair.Key.TargetName), false);
+                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ErrorWarningInTarget", (object)keyValuePair.Key.TargetName), false);
                     }
 
                     curTargetName = keyValuePair.Key.TargetName;

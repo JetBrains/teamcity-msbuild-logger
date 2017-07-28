@@ -8,6 +8,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class MessageWriter: IMessageWriter
     {
+        [NotNull] private readonly IStringService _stringService;
         [NotNull] private readonly IEventFormatter _eventFormatter;
         [NotNull] private readonly ILogFormatter _logFormatter;
         [NotNull] private readonly IBuildEventManager _buildEventManager;
@@ -21,8 +22,10 @@
             [NotNull] ILogWriter logWriter,
             [NotNull] IBuildEventManager buildEventManager,
             [NotNull] ILogFormatter logFormatter,
-            [NotNull] IEventFormatter eventFormatter)
+            [NotNull] IEventFormatter eventFormatter,
+            [NotNull] IStringService stringService)
         {
+            _stringService = stringService ?? throw new ArgumentNullException(nameof(stringService));
             _eventFormatter = eventFormatter ?? throw new ArgumentNullException(nameof(eventFormatter));
             _logFormatter = logFormatter ?? throw new ArgumentNullException(nameof(logFormatter));
             _buildEventManager = buildEventManager ?? throw new ArgumentNullException(nameof(buildEventManager));
@@ -83,7 +86,7 @@
             if ((_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || (_context.Parameters.ShowEventId ?? false)) && e.BuildEventContext.TaskId != -1)
             {
                 var prefixAlreadyWritten = WriteTargetMessagePrefix(e, e.BuildEventContext, e.Timestamp);
-                WriteMessageAligned(ResourceUtilities.FormatResourceString("TaskMessageWithId", message, e.BuildEventContext.TaskId), prefixAlreadyWritten, prefixAdjustment);
+                WriteMessageAligned(_stringService.FormatResourceString("TaskMessageWithId", message, e.BuildEventContext.TaskId), prefixAlreadyWritten, prefixAdjustment);
             }
             else if (_context.Parameters.ShowTimeStamp || _context.IsVerbosityAtLeast(LoggerVerbosity.Detailed))
             {
@@ -137,7 +140,7 @@
                     hasReenteredScope = true;
                 }
 
-                performanceCounter.PrintCounterMessage(WriteLinePrettyFromResource);
+                performanceCounter.PrintCounterMessage();
             }
 
             if (!hasReenteredScope)
@@ -159,7 +162,7 @@
         {
             if (resourceString == null) throw new ArgumentNullException(nameof(resourceString));
             if (args == null) throw new ArgumentNullException(nameof(args));
-            var formattedString = ResourceUtilities.FormatResourceString(resourceString, args);
+            var formattedString = _stringService.FormatResourceString(resourceString, args);
             WriteLinePretty(indentLevel, formattedString);
         }
 
@@ -257,7 +260,7 @@
             _logWriter.SetColor(Color.BuildStage);
             if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || (_context.Parameters.ShowEventId ?? false))
             {
-                WriteMessageAligned(ResourceUtilities.FormatResourceString("TargetMessageWithId", (object)str, (object)e.BuildEventContext.TargetId), prefixAlreadyWritten);
+                WriteMessageAligned(_stringService.FormatResourceString("TargetMessageWithId", (object)str, (object)e.BuildEventContext.TargetId), prefixAlreadyWritten);
             }
             else
             {
@@ -291,11 +294,11 @@
             string formattedString;
             if (!isMessagePrefix || _context.IsVerbosityAtLeast(LoggerVerbosity.Detailed))
             {
-                formattedString = ResourceUtilities.FormatResourceString("BuildEventContext", str, key) + ">";
+                formattedString = _stringService.FormatResourceString("BuildEventContext", str, key) + ">";
             }
             else
             {
-                formattedString = ResourceUtilities.FormatResourceString("BuildEventContext", str, string.Empty) + " ";
+                formattedString = _stringService.FormatResourceString("BuildEventContext", str, string.Empty) + " ";
             }
 
             WritePretty(formattedString);
