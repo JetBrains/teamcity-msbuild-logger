@@ -9,7 +9,6 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class NodeLogger : INodeLogger
     {
-        [NotNull] private readonly IParametersFactory _parametersFactory;
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IBuildEventHandler<BuildMessageEventArgs> _messageHandler;
         [NotNull] private readonly IBuildEventHandler<BuildFinishedEventArgs> _buildFinishedHandler;
@@ -25,11 +24,9 @@
         [NotNull] private readonly IBuildEventHandler<BuildStartedEventArgs> _buildStartedEventHandler;
         [NotNull] private readonly IParametersParser _parametersParser;
         [NotNull] private readonly ILogWriter _logWriter;
-
-        [CanBeNull] private Parameters _parameters;
+        [NotNull] private readonly Parameters _parameters = new Parameters();
 
         public NodeLogger(
-            [NotNull] IParametersFactory parametersFactory,
             [NotNull] IParametersParser parametersParser,
             [NotNull] ILogWriter logWriter,
             [NotNull] ILoggerContext context,
@@ -46,7 +43,6 @@
             [NotNull] IBuildEventHandler<BuildWarningEventArgs> warningHandler,
             [NotNull] IBuildEventHandler<CustomBuildEventArgs> customEventHandler)
         {
-            _parametersFactory = parametersFactory ?? throw new ArgumentNullException(nameof(parametersFactory));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _parametersParser = parametersParser ?? throw new ArgumentNullException(nameof(parametersParser));
             _logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
@@ -72,15 +68,9 @@
         // ReSharper disable once UnusedMember.Global
         public bool ShowSummary
         {
-            get => _parameters?.ShowSummary ?? false;
+            get => _parameters.ShowSummary ?? false;
             // ReSharper disable once UnusedMember.Global
-            set
-            {
-                if (_parameters != null)
-                {
-                    _parameters.ShowSummary = value;
-                }
-            }
+            set => _parameters.ShowSummary = value;
         }
 
         public LoggerVerbosity Verbosity { get; set; } = LoggerVerbosity.Normal;
@@ -89,7 +79,6 @@
 
         public void Initialize(IEventSource eventSource, int nodeCount)
         {
-            _parameters = _parametersFactory.Create();
             _parameters.Verbosity = Verbosity;
             if (Parameters != null)
             {
