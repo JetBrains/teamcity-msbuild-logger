@@ -12,8 +12,6 @@
         [NotNull] private readonly IMessageWriter _messageWriter;
         private readonly IDictionary<string, IPerformanceCounter> _internalPerformanceCounters = new Dictionary<string, IPerformanceCounter>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<BuildEventContext, long> _startedEvent;
-        private bool _inScope;
-        private DateTime _scopeStartTime;
         private readonly string _scopeName;
         [NotNull] private readonly ILogWriter _logWriter;
         [NotNull] private readonly IPerformanceCounterFactory _performanceCounterFactory;

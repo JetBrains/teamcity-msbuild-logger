@@ -12,53 +12,61 @@
         public IEnumerable<IConfiguration> GetDependencies([NotNull] IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            yield return container.Feature(Wellknown.Feature.Default);
+            yield return container.Feature(Wellknown.Feature.Lifetimes);
+            yield return container.Feature(Wellknown.Feature.Resolvers);
         }
 
         public IEnumerable<IDisposable> Apply([NotNull] IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<INodeLogger, NodeLogger>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IColorTheme, ColorTheme>();
-            yield return container.Register().Tag(ColorThemeMode.Default).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IColorTheme, DefaultColorTheme>();
-            yield return container.Register().Tag(ColorThemeMode.TeamCity).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IColorTheme, TeamCityColorTheme>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IConsole, DefaultConsole>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IStringService, StringService>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IPathService, PathService>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IEnvironmentService, EnvironmentService>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<ILogWriter, LogWriter>();
-            yield return container.Register().Tag(ColorMode.Default).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<ILogWriter, DefaultLogWriter>();
-            yield return container.Register().Tag(ColorMode.Ansi).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<ILogWriter, AnsiLogWriter>();
-            yield return container.Register().Tag(ColorMode.NoColor).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<ILogWriter, NoColorLogWriter>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IParametersFactory, ParametersFactory>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IParametersParser, ParametersParser>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IPerformanceCounterFactory, PerformanceCounterFactory>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<ILogFormatter, LogFormatter>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IEventFormatter, EventFormatter>();
-            yield return container.Register().State<string>(0).Autowiring<IPerformanceCounter, PerformanceCounter>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventManager, BuildEventManager>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IDeferredMessageWriter, DeferredMessageWriter>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IMessageWriter, MessageWriter>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<ILoggerContext, LoggerContext>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IServiceMessageFormatter, ServiceMessageFormatter>();
-            yield return container.Register().State<string>(0).Autowiring<ITeamCityBlock, TeamCityBlock>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IHierarchicalMessageWriter, HierarchicalMessageWriter>();
-            yield return container.Register().Tag(TeamCityMode.Off).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IHierarchicalMessageWriter, DefaultHierarchicalMessageWriter>();
-            yield return container.Register().Tag(TeamCityMode.SupportHierarchy).Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IHierarchicalMessageWriter, TeamCityHierarchicalMessageWriter>();
+            yield return container.Register()
+                .Lifetime(Wellknown.Lifetime.Singleton).With()
+                    .Autowiring<INodeLogger, NodeLogger>()
+                    .And().Autowiring<ILoggerContext, LoggerContext>()
+                    .And().Autowiring<IConsole, DefaultConsole>()
+                    .And().Autowiring<IStringService, StringService>()
+                    .And().Autowiring<IPathService, PathService>()
+                    .And().Autowiring<IEnvironmentService, EnvironmentService>()
+                    .And().Autowiring<IParametersParser, ParametersParser>()
+                    .And().Autowiring<IParametersFactory, ParametersFactory>()
+                    .And().Autowiring<IPerformanceCounterFactory, PerformanceCounterFactory>()
+                    .And().Autowiring<ILogFormatter, LogFormatter>()
+                    .And().Autowiring<IEventFormatter, EventFormatter>()
+                    .And().Autowiring<IBuildEventManager, BuildEventManager>()
+                    .And().Autowiring<IDeferredMessageWriter, DeferredMessageWriter>()
+                    .And().Autowiring<IMessageWriter, MessageWriter>()
+                    .And().Autowiring<IServiceMessageFormatter, ServiceMessageFormatter>()
+                    // IColorTheme
+                    .And().Autowiring<IColorTheme, ColorTheme>()
+                    .And().Tag(ColorThemeMode.Default).Autowiring<IColorTheme, DefaultColorTheme>()
+                    .And().Tag(ColorThemeMode.TeamCity).Autowiring<IColorTheme, TeamCityColorTheme>()
+                    // ILogWriter
+                    .And().Autowiring<ILogWriter, LogWriter>()
+                    .And().Tag(ColorMode.Default).Autowiring<ILogWriter, DefaultLogWriter>()
+                    .And().Tag(ColorMode.Ansi).Autowiring<ILogWriter, AnsiLogWriter>()
+                    .And().Tag(ColorMode.NoColor).Autowiring<ILogWriter, NoColorLogWriter>()
+                    // IHierarchicalMessageWriter
+                    .And().Autowiring<IHierarchicalMessageWriter, HierarchicalMessageWriter>()
+                    .And().Tag(TeamCityMode.Off).Autowiring<IHierarchicalMessageWriter, DefaultHierarchicalMessageWriter>()
+                    .And().Tag(TeamCityMode.SupportHierarchy).Autowiring<IHierarchicalMessageWriter, TeamCityHierarchicalMessageWriter>()
+                    // Build event handlers
+                    .And().Autowiring<IBuildEventHandler<BuildFinishedEventArgs>, BuildFinishedHandler>()
+                    .And().Autowiring<IBuildEventHandler<BuildStartedEventArgs>, BuildStartedHandler>()
+                    .And().Autowiring<IBuildEventHandler<CustomBuildEventArgs>, CustomEventHandler>()
+                    .And().Autowiring<IBuildEventHandler<BuildErrorEventArgs>, ErrorHandler>()
+                    .And().Autowiring<IBuildEventHandler<BuildMessageEventArgs>, MessageHandler>()
+                    .And().Autowiring<IBuildEventHandler<ProjectFinishedEventArgs>, ProjectFinishedHandler>()
+                    .And().Autowiring<IBuildEventHandler<ProjectStartedEventArgs>, ProjectStartedHandler>()
+                    .And().Autowiring<IBuildEventHandler<TargetFinishedEventArgs>, TargetFinishedHandler>()
+                    .And().Autowiring<IBuildEventHandler<TargetStartedEventArgs>, TargetStartedHandler>()
+                    .And().Autowiring<IBuildEventHandler<TaskFinishedEventArgs>, TaskFinishedHandler>()
+                    .And().Autowiring<IBuildEventHandler<TaskStartedEventArgs>, TaskStartedHandler>()
+                    .And().Autowiring<IBuildEventHandler<BuildWarningEventArgs>, WarningHandler>();
 
-            // Build event handlers
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<BuildFinishedEventArgs>, BuildFinishedHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<BuildStartedEventArgs>, BuildStartedHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<CustomBuildEventArgs>, CustomEventHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<BuildErrorEventArgs>, ErrorHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<BuildMessageEventArgs>, MessageHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<ProjectFinishedEventArgs>, ProjectFinishedHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<ProjectStartedEventArgs>, ProjectStartedHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<TargetFinishedEventArgs>, TargetFinishedHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<TargetStartedEventArgs>, TargetStartedHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<TaskFinishedEventArgs>, TaskFinishedHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<TaskStartedEventArgs>, TaskStartedHandler>();
-            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<IBuildEventHandler<BuildWarningEventArgs>, WarningHandler>();
+            yield return container.Register()
+                .State<string>(0).With()
+                    .Autowiring<ITeamCityBlock, TeamCityBlock>()
+                    .And().Autowiring<IPerformanceCounter, PerformanceCounter>();
         }
     }
 }

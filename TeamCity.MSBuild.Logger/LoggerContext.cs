@@ -59,7 +59,7 @@
         {
             NumberOfProcessors = numberOfProcessors;
             SkipProjectStartedText = skipProjectStartedText;
-            Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
+            Parameters = parameters;
             if (parameters.ShowSummary ?? false)
             {
                 ErrorList = new List<BuildErrorEventArgs>();
