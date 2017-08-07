@@ -86,7 +86,7 @@
             const string configuration = "Release";
 #endif
 
-            var loggerPath = Path.GetFullPath(Path.Combine(CommandLine.WorkingDirectory, $@"TeamCity.MSBuild.Logger\bin\{configuration}\{framework}\TeamCity.MSBuild.Logger.dll"));
+            var loggerPath = Path.GetFullPath(Path.Combine(CommandLine.WorkingDirectory, $@"TeamCity.MSBuild.Logger\bin\{configuration}\{framework}\publish\TeamCity.MSBuild.Logger.dll"));
             if (!string.IsNullOrWhiteSpace(parameters))
             {
                 parameters = ";" + parameters;

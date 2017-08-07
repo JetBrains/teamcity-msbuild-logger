@@ -5,7 +5,7 @@
         <PublishPath>bin\publish</PublishPath>
     </PropertyGroup>
 
-    <Target Name="BuildMSBuildLogger">
+    <Target Name="Build">
         <PropertyGroup>
             <PackageVersion Condition=" '$(PackageVersion)' == '' ">1.0.0</PackageVersion>
             <Build_Number Condition=" '$(Build_Number)' == '' ">0</Build_Number>
@@ -15,37 +15,43 @@
         <MSBuild Projects="TeamCity.MSBuild.Logger.sln" Targets="Restore;Rebuild" Properties="Configuration=$(Configuration);AssemblyVersion=$(AssemblyVersion)"/>
     </Target>
 
-    <Target Name="TestMSBuildLogger">
-        <Exec Command="dotnet TeamCity.MSBuild.Logger.Tests\TeamCity.MSBuild.Logger.Tests.csproj -c $(Configuration)"/>
+    <Target Name="Test">
+        <Exec Command="dotnet test TeamCity.MSBuild.Logger.Tests\TeamCity.MSBuild.Logger.Tests.csproj -c $(Configuration)"/>
     </Target>
 
-    <Target Name="PublishMSBuildLogger">
+    <Target Name="Publish">
         <ItemGroup>
-            <TargetFramework Include="net45">
+            <MSBuildVersion Include="net45">
                 <MSBuildLoggerPath>msbuild12</MSBuildLoggerPath>
-            </TargetFramework>
-            <TargetFramework Include="net452">
+            </MSBuildVersion>
+            <MSBuildVersion Include="net452">
                 <MSBuildLoggerPath>msbuild14</MSBuildLoggerPath>
-            </TargetFramework>
-            <TargetFramework Include="netcoreapp1.0">
+            </MSBuildVersion>
+            <MSBuildVersion Include="netcoreapp1.0">
                 <MSBuildLoggerPath>msbuild15</MSBuildLoggerPath>
-            </TargetFramework>
+            </MSBuildVersion>
         </ItemGroup>
 
-        <MSBuild Projects="$(MSBuildProjectFile)" Targets="PublishMSBuildLoggerForFramework" Properties="Configuration=$(Configuration);Framework=%(TargetFramework.Identity);MSBuildLoggerPath=%(TargetFramework.MSBuildLoggerPath)"/>
+        <MSBuild Projects="$(MSBuildProjectFile)" Targets="PublishForFramework" Properties="Configuration=$(Configuration);Framework=%(MSBuildVersion.Identity);MSBuildLoggerPath=%(MSBuildVersion.MSBuildLoggerPath)"/>
+        <Message Text="##teamcity[publishArtifacts '$(PublishPath)\**\*.dll=>TeamCity.MSBuild.Logger.zip']" />
     </Target>
 
-    <Target Name="PublishMSBuildLoggerForFramework">
+    <Target Name="PublishForFramework">
+        <PropertyGroup>
+            <FullPublishPath>$(PublishPath)\$(MSBuildLoggerPath)</FullPublishPath>
+            <BinPath>TeamCity.MSBuild.Logger\bin\$(Configuration)\$(Framework)\publish</BinPath>
+            <OutputPath>TeamCity.MSBuild.Logger\bin\$(Configuration)\$(Framework)</OutputPath>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(FullPublishPath)" />
         <MSBuild Projects="TeamCity.MSBuild.Logger\TeamCity.MSBuild.Logger.csproj" Targets="Publish" Properties="Configuration=$(Configuration);TargetFramework=$(Framework)"/>
 
         <ItemGroup>
-            <MSBuildLoggerFiles Include="TeamCity.MSBuild.Logger\bin\$(Configuration)\%(Framework)\publish\*.dll"/>
+            <MSBuildLoggerFiles Include="$(BinPath)\*.dll"/>
         </ItemGroup>
 
-        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="TeamCity.MSBuild.Logger\bin\$(Configuration)\$(Framework)"/>
-        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(PublishPath)\$(MSBuildLoggerPath)"/>
+        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutputPath)"/>
+        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(FullPublishPath)"/>
     </Target>
-
-    <Target Name="Build"  DependsOnTargets="BuildMSBuildLogger;PublishMSBuildLogger"/>
 
 </Project>

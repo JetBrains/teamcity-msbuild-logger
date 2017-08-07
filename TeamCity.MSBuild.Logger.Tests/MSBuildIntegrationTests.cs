@@ -43,7 +43,7 @@
             var loggerString = framework.CreateLoggerString(parameters);
             var projectPath = Path.GetFullPath(Path.Combine(CommandLine.WorkingDirectory, @"IntegrationTests\Console\Console.csproj"));
             var restoreWithLoggerCommandLine = new CommandLine(
-                @"msbuild",
+                "msbuild.exe",
                 environmentVariables,
                 "/t:restore",
                 projectPath,
@@ -52,7 +52,7 @@
                 $@"/logger:{loggerString}");
 
             var buildWithLoggerCommandLine = new CommandLine(
-                @"msbuild",
+                "msbuild.exe",
                 environmentVariables,
                 "/t:build",
                 projectPath,
@@ -62,14 +62,14 @@
                 $@"/l:{loggerString}");
 
             var restoreCommandLine = new CommandLine(
-                @"msbuild",
+                "msbuild.exe",
                 environmentVariables,
                 "/t:restore",
                 projectPath,
                 $"/m:{processCount}");
 
             var buildCommandLine = new CommandLine(
-                @"msbuild",
+                "msbuild.exe",
                 environmentVariables,
                 "/t:build",
                 projectPath,
