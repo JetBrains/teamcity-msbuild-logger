@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+    <metadata minClientVersion="2.14">
+        <id>TeamCity.Dotnet.Integration</id>
+        <version>1.0.0</version>
+        <title>JetBrains TeamCity dotnet integration package</title>
+	<description>Provides the TeamCity integration</description>
+        <authors>NikolayP</authors>
+        <owners>JetBrains</owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <licenseUrl>https://github.com/JetBrains/TeamCity.MSBuild.Logger/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/JetBrains/TeamCity.MSBuild.Logger</projectUrl>
+        <iconUrl>https://www.jetbrains.com/_assets//shared/favicons/jetbrains.ico</iconUrl>
+        <developmentDependency>true</developmentDependency>
+        <copyright>JetBrains</copyright>
+        <tags>TeamCity integration</tags>
+    </metadata>
+    <files>
+        <file src="package\**\*.*" target="build\_common" />
+        <file src="LICENSE" target="LICENSE" />
+    </files>
+</package>
