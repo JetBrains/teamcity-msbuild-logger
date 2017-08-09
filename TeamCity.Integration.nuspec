@@ -4,7 +4,7 @@
         <id>TeamCity.Dotnet.Integration</id>
         <version>1.0.0</version>
         <title>JetBrains TeamCity dotnet integration package</title>
-	<description>Provides the TeamCity integration</description>
+        <description>Provides the TeamCity integration</description>
         <authors>NikolayP</authors>
         <owners>JetBrains</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -17,6 +17,7 @@
     </metadata>
     <files>
         <file src="package\**\*.*" target="build\_common" />
+        <file src="package\**\*.*" target="tools" />
         <file src="LICENSE" target="LICENSE" />
     </files>
 </package>
