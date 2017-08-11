@@ -107,6 +107,8 @@
                 {
                     Thread.Sleep(100);
                 }
+
+                Debugger.Break();
             }
 
             if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic))

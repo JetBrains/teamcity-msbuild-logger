@@ -58,22 +58,26 @@
                     {
                         if (e.Succeeded)
                         {
-                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey, _stringService.FormatResourceString("ProjectFinishedPrefixWithDefaultTargetsMultiProc", projectFile));
+                            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectFinishedPrefixWithDefaultTargetsMultiProc", projectFile), true);
+                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey);
                         }
                         else
                         {
-                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey, _stringService.FormatResourceString("ProjectFinishedPrefixWithDefaultTargetsMultiProcFailed", projectFile));
+                            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectFinishedPrefixWithDefaultTargetsMultiProcFailed", projectFile), true);
+                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey);
                         }
                     }
                     else
                     {
                         if (e.Succeeded)
                         {
-                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey, _stringService.FormatResourceString("ProjectFinishedPrefixWithTargetNamesMultiProc", projectFile, targetNames));
+                            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectFinishedPrefixWithTargetNamesMultiProc", projectFile, targetNames), true);
+                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey);
                         }
                         else
                         {
-                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey, _stringService.FormatResourceString("ProjectFinishedPrefixWithTargetNamesMultiProcFailed", projectFile, targetNames));
+                            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectFinishedPrefixWithTargetNamesMultiProcFailed", projectFile, targetNames), true);
+                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey);
                         }
                     }
                 }

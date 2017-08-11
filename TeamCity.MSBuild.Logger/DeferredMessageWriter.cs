@@ -64,8 +64,6 @@ namespace TeamCity.MSBuild.Logger
             var shortProjectFile = _pathService.GetFileName(projectFile);
             if (parentProjectFile == null)
             {
-                _messageWriter.WriteLinePrefix(projectStartedEvent.FullProjectKey, projectStartedEvent.TimeStamp, false);
-                _logWriter.SetColor(Color.BuildStage);
                 string message;
                 string shortName;
                 if (string.IsNullOrEmpty(targetNames))
@@ -79,22 +77,32 @@ namespace TeamCity.MSBuild.Logger
                     shortName = $"{shortProjectFile}: {targetNames}";
                 }
 
-                _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName, message);
+                _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName);
+
+                _messageWriter.WriteLinePrefix(projectStartedEvent.FullProjectKey, projectStartedEvent.TimeStamp, false);
+                _logWriter.SetColor(Color.BuildStage);
+                _messageWriter.WriteMessageAligned(message, true);
                 _logWriter.ResetColor();
             }
             else
             {
-                _messageWriter.WriteLinePrefix(parentProjectStartedEvent.FullProjectKey, parentProjectStartedEvent.TimeStamp, false);
-                _logWriter.SetColor(Color.BuildStage);
                 if (string.IsNullOrEmpty(targetNames))
                 {
                     var shortName = shortProjectFile;
-                    _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName, _stringService.FormatResourceString("ProjectStartedWithDefaultTargetsMultiProc", parentProjectFile, parentProjectStartedEvent.FullProjectKey, projectFile, projectStartedEvent.FullProjectKey, nodeId));
+                    _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName);
+
+                    _messageWriter.WriteLinePrefix(parentProjectStartedEvent.FullProjectKey, parentProjectStartedEvent.TimeStamp, false);
+                    _logWriter.SetColor(Color.BuildStage);
+                    _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectStartedWithDefaultTargetsMultiProc", parentProjectFile, parentProjectStartedEvent.FullProjectKey, projectFile, projectStartedEvent.FullProjectKey, nodeId), true);
                 }
                 else
                 {
                     var shortName = $"{shortProjectFile}: {targetNames}";
-                    _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName, _stringService.FormatResourceString("ProjectStartedWithTargetsMultiProc", parentProjectFile, parentProjectStartedEvent.FullProjectKey, projectFile, projectStartedEvent.FullProjectKey, nodeId, targetNames));
+                    _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName);
+
+                    _messageWriter.WriteLinePrefix(parentProjectStartedEvent.FullProjectKey, parentProjectStartedEvent.TimeStamp, false);
+                    _logWriter.SetColor(Color.BuildStage);
+                    _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectStartedWithTargetsMultiProc", parentProjectFile, parentProjectStartedEvent.FullProjectKey, projectFile, projectStartedEvent.FullProjectKey, nodeId, targetNames), true);
                 }
 
                 _logWriter.ResetColor();
@@ -118,8 +126,6 @@ namespace TeamCity.MSBuild.Logger
 
             targetStartedEvent.ShowTargetFinishedEvent = true;
             DisplayDeferredStartedEvents(targetStartedEvent.TargetBuildEventContext);
-            _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
-            _logWriter.SetColor(Color.BuildStage);
             var projectStartedEvent = _buildEventManager.GetProjectStartedEvent(e);
             if (projectStartedEvent == null)
             {
@@ -128,7 +134,7 @@ namespace TeamCity.MSBuild.Logger
 
             var projectFile = projectStartedEvent.ProjectFile ?? string.Empty;
             string targetName;
-            string shortTargetName = targetStartedEvent.TargetName;
+            var shortTargetName = targetStartedEvent.TargetName;
             if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || (_context.Parameters.ShowEventId ?? false))
             {
                 targetName = _stringService.FormatResourceString("TargetMessageWithId", targetStartedEvent.TargetName, targetStartedEvent.TargetBuildEventContext.TargetId);
@@ -144,26 +150,46 @@ namespace TeamCity.MSBuild.Logger
                 {
                     if (!string.IsNullOrEmpty(targetStartedEvent.ParentTarget))
                     {
-                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName, _stringService.FormatResourceString("TargetStartedProjectDepends", targetName, projectFile, targetStartedEvent.ParentTarget));
+                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+
+                        _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
+                        _logWriter.SetColor(Color.BuildStage);
+                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetStartedProjectDepends", targetName, projectFile, targetStartedEvent.ParentTarget), true);
                     }
                     else
                     {
-                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName, _stringService.FormatResourceString("TargetStartedProjectEntry", targetName, projectFile));
+                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+
+                        _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
+                        _logWriter.SetColor(Color.BuildStage);
+                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetStartedProjectEntry", targetName, projectFile), true);
                     }
                 }
                 else 
                     if (!string.IsNullOrEmpty(targetStartedEvent.ParentTarget))
                     {
-                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName, _stringService.FormatResourceString("TargetStartedFileProjectDepends", targetName, targetStartedEvent.TargetFile, projectFile, targetStartedEvent.ParentTarget));
+                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+
+                        _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
+                        _logWriter.SetColor(Color.BuildStage);
+                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetStartedFileProjectDepends", targetName, targetStartedEvent.TargetFile, projectFile, targetStartedEvent.ParentTarget), true);
                     }
                     else
                     {
-                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName, _stringService.FormatResourceString("TargetStartedFileProjectEntry", targetName, targetStartedEvent.TargetFile, projectFile));
+                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+
+                        _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
+                        _logWriter.SetColor(Color.BuildStage);
+                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetStartedFileProjectEntry", targetName, targetStartedEvent.TargetFile, projectFile), true);
                     }
             }
             else
             {
-                _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName, _stringService.FormatResourceString("TargetStartedFileProjectEntry", targetName, targetStartedEvent.TargetFile, projectFile));
+                _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+
+                _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
+                _logWriter.SetColor(Color.BuildStage);
+                _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetStartedFileProjectEntry", targetName, targetStartedEvent.TargetFile, projectFile), true);
             }
 
             _logWriter.ResetColor();

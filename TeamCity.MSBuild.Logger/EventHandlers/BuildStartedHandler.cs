@@ -61,7 +61,8 @@
         {
             if (environment == null) throw new ArgumentNullException(nameof(environment));
             _logWriter.SetColor(Color.SummaryHeader);
-            _hierarchicalMessageWriter.StartBlock(WellknownHierarchicalKeys.EnvironmentHeader, "Environment", _stringService.FormatResourceString("EnvironmentHeader"));
+            _hierarchicalMessageWriter.StartBlock(WellknownHierarchicalKeys.EnvironmentHeader, "Environment");
+            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("EnvironmentHeader"), true);
             foreach (var keyValuePair in environment)
             {
                 _logWriter.SetColor(Color.SummaryInfo);

@@ -25,14 +25,14 @@ namespace TeamCity.MSBuild.Logger
 
         private IHierarchicalMessageWriter CurrentHierarchicalMessageWriter => _hierarchicalMessageWriter[_context.Parameters?.TeamCityMode ?? TeamCityMode.Off];
 
-        public void StartBlock(HierarchicalKey key, string name, string message = "")
+        public void StartBlock(HierarchicalKey key, string name)
         {
-            CurrentHierarchicalMessageWriter.StartBlock(key, name, message);
+            CurrentHierarchicalMessageWriter.StartBlock(key, name);
         }
 
-        public void FinishBlock(HierarchicalKey key, string message = "")
+        public void FinishBlock(HierarchicalKey key)
         {
-            CurrentHierarchicalMessageWriter.FinishBlock(key, message);
+            CurrentHierarchicalMessageWriter.FinishBlock(key);
         }
     }
 }

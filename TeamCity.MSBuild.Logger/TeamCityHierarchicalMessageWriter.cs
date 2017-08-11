@@ -8,33 +8,21 @@
     {
         [NotNull] private readonly Func<string, ITeamCityBlock> _teamCityBlockFactory;
         [NotNull] private readonly Dictionary<HierarchicalKey, ITeamCityBlock> _blocks = new Dictionary<HierarchicalKey, ITeamCityBlock>();
-        [NotNull] private readonly IMessageWriter _messageWriter;
 
         public TeamCityHierarchicalMessageWriter(
-            [NotNull] IMessageWriter messageWriter,
             [NotNull] Func<string, ITeamCityBlock> teamCityBlockFactory)
         {
             _teamCityBlockFactory = teamCityBlockFactory ?? throw new ArgumentNullException(nameof(teamCityBlockFactory));
-            _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
         }
 
-        public void StartBlock(HierarchicalKey key, string name, string message = "")
+        public void StartBlock(HierarchicalKey key, string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
             _blocks.Add(key, _teamCityBlockFactory(name));
-            if (!string.IsNullOrEmpty(message))
-            {
-                _messageWriter.WriteMessageAligned(message, true);
-            }
         }
 
-        public void FinishBlock(HierarchicalKey key, string message = "")
+        public void FinishBlock(HierarchicalKey key)
         {
-            if (!string.IsNullOrEmpty(message))
-            {
-                _messageWriter.WriteMessageAligned(message, true);
-            }
-
             if (_blocks.TryGetValue(key, out ITeamCityBlock block))
             {
                 _blocks.Remove(key);

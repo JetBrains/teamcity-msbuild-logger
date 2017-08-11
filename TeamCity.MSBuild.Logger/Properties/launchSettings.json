@@ -3,7 +3,7 @@
     "TeamCity.MSBuild.Logger": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
-      "commandLineArgs": "msbuild /t:restore /logger:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger2,C:\\Projects\\TeamCity\\TeamCity.MSBuild.Logger\\TeamCity.MSBuild.Logger\\bin\\Debug\\netcoreapp1.0\\TeamCity.MSBuild.Logger.dll;debug=true"
+      "commandLineArgs": "build --verbosity Detailed /noconsolelogger /l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,C:\\Projects\\TeamCity\\TeamCity.MSBuild.Logger\\TeamCity.MSBuild.Logger\\bin\\Debug\\netcoreapp1.0\\TeamCity.MSBuild.Logger.dll;debug"
     }
   }
 }
