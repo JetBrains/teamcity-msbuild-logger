@@ -9,6 +9,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class NodeLogger : INodeLogger
     {
+        [NotNull] private readonly Func<IHierarchicalMessageWriter> _hierarchicalMessageWriter;
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IBuildEventHandler<BuildMessageEventArgs> _messageHandler;
         [NotNull] private readonly IBuildEventHandler<BuildFinishedEventArgs> _buildFinishedHandler;
@@ -25,11 +26,13 @@
         [NotNull] private readonly IParametersParser _parametersParser;
         [NotNull] private readonly ILogWriter _logWriter;
         [NotNull] private readonly Parameters _parameters = new Parameters();
+        [NotNull] private readonly object _lockObject = new object();
 
         public NodeLogger(
             [NotNull] IParametersParser parametersParser,
             [NotNull] ILogWriter logWriter,
             [NotNull] ILoggerContext context,
+            [NotNull] Func<IHierarchicalMessageWriter> hierarchicalMessageWriter,
             [NotNull] IBuildEventHandler<BuildStartedEventArgs> buildStartedHandler,
             [NotNull] IBuildEventHandler<BuildMessageEventArgs> messageHandler,
             [NotNull] IBuildEventHandler<BuildFinishedEventArgs> buildFinishedHandler,
@@ -43,9 +46,11 @@
             [NotNull] IBuildEventHandler<BuildWarningEventArgs> warningHandler,
             [NotNull] IBuildEventHandler<CustomBuildEventArgs> customEventHandler)
         {
+            _hierarchicalMessageWriter = hierarchicalMessageWriter ?? throw new ArgumentNullException(nameof(hierarchicalMessageWriter));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _parametersParser = parametersParser ?? throw new ArgumentNullException(nameof(parametersParser));
             _logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
+
             _buildStartedEventHandler = buildStartedHandler ?? throw new ArgumentNullException(nameof(buildStartedHandler));
             _messageHandler = messageHandler ?? throw new ArgumentNullException(nameof(messageHandler));
             _buildFinishedHandler = buildFinishedHandler ?? throw new ArgumentNullException(nameof(buildFinishedHandler));
@@ -132,23 +137,18 @@
                 _parameters.ShowPerfSummary = false;
             }
 
-            if (eventSource == null)
-            {
-                return;
-            }
-
-            eventSource.BuildStarted += (sender, e) => _buildStartedEventHandler.Handle(e);
-            eventSource.BuildFinished += (sender, e) => _buildFinishedHandler.Handle(e);
-            eventSource.ProjectStarted += (sender, e) => _projectStartedHandler.Handle(e);
-            eventSource.ProjectFinished += (sender, e) => _projectFinishedHandler.Handle(e);
-            eventSource.TargetStarted += (sender, e) => _targetStartedHandler.Handle(e);
-            eventSource.TargetFinished += (sender, e) => _targetFinishedHandler.Handle(e);
-            eventSource.TaskStarted += (sender, e) => _taskStartedHandler.Handle(e);
-            eventSource.TaskFinished += (sender, e) => _taskFinishedHandler.Handle(e);
-            eventSource.ErrorRaised += (sender, e) => _errorHandler.Handle(e);
-            eventSource.WarningRaised += (sender, e) => _warningHandler.Handle(e);
-            eventSource.MessageRaised += (sender, e) => _messageHandler.Handle(e);
-            eventSource.CustomEventRaised += (sender, e) => _customEventHandler.Handle(e);
+            eventSource.BuildStarted += (sender, e) => Handle(_buildStartedEventHandler, e);
+            eventSource.BuildFinished += (sender, e) => Handle(_buildFinishedHandler, e);
+            eventSource.ProjectStarted += (sender, e) => Handle(_projectStartedHandler, e);
+            eventSource.ProjectFinished += (sender, e) => Handle(_projectFinishedHandler, e);
+            eventSource.TargetStarted += (sender, e) => Handle(_targetStartedHandler, e);
+            eventSource.TargetFinished += (sender, e) => Handle(_targetFinishedHandler, e);
+            eventSource.TaskStarted += (sender, e) => Handle(_taskStartedHandler, e);
+            eventSource.TaskFinished += (sender, e) => Handle(_taskFinishedHandler, e);
+            eventSource.ErrorRaised += (sender, e) => Handle(_errorHandler, e);
+            eventSource.WarningRaised += (sender, e) => Handle(_warningHandler, e);
+            eventSource.MessageRaised += (sender, e) => Handle(_messageHandler, e);
+            eventSource.CustomEventRaised += (sender, e) => Handle(_customEventHandler, e);
         }
 
         public void Initialize(IEventSource eventSource)
@@ -158,6 +158,28 @@
 
         public virtual void Shutdown()
         {
+        }
+
+        private void Handle<TBuildEventArgs>(IBuildEventHandler<TBuildEventArgs> handler, TBuildEventArgs e)
+            where TBuildEventArgs : BuildEventArgs
+        {
+            if (e == null)
+            {
+                return;
+            }
+
+            try
+            {
+                lock (_lockObject)
+                {
+                    _hierarchicalMessageWriter().SelectFlow(e.BuildEventContext?.NodeId ?? 0);
+                    handler.Handle(e);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logWriter.Write($"Exception was occured while processing a message of type \"{e.GetType()}\":\n{ex}");
+            }
         }
     }
 }

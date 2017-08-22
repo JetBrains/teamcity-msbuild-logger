@@ -61,7 +61,7 @@
         {
             if (environment == null) throw new ArgumentNullException(nameof(environment));
             _logWriter.SetColor(Color.SummaryHeader);
-            _hierarchicalMessageWriter.StartBlock(WellknownHierarchicalKeys.EnvironmentHeader, "Environment");
+            _hierarchicalMessageWriter.StartBlock("Environment");
             _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("EnvironmentHeader"), true);
             foreach (var keyValuePair in environment)
             {
@@ -69,7 +69,7 @@
                 _messageWriter.WriteMessageAligned(string.Format(CultureInfo.CurrentCulture, "{0} = {1}", keyValuePair.Key, keyValuePair.Value), false);
             }
 
-            _hierarchicalMessageWriter.FinishBlock(WellknownHierarchicalKeys.EnvironmentHeader);
+            _hierarchicalMessageWriter.FinishBlock();
             _logWriter.ResetColor();
         }
     }

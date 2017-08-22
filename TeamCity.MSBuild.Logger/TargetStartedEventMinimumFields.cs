@@ -5,6 +5,7 @@
     using Microsoft.Build.Framework;
 
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     internal class TargetStartedEventMinimumFields
     {
         public DateTime TimeStamp { get; }
@@ -27,8 +28,6 @@
 
         public string FullTargetKey { get; }
 
-        public HierarchicalKey HierarchicalKey { [NotNull] get; }
-
         public TargetStartedEventMinimumFields(
             TargetStartedEventArgs startedEvent,
             bool requireTimeStamp)
@@ -47,7 +46,6 @@
 
             ParentTarget = startedEvent.ParentTarget;
             FullTargetKey = $"{TargetFile}.{TargetName}";
-            HierarchicalKey = new HierarchicalKey($"{ProjectFile}**{TargetFile}**{TargetName}**{TargetBuildEventContext.ProjectContextId}**{TargetBuildEventContext.TargetId}");
         }
     }
 }

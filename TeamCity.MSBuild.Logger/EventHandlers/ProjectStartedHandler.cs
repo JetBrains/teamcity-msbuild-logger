@@ -149,7 +149,7 @@
                 _messageWriter.WriteMessageAligned(stringBuilder.ToString(), false);
                 foreach (DictionaryEntry dictionaryEntry in item.CloneCustomMetadata())
                 {
-                    _messageWriter.WriteMessageAligned(new string(' ', 8) + dictionaryEntry.Key + " = " + item.GetMetadata(dictionaryEntry.Key as string), false);
+                    _messageWriter.WriteMessageAligned(new string(' ', 8) + dictionaryEntry.Key + " = " + item.GetMetadata((string)dictionaryEntry.Key), false);
                 }
             }
 

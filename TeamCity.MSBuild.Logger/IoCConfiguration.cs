@@ -5,7 +5,7 @@
     using DevTeam.IoC.Contracts;
     using Microsoft.Build.Framework;
     using EventHandlers;
-    using JetBrains.TeamCity.ServiceMessages.Write;
+    using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
     internal class IoCConfiguration : IConfiguration
     {
@@ -20,7 +20,7 @@
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             yield return container.Register()
-                .Lifetime(Wellknown.Lifetime.Singleton).With()
+                .Lifetime(Wellknown.Lifetime.Singleton).Lifetime(Wellknown.Lifetime.AutoDisposing).With()
                     .Autowiring<INodeLogger, NodeLogger>()
                     .And().Autowiring<ILoggerContext, LoggerContext>()
                     .And().Autowiring<IConsole, DefaultConsole>()
@@ -33,7 +33,6 @@
                     .And().Autowiring<IBuildEventManager, BuildEventManager>()
                     .And().Autowiring<IDeferredMessageWriter, DeferredMessageWriter>()
                     .And().Autowiring<IMessageWriter, MessageWriter>()
-                    .And().Autowiring<IServiceMessageFormatter, ServiceMessageFormatter>()
                     // IColorTheme
                     .And().Autowiring<IColorTheme, ColorTheme>()
                     .And().Tag(ColorThemeMode.Default).Autowiring<IColorTheme, DefaultColorTheme>()
@@ -41,12 +40,12 @@
                     // ILogWriter
                     .And().Autowiring<ILogWriter, LogWriter>()
                     .And().Tag(ColorMode.Default).Autowiring<ILogWriter, DefaultLogWriter>()
-                    .And().Tag(ColorMode.Ansi).Autowiring<ILogWriter, AnsiLogWriter>()
+                    .And().Tag(ColorMode.TeamCity, TeamCityMode.SupportHierarchy).Contract<IHierarchicalMessageWriter>().Autowiring<ILogWriter, TeamCityHierarchicalMessageWriter>()
                     .And().Tag(ColorMode.NoColor).Autowiring<ILogWriter, NoColorLogWriter>()
+                    .And().Tag(ColorMode.AnsiColor).Autowiring<ILogWriter, AnsiLogWriter>()
                     // IHierarchicalMessageWriter
                     .And().Autowiring<IHierarchicalMessageWriter, HierarchicalMessageWriter>()
                     .And().Tag(TeamCityMode.Off).Autowiring<IHierarchicalMessageWriter, DefaultHierarchicalMessageWriter>()
-                    .And().Tag(TeamCityMode.SupportHierarchy).Autowiring<IHierarchicalMessageWriter, TeamCityHierarchicalMessageWriter>()
                     // Build event handlers
                     .And().Autowiring<IBuildEventHandler<BuildFinishedEventArgs>, BuildFinishedHandler>()
                     .And().Autowiring<IBuildEventHandler<BuildStartedEventArgs>, BuildStartedHandler>()
@@ -62,9 +61,14 @@
                     .And().Autowiring<IBuildEventHandler<BuildWarningEventArgs>, WarningHandler>();
 
             yield return container.Register()
-                .State<string>(0).With()
-                    .Autowiring<ITeamCityBlock, TeamCityBlock>()
-                    .And().Autowiring<IPerformanceCounter, PerformanceCounter>();
+                .Contract<ITeamCityWriter>().FactoryMethod(ctx =>
+                {
+                    var logWriter = ctx.ResolverContext.Container.Resolve().Tag(ColorMode.NoColor).Instance<ILogWriter>();
+                    return new TeamCityServiceMessages().CreateWriter(str => logWriter.Write(str + "\n"));
+                });
+
+            yield return container.Register()
+                .State<string>(0).Autowiring<IPerformanceCounter, PerformanceCounter>();
         }
     }
 }

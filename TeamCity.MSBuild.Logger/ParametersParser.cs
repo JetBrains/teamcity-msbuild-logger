@@ -76,13 +76,15 @@
                     return true;
 
                 case "FORCECONSOLECOLOR":
-                    parameters.ColorMode = ColorMode.Ansi;
+                    parameters.ColorMode = ColorMode.AnsiColor;
                     return true;
 
                 case "TEAMCITY":
                     parameters.TeamCityMode = TeamCityMode.SupportHierarchy;
-                    parameters.ColorMode = ColorMode.Ansi;
+                    parameters.ColorMode = ColorMode.TeamCity;
                     parameters.ColorThemeMode = ColorThemeMode.TeamCity;
+                    parameters.ForceNoAlign = true;
+                    parameters.AlignMessages = false;
                     return true;
 
                 case "V":

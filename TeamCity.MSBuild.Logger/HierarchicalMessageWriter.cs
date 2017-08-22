@@ -1,9 +1,9 @@
-﻿using DevTeam.IoC.Contracts;
-using System;
-using System.Collections.Generic;
-
-namespace TeamCity.MSBuild.Logger
+﻿namespace TeamCity.MSBuild.Logger
 {
+    using DevTeam.IoC.Contracts;
+    using System;
+    using System.Collections.Generic;
+
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class HierarchicalMessageWriter : IHierarchicalMessageWriter
     {
@@ -25,14 +25,20 @@ namespace TeamCity.MSBuild.Logger
 
         private IHierarchicalMessageWriter CurrentHierarchicalMessageWriter => _hierarchicalMessageWriter[_context.Parameters?.TeamCityMode ?? TeamCityMode.Off];
 
-        public void StartBlock(HierarchicalKey key, string name)
+        public void SelectFlow(int flowId)
         {
-            CurrentHierarchicalMessageWriter.StartBlock(key, name);
+            CurrentHierarchicalMessageWriter.SelectFlow(flowId);
         }
 
-        public void FinishBlock(HierarchicalKey key)
+        public void StartBlock(string name)
         {
-            CurrentHierarchicalMessageWriter.FinishBlock(key);
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            CurrentHierarchicalMessageWriter.StartBlock(name);
+        }
+
+        public void FinishBlock()
+        {
+            CurrentHierarchicalMessageWriter.FinishBlock();
         }
     }
 }

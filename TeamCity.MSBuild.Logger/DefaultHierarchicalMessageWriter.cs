@@ -5,11 +5,16 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DefaultHierarchicalMessageWriter : IHierarchicalMessageWriter
     {
-        public void StartBlock(HierarchicalKey key, string name)
+        public void SelectFlow(int flowId)
         {
         }
 
-        public void FinishBlock(HierarchicalKey key)
+        public void StartBlock(string name)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+        }
+
+        public void FinishBlock()
         {
         }
     }

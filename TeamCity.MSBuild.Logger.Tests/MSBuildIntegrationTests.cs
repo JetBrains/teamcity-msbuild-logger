@@ -28,8 +28,8 @@
         [InlineData("net452", 10, "deTailed", null, false)]
         [InlineData("net452", 10, "diag", "teamcity", true)]
         [InlineData("net452", 10, "deTailed", "teamcity", true)]
-        [InlineData("net45", 10, "diag", null, false)]
-        [InlineData("net45", 10, "diag", "teamcity", true)]
+        [InlineData("net452", 10, "diag", null, false)]
+        [InlineData("net452", 10, "diag", "teamcity", true)]
         // ReSharper disable once InconsistentNaming
         public void ShouldProduceSameMessagesAsConsoleLoggerWhenMSBuild(
             string framework,

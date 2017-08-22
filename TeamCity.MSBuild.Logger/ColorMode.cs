@@ -4,8 +4,10 @@
     {
         Default = 1,
 
-        Ansi = 2,
+        TeamCity = 2,
 
-        NoColor = 3
+        NoColor = 3,
+
+        AnsiColor = 4
     }
 }

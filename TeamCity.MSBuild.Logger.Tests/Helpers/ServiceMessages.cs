@@ -55,17 +55,19 @@
             foreach (var serviceMessage in messages)
             {
                 var message = new Message(serviceMessage);
-                var flow = rootFlows.SingleOrDefault(i => i.FlowId == message.CurrentFlowId);
+                var flow = rootFlows.SingleOrDefault(i => i.FlowId == message.FlowIdAttr);
                 if (flow == null)
                 {
-                    flow = new Flow(message.FlowIdAttr);
+                    flow = new Flow(message.CurrentFlowId);
                     rootFlows.Add(flow);
                 }
 
                 flow.ProcessMessage(message);
 
                 if (flow.IsFinished)
+                {
                     rootFlows.Remove(flow);
+                }
             }
         }
 
@@ -126,6 +128,9 @@
             {
                 switch (message.Name)
                 {
+                    case "message":
+                        break;
+
                     case "blockOpened":
                         IsNotEmpty(message.NameAttr, "Name attribute is empty");
                         FlowId = message.FlowIdAttr;
@@ -161,7 +166,7 @@
 
                     case "flowFinished":
                         AreEqual(message.FlowIdAttr, FlowId, "Invalid FlowId attribute");
-                        Greater(_messages.Count, 1, "flowFinished should close flowStarted");
+                        Greater(_messages.Count, 0, "flowFinished should close flowStarted");
                         var flowStarted = _messages.Pop();
                         AreEqual(flowStarted.Name, "flowStarted", "flowFinished should close flowStarted");
                         FlowId = flowStarted.ParentAttr;
@@ -179,7 +184,7 @@
                     case "testFinished":
                         AreEqual(message.FlowIdAttr, FlowId, "Invalid FlowId attribute");
                         IsNotEmpty(message.NameAttr, "Name attribute is empty");
-                        Greater(_messages.Count, 1, "testFinished should close testStarted");
+                        Greater(_messages.Count, 0, "testFinished should close testStarted");
                         var testStarted = _messages.Pop();
                         AreEqual(testStarted.Name, "testStarted", "testFinished should close testStarted");
                         AreEqual(testStarted.NameAttr, message.NameAttr, "Invalid Name attribute");

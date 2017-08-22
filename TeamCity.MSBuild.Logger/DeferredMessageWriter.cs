@@ -77,7 +77,7 @@ namespace TeamCity.MSBuild.Logger
                     shortName = $"{shortProjectFile}: {targetNames}";
                 }
 
-                _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName);
+                _hierarchicalMessageWriter.StartBlock(shortName);
 
                 _messageWriter.WriteLinePrefix(projectStartedEvent.FullProjectKey, projectStartedEvent.TimeStamp, false);
                 _logWriter.SetColor(Color.BuildStage);
@@ -89,7 +89,7 @@ namespace TeamCity.MSBuild.Logger
                 if (string.IsNullOrEmpty(targetNames))
                 {
                     var shortName = shortProjectFile;
-                    _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName);
+                    _hierarchicalMessageWriter.StartBlock(shortName);
 
                     _messageWriter.WriteLinePrefix(parentProjectStartedEvent.FullProjectKey, parentProjectStartedEvent.TimeStamp, false);
                     _logWriter.SetColor(Color.BuildStage);
@@ -98,7 +98,7 @@ namespace TeamCity.MSBuild.Logger
                 else
                 {
                     var shortName = $"{shortProjectFile}: {targetNames}";
-                    _hierarchicalMessageWriter.StartBlock(projectStartedEvent.HierarchicalKey, shortName);
+                    _hierarchicalMessageWriter.StartBlock(shortName);
 
                     _messageWriter.WriteLinePrefix(parentProjectStartedEvent.FullProjectKey, parentProjectStartedEvent.TimeStamp, false);
                     _logWriter.SetColor(Color.BuildStage);
@@ -150,7 +150,7 @@ namespace TeamCity.MSBuild.Logger
                 {
                     if (!string.IsNullOrEmpty(targetStartedEvent.ParentTarget))
                     {
-                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+                        _hierarchicalMessageWriter.StartBlock(shortTargetName);
 
                         _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
                         _logWriter.SetColor(Color.BuildStage);
@@ -158,7 +158,7 @@ namespace TeamCity.MSBuild.Logger
                     }
                     else
                     {
-                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+                        _hierarchicalMessageWriter.StartBlock(shortTargetName);
 
                         _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
                         _logWriter.SetColor(Color.BuildStage);
@@ -168,7 +168,7 @@ namespace TeamCity.MSBuild.Logger
                 else 
                     if (!string.IsNullOrEmpty(targetStartedEvent.ParentTarget))
                     {
-                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+                        _hierarchicalMessageWriter.StartBlock(shortTargetName);
 
                         _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
                         _logWriter.SetColor(Color.BuildStage);
@@ -176,7 +176,7 @@ namespace TeamCity.MSBuild.Logger
                     }
                     else
                     {
-                        _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+                        _hierarchicalMessageWriter.StartBlock(shortTargetName);
 
                         _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
                         _logWriter.SetColor(Color.BuildStage);
@@ -185,7 +185,7 @@ namespace TeamCity.MSBuild.Logger
             }
             else
             {
-                _hierarchicalMessageWriter.StartBlock(targetStartedEvent.HierarchicalKey, shortTargetName);
+                _hierarchicalMessageWriter.StartBlock(shortTargetName);
 
                 _messageWriter.WriteLinePrefix(targetStartedEvent.TargetBuildEventContext, targetStartedEvent.TimeStamp, false);
                 _logWriter.SetColor(Color.BuildStage);

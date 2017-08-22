@@ -2,8 +2,10 @@
 {
     internal interface IHierarchicalMessageWriter
     {
-        void StartBlock(HierarchicalKey key, [NotNull] string name);
+        void SelectFlow(int flowId);
 
-        void FinishBlock(HierarchicalKey key);
+        void StartBlock([NotNull] string name);
+
+        void FinishBlock();
     }
 }

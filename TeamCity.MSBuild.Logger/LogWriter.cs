@@ -13,14 +13,16 @@
         public LogWriter(
             [NotNull] ILoggerContext context,
             [NotNull] [Tag(ColorMode.Default)] ILogWriter defaultLogWriter,
-            [NotNull] [Tag(ColorMode.Ansi)] ILogWriter ansiLogWriter,
-            [NotNull] [Tag(ColorMode.NoColor)] ILogWriter noColorLogWriter)
+            [NotNull] [Tag(ColorMode.TeamCity)] ILogWriter ansiLogWriter,
+            [NotNull] [Tag(ColorMode.NoColor)] ILogWriter noColorLogWriter,
+            [NotNull] [Tag(ColorMode.AnsiColor)] ILogWriter ansiColorLogWriter)
         {
             _logWriters = new Dictionary<ColorMode, ILogWriter>
             {
                 { ColorMode.Default, defaultLogWriter ?? throw new ArgumentNullException(nameof(defaultLogWriter))},
-                { ColorMode.Ansi, ansiLogWriter ?? throw new ArgumentNullException(nameof(ansiLogWriter))},
+                { ColorMode.TeamCity, ansiLogWriter ?? throw new ArgumentNullException(nameof(ansiLogWriter))},
                 { ColorMode.NoColor, noColorLogWriter ?? throw new ArgumentNullException(nameof(noColorLogWriter))},
+                { ColorMode.AnsiColor, ansiColorLogWriter ?? throw new ArgumentNullException(nameof(ansiColorLogWriter))},
             };
 
             _context = context ?? throw new ArgumentNullException(nameof(context));

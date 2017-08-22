@@ -49,6 +49,7 @@
             {
                 _deferredMessageWriter.DisplayDeferredTargetStartedEvent(e.BuildEventContext);
                 var targetStartedEvent = _buildEventManager.GetTargetStartedEvent(e.BuildEventContext);
+                // ReSharper disable once NotResolvedInText
                 if (targetStartedEvent == null) throw new ArgumentNullException("Started event should not be null in the finished event handler");
                 if (targetStartedEvent.ShowTargetFinishedEvent)
                 {
@@ -63,7 +64,7 @@
                                 _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetOutputItem", taskItem.ItemSpec), false);
                                 foreach (DictionaryEntry dictionaryEntry in taskItem.CloneCustomMetadata())
                                 {
-                                    _messageWriter.WriteMessageAligned(new string(' ', 8) + dictionaryEntry.Key + " = " + taskItem.GetMetadata(dictionaryEntry.Key as string), false);
+                                    _messageWriter.WriteMessageAligned(new string(' ', 8) + dictionaryEntry.Key + " = " + taskItem.GetMetadata((string)dictionaryEntry.Key), false);
                                 }
                             }
                         }
@@ -87,7 +88,7 @@
                     }
 
                     _deferredMessageWriter.ShownBuildEventContext(e.BuildEventContext);
-                    _hierarchicalMessageWriter.FinishBlock(targetStartedEvent.HierarchicalKey);
+                    _hierarchicalMessageWriter.FinishBlock();
                 }
             }
 

@@ -39,6 +39,7 @@
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             var projectStartedEvent = _buildEventManager.GetProjectStartedEvent(e.BuildEventContext);
+            // ReSharper disable once LocalizableElement
             if (projectStartedEvent == null) throw new ArgumentException($"Project finished event for {e.ProjectFile} received without matching start event", nameof(e));
             if (_context.Parameters.ShowPerfSummary)
             {
@@ -59,12 +60,12 @@
                         if (e.Succeeded)
                         {
                             _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectFinishedPrefixWithDefaultTargetsMultiProc", projectFile), true);
-                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey);
+                            _hierarchicalMessageWriter.FinishBlock();
                         }
                         else
                         {
                             _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectFinishedPrefixWithDefaultTargetsMultiProcFailed", projectFile), true);
-                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey);
+                            _hierarchicalMessageWriter.FinishBlock();
                         }
                     }
                     else
@@ -72,12 +73,12 @@
                         if (e.Succeeded)
                         {
                             _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectFinishedPrefixWithTargetNamesMultiProc", projectFile, targetNames), true);
-                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey);
+                            _hierarchicalMessageWriter.FinishBlock();
                         }
                         else
                         {
                             _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ProjectFinishedPrefixWithTargetNamesMultiProcFailed", projectFile, targetNames), true);
-                            _hierarchicalMessageWriter.FinishBlock(projectStartedEvent.HierarchicalKey);
+                            _hierarchicalMessageWriter.FinishBlock();
                         }
                     }
                 }

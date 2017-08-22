@@ -20,6 +20,7 @@
         public string TargetNames { get; }
 
         // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int ProjectId { get; }
 
         public string ProjectFile { get; }
@@ -29,8 +30,6 @@
         public bool ErrorInProject { get; set; }
 
         public BuildEventContext ProjectBuildEventContext { get; }
-
-        public HierarchicalKey HierarchicalKey { [NotNull] get; }
 
         public ProjectStartedEventMinimumFields(
             int projectKey,
@@ -51,8 +50,6 @@
             {
                 TimeStamp = startedEvent.Timestamp;
             }
-
-            HierarchicalKey = new HierarchicalKey($"{ProjectFile}**{ProjectId}**{projectKey}**{entryPointKey}");
         }
     }
 }

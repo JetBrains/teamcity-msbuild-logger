@@ -135,7 +135,7 @@
 
         private void ShowPerfSummary()
         {
-            _hierarchicalMessageWriter.StartBlock(WellknownHierarchicalKeys.PerformanceSummary, "Performance Summary");
+            _hierarchicalMessageWriter.StartBlock("Performance Summary");
 
             if (_context.ProjectPerformanceCounters != null)
             {
@@ -164,7 +164,7 @@
                 _messageWriter.DisplayCounters(_context.TaskPerformanceCounters);
             }
 
-            _hierarchicalMessageWriter.FinishBlock(WellknownHierarchicalKeys.PerformanceSummary);
+            _hierarchicalMessageWriter.FinishBlock();
             _logWriter.ResetColor();
         }
 
@@ -191,8 +191,13 @@
             _logWriter.ResetColor();
         }
 
-        private void ShowErrorWarningSummary<T>(IEnumerable<T> events) where T : BuildEventArgs
+        private void ShowErrorWarningSummary<T>([CanBeNull] IEnumerable<T> events) where T : BuildEventArgs
         {
+            if (events == null)
+            {
+                return;
+            }
+
             var dictionary = new Dictionary<ErrorWarningSummaryDictionaryKey, List<T>>();
             foreach (var warningEventArgs in events)
             {

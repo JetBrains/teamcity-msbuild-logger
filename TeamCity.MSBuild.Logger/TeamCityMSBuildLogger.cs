@@ -7,6 +7,7 @@
     // ReSharper disable once UnusedMember.Global
     public class TeamCityMsBuildLogger : INodeLogger
     {
+        private readonly IContainer _container;
         private readonly INodeLogger _logger;
 
         public TeamCityMsBuildLogger()
@@ -16,7 +17,8 @@
 
         public TeamCityMsBuildLogger(IContainer container)
         {
-            _logger = container.Resolve().Instance<INodeLogger>();
+            _container = container;
+            _logger = _container.Resolve().Instance<INodeLogger>();
         }
 
         public string Parameters
@@ -44,6 +46,7 @@
         public void Shutdown()
         {
             _logger.Shutdown();
+            _container.Dispose();
         }
     }
 }
