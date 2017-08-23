@@ -211,6 +211,11 @@
             _logWriter.Write(stringBuilder.ToString());
         }
 
+        public string IndentString(string str)
+        {
+            return IndentString(str, _context.PrefixWidth);
+        }
+
         private static string IndentString([CanBeNull] string str, int indent)
         {
             if (str == null)

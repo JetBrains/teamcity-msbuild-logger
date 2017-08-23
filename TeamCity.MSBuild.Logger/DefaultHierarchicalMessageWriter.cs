@@ -5,7 +5,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DefaultHierarchicalMessageWriter : IHierarchicalMessageWriter
     {
-        public void SelectFlow(int flowId)
+        public void SelectFlow(int? flowId)
         {
         }
 

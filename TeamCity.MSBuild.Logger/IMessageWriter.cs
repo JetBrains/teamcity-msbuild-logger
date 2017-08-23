@@ -27,5 +27,7 @@ namespace TeamCity.MSBuild.Logger
         void WriteNewLine();
 
         bool WriteTargetMessagePrefix(BuildEventArgs e, BuildEventContext context, DateTime timeStamp);
+
+        string IndentString([CanBeNull] string str);
     }
 }

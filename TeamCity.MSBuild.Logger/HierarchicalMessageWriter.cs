@@ -25,7 +25,7 @@
 
         private IHierarchicalMessageWriter CurrentHierarchicalMessageWriter => _hierarchicalMessageWriter[_context.Parameters?.TeamCityMode ?? TeamCityMode.Off];
 
-        public void SelectFlow(int flowId)
+        public void SelectFlow(int? flowId)
         {
             CurrentHierarchicalMessageWriter.SelectFlow(flowId);
         }

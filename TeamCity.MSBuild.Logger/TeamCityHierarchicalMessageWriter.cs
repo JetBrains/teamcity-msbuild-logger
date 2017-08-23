@@ -9,6 +9,7 @@
     internal class TeamCityHierarchicalMessageWriter : IHierarchicalMessageWriter, ILogWriter, IDisposable
     {
         private const int DefaultFlowId = 0;
+        [NotNull] private readonly Func<IMessageWriter> _messageWriter;
         [NotNull] private readonly Dictionary<int, Flow> _flows = new Dictionary<int, Flow>();
         [NotNull] private readonly IColorTheme _colorTheme;
         private readonly ITeamCityWriter _writer;
@@ -18,44 +19,56 @@
 
         public TeamCityHierarchicalMessageWriter(
             [NotNull] IColorTheme colorTheme,
-            [NotNull] ITeamCityWriter writer)
+            [NotNull] ITeamCityWriter writer,
+            [NotNull] Func<IMessageWriter> messageWriter)
         {
+            _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
             _colorTheme = colorTheme ?? throw new ArgumentNullException(nameof(colorTheme));
             _writer = writer ?? throw new ArgumentNullException(nameof(writer));
         }
 
-        private Flow CurrentFlow
+        private bool TryGetFlow(int flowId, out Flow flow, bool forceCreate)
         {
-            get
+            if (!_flows.TryGetValue(flowId, out flow))
             {
-                if (!_flows.TryGetValue(_flowId, out Flow flow))
+                if (forceCreate)
                 {
-                    flow = new Flow(_writer, _flowId == DefaultFlowId);
+                    flow = new Flow(_writer, flowId == DefaultFlowId);
                     _flows.Add(_flowId, flow);
+                    return true;
                 }
 
-                return flow;
+                return false;
             }
+
+            return true;
         }
 
-        public void SelectFlow(int flowId)
+        public void SelectFlow(int? flowId)
         {
-            _flowId = flowId;
+            _flowId = flowId ?? DefaultFlowId;
         }
 
         public void StartBlock(string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
-            CurrentFlow.StartBlock(name);
+            if (TryGetFlow(_flowId, out Flow flow, true))
+            {
+                flow.StartBlock(_messageWriter().IndentString(name).TrimEnd());
+            }
         }
 
         public void FinishBlock()
         {
-            var flow = CurrentFlow;
-            if (flow.FinishBlock() && !flow.IsDefault)
+            if (TryGetFlow(_flowId, out Flow flow, false))
             {
-                _flows.Remove(_flowId);
-                flow.Dispose();
+                Write("\n", flow);
+                flow.FinishBlock();
+                if (flow.IsFinished)
+                {
+                    _flows.Remove(_flowId);
+                    flow.Dispose();
+                }
             }
         }
 
@@ -66,7 +79,10 @@
                 return;
             }
 
-            Write(message, CurrentFlow);
+            if (TryGetFlow(_flowId, out Flow flow, false) || TryGetFlow(DefaultFlowId, out flow, true))
+            {
+                Write(message, flow);
+            }
         }
 
         public void SetColor(Color color)
@@ -86,6 +102,8 @@
                 Write("\n", flow);
                 flow.Dispose();
             }
+
+            _flows.Clear();
         }
 
         private void Write([NotNull] string message, [NotNull] Flow flow)
@@ -147,14 +165,16 @@
         {
             private ITeamCityWriter _writer;
             private readonly Stack<ITeamCityWriter> _blocks = new Stack<ITeamCityWriter>();
+            private readonly bool _isMainFlow;
 
-            public Flow(ITeamCityWriter writer, bool isDefault)
+            public Flow([NotNull] ITeamCityWriter writer, bool isMainFlow)
             {
-                IsDefault = isDefault;
-                _writer = isDefault ? writer : writer.OpenFlow();
+                if (writer == null) throw new ArgumentNullException(nameof(writer));
+                _isMainFlow = isMainFlow;
+                _writer = isMainFlow ? writer : writer.OpenFlow();
             }
 
-            public bool IsDefault { get; }
+            public bool IsFinished => !_isMainFlow && _blocks.Count == 0;
 
             public void StartBlock(string name)
             {
@@ -163,27 +183,18 @@
                 _writer = newWriter;
             }
 
-            public bool FinishBlock()
+            public void FinishBlock()
             {
-                if (_blocks.Count > 0)
-                {
-                    var prevWriter = _blocks.Pop();
-                    _writer.Dispose();
-                    _writer = prevWriter;
-                }
-
-                return _blocks.Count == 0;
+                var prevWriter = _blocks.Pop();
+                _writer.Dispose();
+                _writer = prevWriter;
             }
 
-            public void Write(string message, MessageState messageState)
+            public void Write([NotNull] string message, MessageState messageState)
             {
+                if (message == null) throw new ArgumentNullException(nameof(message));
                 switch (messageState)
                 {
-                    case MessageState.Normal:
-
-                        _writer.WriteMessage(message);
-                        break;
-
                     case MessageState.Warning:
                         _writer.WriteWarning(message);
                         break;
@@ -191,12 +202,17 @@
                     case MessageState.Error:
                         _writer.WriteError(message);
                         break;
+
+                    default:
+                        _writer.WriteMessage(message);
+                        break;
+
                 }
             }
 
             public void Dispose()
             {
-                if (!IsDefault)
+                if (!_isMainFlow)
                 {
                     _writer.Dispose();
                 }

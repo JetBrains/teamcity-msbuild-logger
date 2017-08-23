@@ -2,7 +2,7 @@
 {
     internal interface IHierarchicalMessageWriter
     {
-        void SelectFlow(int flowId);
+        void SelectFlow([CanBeNull] int? flowId);
 
         void StartBlock([NotNull] string name);
 

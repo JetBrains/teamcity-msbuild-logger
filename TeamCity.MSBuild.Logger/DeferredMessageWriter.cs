@@ -69,12 +69,12 @@ namespace TeamCity.MSBuild.Logger
                 if (string.IsNullOrEmpty(targetNames))
                 {
                     message = _stringService.FormatResourceString("ProjectStartedTopLevelProjectWithDefaultTargets", projectFile, nodeId);
-                    shortName = shortProjectFile;
+                    shortName = $"Project \"{shortProjectFile}\"";
                 }
                 else
                 {
                     message = _stringService.FormatResourceString("ProjectStartedTopLevelProjectWithTargetNames", projectFile, nodeId, targetNames);
-                    shortName = $"{shortProjectFile}: {targetNames}";
+                    shortName = $"Project \"{shortProjectFile}\": {targetNames}";
                 }
 
                 _hierarchicalMessageWriter.StartBlock(shortName);
@@ -88,7 +88,7 @@ namespace TeamCity.MSBuild.Logger
             {
                 if (string.IsNullOrEmpty(targetNames))
                 {
-                    var shortName = shortProjectFile;
+                    var shortName = $"Project \"{shortProjectFile}\"";
                     _hierarchicalMessageWriter.StartBlock(shortName);
 
                     _messageWriter.WriteLinePrefix(parentProjectStartedEvent.FullProjectKey, parentProjectStartedEvent.TimeStamp, false);
@@ -97,7 +97,7 @@ namespace TeamCity.MSBuild.Logger
                 }
                 else
                 {
-                    var shortName = $"{shortProjectFile}: {targetNames}";
+                    var shortName = $"Project \"{shortProjectFile}\": {targetNames}";
                     _hierarchicalMessageWriter.StartBlock(shortName);
 
                     _messageWriter.WriteLinePrefix(parentProjectStartedEvent.FullProjectKey, parentProjectStartedEvent.TimeStamp, false);
@@ -134,7 +134,7 @@ namespace TeamCity.MSBuild.Logger
 
             var projectFile = projectStartedEvent.ProjectFile ?? string.Empty;
             string targetName;
-            var shortTargetName = targetStartedEvent.TargetName;
+            var shortTargetName = $"Target \"{targetStartedEvent.TargetName}\"";
             if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || (_context.Parameters.ShowEventId ?? false))
             {
                 targetName = _stringService.FormatResourceString("TargetMessageWithId", targetStartedEvent.TargetName, targetStartedEvent.TargetBuildEventContext.TargetId);
