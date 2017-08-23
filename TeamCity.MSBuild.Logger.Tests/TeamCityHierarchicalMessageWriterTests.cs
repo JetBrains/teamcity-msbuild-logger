@@ -9,11 +9,17 @@
         private readonly Mock<IColorTheme> _colorTheme;
         private readonly Mock<ITeamCityWriter> _rootWriter;
         private readonly Mock<IMessageWriter> _messageWriter;
+        private readonly Mock<IColorStorage> _colorStorage;
 
         public TeamCityHierarchicalMessageWriterTests()
         {
             _colorTheme = new Mock<IColorTheme>();
             _rootWriter = new Mock<ITeamCityWriter>();
+            _colorStorage = new Mock<IColorStorage>();
+            Color? currentColor = null;
+            _colorStorage.Setup(i => i.SetColor(It.IsAny<Color>())).Callback<Color>(i => currentColor = i);
+            _colorStorage.Setup(i => i.ResetColor()).Callback(() => currentColor = null);
+            _colorStorage.SetupGet(i => i.Color).Returns(() => currentColor);
             _messageWriter = new Mock<IMessageWriter>();
             _messageWriter.Setup(i => i.IndentString(It.IsAny<string>())).Returns<string>(str => str + "\n");
         }
@@ -400,6 +406,7 @@
             return new TeamCityHierarchicalMessageWriter(
                 _colorTheme.Object,
                 _rootWriter.Object,
+                _colorStorage.Object,
                 () => _messageWriter.Object);
         }
     }

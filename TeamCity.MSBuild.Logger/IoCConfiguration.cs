@@ -69,6 +69,9 @@
 
             yield return container.Register()
                 .State<string>(0).Autowiring<IPerformanceCounter, PerformanceCounter>();
+
+            yield return container.Register()
+                .Autowiring<IColorStorage, ColorStorage>();
         }
     }
 }

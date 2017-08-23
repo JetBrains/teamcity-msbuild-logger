@@ -5,14 +5,16 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class AnsiLogWriter : ILogWriter
     {
+        [NotNull] private readonly IColorStorage _colorStorage;
         [NotNull] private readonly IColorTheme _colorTheme;
         [NotNull] private readonly IConsole _defaultConsole;
-        private Color? _currentColor;
 
         public AnsiLogWriter(
             [NotNull] IConsole defaultConsole,
-            [NotNull] IColorTheme colorTheme)
+            [NotNull] IColorTheme colorTheme,
+            [NotNull] IColorStorage colorStorage)
         {
+            _colorStorage = colorStorage ?? throw new ArgumentNullException(nameof(colorStorage));
             _colorTheme = colorTheme ?? throw new ArgumentNullException(nameof(colorTheme));
             _defaultConsole = defaultConsole ?? throw new ArgumentNullException(nameof(defaultConsole));
         }
@@ -24,17 +26,17 @@
                 return;
             }
 
-            (console ?? _defaultConsole).Write(_currentColor.HasValue ? $"\x001B[{_colorTheme.GetAnsiColor(_currentColor.Value)}m{message}" : message);
+            (console ?? _defaultConsole).Write(_colorStorage.Color.HasValue ? $"\x001B[{_colorTheme.GetAnsiColor(_colorStorage.Color.Value)}m{message}" : message);
         }
 
         public void SetColor(Color color)
         {
-            _currentColor = color;
+            _colorStorage.SetColor(color);
         }
 
         public void ResetColor()
         {
-            _currentColor = null;
+            _colorStorage.ResetColor();
         }
     }
 }

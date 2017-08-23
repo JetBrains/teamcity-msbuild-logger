@@ -8,20 +8,22 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class TeamCityHierarchicalMessageWriter : IHierarchicalMessageWriter, ILogWriter, IDisposable
     {
+        [NotNull] private readonly IColorStorage _colorStorage;
         private const int DefaultFlowId = 0;
         [NotNull] private readonly Func<IMessageWriter> _messageWriter;
         [NotNull] private readonly Dictionary<int, Flow> _flows = new Dictionary<int, Flow>();
         [NotNull] private readonly IColorTheme _colorTheme;
         private readonly ITeamCityWriter _writer;
         private readonly Dictionary<Flow, MessageInfo> _messages = new Dictionary<Flow, MessageInfo>();
-        private Color? _currentColor;
         private int _flowId = DefaultFlowId;
 
         public TeamCityHierarchicalMessageWriter(
             [NotNull] IColorTheme colorTheme,
             [NotNull] ITeamCityWriter writer,
+            [NotNull] IColorStorage colorStorage,
             [NotNull] Func<IMessageWriter> messageWriter)
         {
+            _colorStorage = colorStorage ?? throw new ArgumentNullException(nameof(colorStorage));
             _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
             _colorTheme = colorTheme ?? throw new ArgumentNullException(nameof(colorTheme));
             _writer = writer ?? throw new ArgumentNullException(nameof(writer));
@@ -81,18 +83,19 @@
 
             if (TryGetFlow(_flowId, out Flow flow, false) || TryGetFlow(DefaultFlowId, out flow, true))
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
                 Write(message, flow);
             }
         }
 
         public void SetColor(Color color)
         {
-            _currentColor = color;
+            _colorStorage.SetColor(color);
         }
 
         public void ResetColor()
         {
-            _currentColor = null;
+            _colorStorage.ResetColor();
         }
 
         public void Dispose()
@@ -118,7 +121,7 @@
             }
 
             messageInfo.Text.Append(message);
-            messageInfo.Color = _currentColor;
+            messageInfo.Color = _colorStorage.Color;
 
             if (!message.EndsWith("\n"))
             {
