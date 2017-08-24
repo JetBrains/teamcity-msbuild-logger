@@ -5,7 +5,9 @@
     using DevTeam.IoC.Contracts;
     using Microsoft.Build.Framework;
     using EventHandlers;
+    using JetBrains.TeamCity.ServiceMessages.Write;
     using JetBrains.TeamCity.ServiceMessages.Write.Special;
+    using JetBrains.TeamCity.ServiceMessages.Write.Special.Impl.Updater;
 
     internal class IoCConfiguration : IConfiguration
     {
@@ -64,7 +66,10 @@
                 .Contract<ITeamCityWriter>().FactoryMethod(ctx =>
                 {
                     var logWriter = ctx.ResolverContext.Container.Resolve().Tag(ColorMode.NoColor).Instance<ILogWriter>();
-                    return new TeamCityServiceMessages().CreateWriter(str => logWriter.Write(str + "\n"));
+                    return new TeamCityServiceMessages(
+                        new ServiceMessageFormatter(),
+                        new FlowIdGenerator(),
+                        new IServiceMessageUpdater[] { new TimestampUpdater(() => DateTime.Now) }).CreateWriter(str => logWriter.Write(str + "\n"));
                 });
 
             yield return container.Register()
