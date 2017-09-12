@@ -24,7 +24,3 @@ TeamCity Integration is working from-the-box while you are using [TeamCity dotne
 ## License
 
 It is under the [Apache License](LICENSE).
-
-## Contributors
-
-* [Nikolay Pianikov](https://github.com/NikolayPianikov)

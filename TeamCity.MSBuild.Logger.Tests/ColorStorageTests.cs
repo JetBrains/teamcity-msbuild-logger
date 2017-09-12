@@ -42,7 +42,7 @@
             storage.ResetColor();
 
             // Then
-            storage.Color.ShouldBe(Color.Error);
+            storage.Color.ShouldBe(default(Color?));
         }
 
         [Fact]
