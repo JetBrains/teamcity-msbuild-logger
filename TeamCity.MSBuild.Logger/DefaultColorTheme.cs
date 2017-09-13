@@ -17,8 +17,10 @@
                 case Color.Items:
                     return ConsoleColor.Green;
                 case Color.Warning:
+                case Color.WarningSummary:
                     return ConsoleColor.Yellow;
                 case Color.Error:
+                case Color.ErrorSummary:
                     return ConsoleColor.Red;
                 case Color.SummaryInfo:
                     return ConsoleColor.Gray;

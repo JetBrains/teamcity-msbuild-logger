@@ -114,7 +114,7 @@
 
             if (_context.WarningList != null && _context.WarningList.Count > 0)
             {
-                _logWriter.SetColor(Color.Warning);
+                _logWriter.SetColor(Color.WarningSummary);
                 foreach (var warning in _context.WarningList)
                 {
                     _messageWriter.WriteMessageAligned(_eventFormatter.FormatEventMessage(warning, false, _context.Parameters.ShowProjectFile), true);
@@ -123,7 +123,7 @@
 
             if (_context.ErrorList != null && _context.ErrorList.Count > 0)
             {
-                _logWriter.SetColor(Color.Error);
+                _logWriter.SetColor(Color.ErrorSummary);
                 foreach (var error in _context.ErrorList)
                 {
                     _messageWriter.WriteMessageAligned(_eventFormatter.FormatEventMessage(error, false, _context.Parameters.ShowProjectFile), true);
@@ -178,13 +178,13 @@
 
             if (_context.WarningCount > 0)
             {
-                _logWriter.SetColor(Color.Warning);
+                _logWriter.SetColor(Color.WarningSummary);
                 ShowErrorWarningSummary(_context.WarningList);
             }
 
             if (_context.ErrorCount > 0)
             {
-                _logWriter.SetColor(Color.Error);
+                _logWriter.SetColor(Color.ErrorSummary);
                 ShowErrorWarningSummary(_context.ErrorList);
             }
 

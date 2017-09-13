@@ -15,6 +15,7 @@
         [NotNull] private readonly IColorTheme _colorTheme;
         private readonly ITeamCityWriter _writer;
         private readonly Dictionary<Flow, MessageInfo> _messages = new Dictionary<Flow, MessageInfo>();
+        private readonly List<string> _buildProblems = new List<string>();
         private int _flowId = DefaultFlowId;
 
         public TeamCityHierarchicalMessageWriter(
@@ -54,7 +55,7 @@
         public void StartBlock(string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
-            if (TryGetFlow(_flowId, out Flow flow, true))
+            if (TryGetFlow(_flowId, out var flow, true))
             {
                 flow.StartBlock(_messageWriter().IndentString(name).TrimEnd());
             }
@@ -62,7 +63,7 @@
 
         public void FinishBlock()
         {
-            if (TryGetFlow(_flowId, out Flow flow, false))
+            if (TryGetFlow(_flowId, out var flow, false))
             {
                 Write("\n", flow);
                 flow.FinishBlock();
@@ -81,7 +82,7 @@
                 return;
             }
 
-            if (TryGetFlow(_flowId, out Flow flow, false) || TryGetFlow(DefaultFlowId, out flow, true))
+            if (TryGetFlow(_flowId, out var flow, false) || TryGetFlow(DefaultFlowId, out flow, true))
             {
                 // ReSharper disable once AssignNullToNotNullAttribute
                 Write(message, flow);
@@ -102,11 +103,17 @@
         {
             foreach (var flow in _flows.Values)
             {
+                _colorStorage.ResetColor();
                 Write("\n", flow);
                 flow.Dispose();
             }
 
             _flows.Clear();
+            if (_buildProblems.Count > 0)
+            {
+                _writer.WriteBuildProblem("msbuild", string.Join("\n", _buildProblems));
+                _buildProblems.Clear();
+            }
         }
 
         private void Write([NotNull] string message, [NotNull] Flow flow)
@@ -114,7 +121,7 @@
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (flow == null) throw new ArgumentNullException(nameof(flow));
 
-            if (!_messages.TryGetValue(flow, out MessageInfo messageInfo))
+            if (!_messages.TryGetValue(flow, out var messageInfo))
             {
                 messageInfo = new MessageInfo();
                 _messages.Add(flow, messageInfo);
@@ -138,7 +145,12 @@
                         messageState = MessageState.Error;
                         break;
 
+                    case Color.ErrorSummary:
+                        _buildProblems.Add(messageInfo.Text.ToString().TrimEnd());
+                        return;
+
                     case Color.Warning:
+                    case Color.WarningSummary:
                         messageState = MessageState.Warning;
                         break;
                 }

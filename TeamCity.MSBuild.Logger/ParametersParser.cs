@@ -85,12 +85,12 @@
                     parameters.ColorThemeMode = ColorThemeMode.TeamCity;
                     parameters.ForceNoAlign = true;
                     parameters.AlignMessages = false;
+                    parameters.ShowSummary = true;
                     return true;
 
                 case "V":
                 case "VERBOSITY":
-                    LoggerVerbosity verbosity;
-                    if (TryApplyVerbosityParameter(parameterValue, out error, out verbosity))
+                    if (TryApplyVerbosityParameter(parameterValue, out error, out var verbosity))
                     {
                         parameters.Verbosity = verbosity;
                         return true;

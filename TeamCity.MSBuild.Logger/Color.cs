@@ -8,7 +8,11 @@
 
         Warning,
 
+        WarningSummary,
+
         Error,
+
+        ErrorSummary,
 
         Details,
 

@@ -67,6 +67,21 @@
         }
 
         [Fact]
+        public void ShouldSendWarningSummaryAsWarning()
+        {
+            // Given
+            var writer = CreateInstance();
+            writer.SetColor(Color.WarningSummary);
+
+            // When
+            writer.Write("my");
+            writer.Write(" warning\n");
+
+            // Then
+            _rootWriter.Verify(i => i.WriteWarning("my warning"), Times.Once());
+        }
+
+        [Fact]
         public void ShouldSetColor()
         {
             // Given
@@ -144,6 +159,22 @@
 
             // Then
             _rootWriter.Verify(i => i.WriteError("my error", null), Times.Once());
+        }
+
+        [Fact]
+        public void ShouldSendBuildProblemWhenFinished()
+        {
+            // Given
+            var writer = CreateInstance();
+            writer.SetColor(Color.ErrorSummary);
+
+            // When
+            writer.Write("my");
+            writer.Write(" error\n");
+            writer.Dispose();
+
+            // Then
+            _rootWriter.Verify(i => i.WriteBuildProblem("msbuild", "my error"), Times.Once());
         }
 
         [Fact]

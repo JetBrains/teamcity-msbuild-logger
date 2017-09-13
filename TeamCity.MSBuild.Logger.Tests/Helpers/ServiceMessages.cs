@@ -86,6 +86,8 @@
                 MessageAttr = message.GetValue("message");
                 DetailsAttr = message.GetValue("details");
                 TcTagsAttr = message.GetValue("tc:tags");
+                IdentityAttr = message.GetValue("identity");
+                DescriptionAttr = message.GetValue("description");
             }
 
             public string Name { get; }
@@ -109,6 +111,10 @@
             public string DetailsAttr { get; }
 
             public string TcTagsAttr { get; }
+
+            public string IdentityAttr { get; }
+
+            public string DescriptionAttr { get; }
         }
 
         private class Flow
@@ -221,6 +227,11 @@
                         AreEqual(testStartedForTestIgnored.Name, "testStarted", "testIgnored should be within testStarted and testFinished");
                         AreEqual(testStartedForTestIgnored.NameAttr, message.NameAttr, "Invalid Name attribute");
                         // IsNotEmpty(message.MessageAttr, "Message attribute is empty");
+                        break;
+
+                    case "buildProblem":
+                        IsNotEmpty(message.IdentityAttr, "Identity attribute is empty");
+                        IsNotEmpty(message.DescriptionAttr, "Description attribute is empty");
                         break;
 
                     default:
