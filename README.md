@@ -1,5 +1,4 @@
-## MSBuild logger for
-[<img src="https://cdn.worldvectorlogo.com/logos/teamcity.svg"/>](https://www.jetbrains.com/teamcity/)
+## [<img src="http://jb.gg/badges/official.svg" height="20" align="center"/>](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub) MSBuild logger for [<img src="https://cdn.worldvectorlogo.com/logos/teamcity.svg" height="20" align="center"/>](https://www.jetbrains.com/teamcity/)
 
 [<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:TeamCityPluginsByJetBrains_TeamCityDotnetIntegration_TeamCityMSBuildLogger)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_TeamCityDotnetIntegration_TeamCityMSBuildLogger) [<img src="https://www.nuget.org/Content/Logos/nugetlogo.png" height="18">](https://www.nuget.org/packages/TeamCity.Dotnet.Integration/)
 
@@ -10,7 +9,16 @@ Provides the TeamCity integration with [__*.NET CLI*__](https://www.microsoft.co
 ## Supported platforms:
 
 * [.NET CLI](https://www.microsoft.com/net/core)
+
+```
+dotnet build my.csproj /noconsolelogger /l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,path_to_logger\TeamCity.MSBuild.Logger.dll;teamcity
+```
+
 * [MSBuild 12+](https://msdn.microsoft.com/en-US/library/0k6kkbsd.aspx)
+
+```
+msbuild.exe my.csproj /t:build /noconsolelogger /l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,path_to_logger\TeamCity.MSBuild.Logger.dll;teamcity
+```
 
 ## Download
 
