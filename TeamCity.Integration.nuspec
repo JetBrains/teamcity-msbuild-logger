@@ -8,9 +8,9 @@
         <authors>NikolayP</authors>
         <owners>JetBrains</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <licenseUrl>https://github.com/JetBrains/TeamCity.MSBuild.Logger/blob/master/LICENSE</licenseUrl>
+        <licenseUrl>https://github.com/JetBrains/TeamCity.MSBuild.Logger/raw/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/JetBrains/TeamCity.MSBuild.Logger</projectUrl>
-        <iconUrl>https://www.jetbrains.com/_assets//shared/favicons/jetbrains.ico</iconUrl>
+        <iconUrl>https://github.com/JetBrains/TeamCity.MSBuild.Logger/raw/master/icon.png</iconUrl>
         <developmentDependency>true</developmentDependency>
         <copyright>JetBrains</copyright>
         <tags>TeamCity integration</tags>
