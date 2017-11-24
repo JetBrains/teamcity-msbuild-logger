@@ -34,7 +34,7 @@
                 {
                     WorkingDirectory = WorkingDirectory,
                     FileName = ExecutableFile,
-                    Arguments = string.Join(" ", Args.Select(i => $"\"{i}\"").ToArray()),
+                    Arguments = string.Join(" ", Args.Select(NormalizeArg).ToArray()),
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
@@ -86,7 +86,12 @@
 
         public override string ToString()
         {
-            return string.Join(" ", Enumerable.Repeat(ExecutableFile, 1).Concat(Args).Select(i => $"\"{i}\""));
+            return string.Join(" ", Enumerable.Repeat(ExecutableFile, 1).Concat(Args).Select(NormalizeArg));
+        }
+
+        private static string NormalizeArg(string arg)
+        {
+            return arg.Contains(" ") ? "\"{arg}\"" : arg;
         }
     }
 }

@@ -77,11 +77,11 @@
                 $"/m:{processCount}");
 
             // When
-            restoreWithLoggerCommandLine.TryExecute(out CommandLineResult restoreWithLoggerResult).ShouldBe(true);
-            restoreCommandLine.TryExecute(out CommandLineResult restoreResult).ShouldBe(true);
+            restoreWithLoggerCommandLine.TryExecute(out var restoreWithLoggerResult).ShouldBe(true);
+            restoreCommandLine.TryExecute(out var restoreResult).ShouldBe(true);
 
-            buildWithLoggerCommandLine.TryExecute(out CommandLineResult buildWithLoggerResult).ShouldBe(true);
-            buildCommandLine.TryExecute(out CommandLineResult buildResult).ShouldBe(true);
+            buildWithLoggerCommandLine.TryExecute(out var buildWithLoggerResult).ShouldBe(true);
+            buildCommandLine.TryExecute(out var buildResult).ShouldBe(true);
 
             // Then
             restoreWithLoggerResult.ResultShouldBe(restoreResult, producesTeamCityServiceMessages);
