@@ -39,6 +39,10 @@
                     .And().Autowiring<IColorTheme, ColorTheme>()
                     .And().Tag(ColorThemeMode.Default).Autowiring<IColorTheme, DefaultColorTheme>()
                     .And().Tag(ColorThemeMode.TeamCity).Autowiring<IColorTheme, TeamCityColorTheme>()
+                    // IColorTheme
+                    .And().Autowiring<IStatistics, Statistics>()
+                    .And().Tag(StatisticsMode.Default).Autowiring<IStatistics, DefaultStatistics>()
+                    .And().Tag(StatisticsMode.TeamCity).Autowiring<IStatistics, TeamCityStatistics>()
                     // ILogWriter
                     .And().Autowiring<ILogWriter, LogWriter>()
                     .And().Tag(ColorMode.Default).Autowiring<ILogWriter, DefaultLogWriter>()

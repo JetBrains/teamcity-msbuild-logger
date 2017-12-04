@@ -60,5 +60,302 @@ namespace TeamCity.MSBuild.Logger.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1,5}.
+        /// </summary>
+        internal static string BuildEventContext {
+            get {
+                return ResourceManager.GetString("BuildEventContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build started {0}..
+        /// </summary>
+        internal static string BuildStartedWithTime {
+            get {
+                return ResourceManager.GetString("BuildStartedWithTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deferred Messages.
+        /// </summary>
+        internal static string DeferredMessages {
+            get {
+                return ResourceManager.GetString("DeferredMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Environment at start of build:.
+        /// </summary>
+        internal static string EnvironmentHeader {
+            get {
+                return ResourceManager.GetString("EnvironmentHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Error(s).
+        /// </summary>
+        internal static string ErrorCount {
+            get {
+                return ResourceManager.GetString("ErrorCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ({0} target) -&gt; .
+        /// </summary>
+        internal static string ErrorWarningInTarget {
+            get {
+                return ResourceManager.GetString("ErrorWarningInTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial Items:.
+        /// </summary>
+        internal static string ItemListHeader {
+            get {
+                return ResourceManager.GetString("ItemListHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} ms  {1} {2} calls.
+        /// </summary>
+        internal static string PerformanceLine {
+            get {
+                return ResourceManager.GetString("PerformanceLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (* = timing was not recorded because of reentrancy).
+        /// </summary>
+        internal static string PerformanceReentrancyNote {
+            get {
+                return ResourceManager.GetString("PerformanceReentrancyNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done Building Project &quot;{0}&quot; (default targets)..
+        /// </summary>
+        internal static string ProjectFinishedPrefixWithDefaultTargetsMultiProc {
+            get {
+                return ResourceManager.GetString("ProjectFinishedPrefixWithDefaultTargetsMultiProc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done Building Project &quot;{0}&quot; (default targets) -- FAILED..
+        /// </summary>
+        internal static string ProjectFinishedPrefixWithDefaultTargetsMultiProcFailed {
+            get {
+                return ResourceManager.GetString("ProjectFinishedPrefixWithDefaultTargetsMultiProcFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done Building Project &quot;{0}&quot; ({1} target(s))..
+        /// </summary>
+        internal static string ProjectFinishedPrefixWithTargetNamesMultiProc {
+            get {
+                return ResourceManager.GetString("ProjectFinishedPrefixWithTargetNamesMultiProc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done Building Project &quot;{0}&quot; ({1} target(s)) -- FAILED..
+        /// </summary>
+        internal static string ProjectFinishedPrefixWithTargetNamesMultiProcFailed {
+            get {
+                return ResourceManager.GetString("ProjectFinishedPrefixWithTargetNamesMultiProcFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project Performance Summary:.
+        /// </summary>
+        internal static string ProjectPerformanceSummary {
+            get {
+                return ResourceManager.GetString("ProjectPerformanceSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; (default target) ({1}) -&gt;.
+        /// </summary>
+        internal static string ProjectStackWithDefaultTargets {
+            get {
+                return ResourceManager.GetString("ProjectStackWithDefaultTargets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; ({1} target) ({2}) -&gt;.
+        /// </summary>
+        internal static string ProjectStackWithTargetNames {
+            get {
+                return ResourceManager.GetString("ProjectStackWithTargetNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project &quot;{0}&quot; on node {1} (default targets)..
+        /// </summary>
+        internal static string ProjectStartedTopLevelProjectWithDefaultTargets {
+            get {
+                return ResourceManager.GetString("ProjectStartedTopLevelProjectWithDefaultTargets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project &quot;{0}&quot; on node {1} ({2} target(s))..
+        /// </summary>
+        internal static string ProjectStartedTopLevelProjectWithTargetNames {
+            get {
+                return ResourceManager.GetString("ProjectStartedTopLevelProjectWithTargetNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project &quot;{0}&quot; ({1}) is building &quot;{2}&quot; ({3}) on node {4} (default targets)..
+        /// </summary>
+        internal static string ProjectStartedWithDefaultTargetsMultiProc {
+            get {
+                return ResourceManager.GetString("ProjectStartedWithDefaultTargetsMultiProc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project &quot;{0}&quot; ({1}) is building &quot;{2}&quot; ({3}) on node {4} ({5} target(s))..
+        /// </summary>
+        internal static string ProjectStartedWithTargetsMultiProc {
+            get {
+                return ResourceManager.GetString("ProjectStartedWithTargetsMultiProc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial Properties:.
+        /// </summary>
+        internal static string PropertyListHeader {
+            get {
+                return ResourceManager.GetString("PropertyListHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}: (TargetId:{1}).
+        /// </summary>
+        internal static string TargetMessageWithId {
+            get {
+                return ResourceManager.GetString("TargetMessageWithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to     {0}.
+        /// </summary>
+        internal static string TargetOutputItem {
+            get {
+                return ResourceManager.GetString("TargetOutputItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target output items:.
+        /// </summary>
+        internal static string TargetOutputItemsHeader {
+            get {
+                return ResourceManager.GetString("TargetOutputItemsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Performance Summary:.
+        /// </summary>
+        internal static string TargetPerformanceSummary {
+            get {
+                return ResourceManager.GetString("TargetPerformanceSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target &quot;{0}&quot; in file &quot;{1}&quot; from project &quot;{2}&quot; (target &quot;{3}&quot; depends on it):.
+        /// </summary>
+        internal static string TargetStartedFileProjectDepends {
+            get {
+                return ResourceManager.GetString("TargetStartedFileProjectDepends", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target &quot;{0}&quot; in file &quot;{1}&quot; from project &quot;{2}&quot; (entry point):.
+        /// </summary>
+        internal static string TargetStartedFileProjectEntry {
+            get {
+                return ResourceManager.GetString("TargetStartedFileProjectEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target &quot;{0}&quot; in project &quot;{1}&quot; (target &quot;{2}&quot; depends on it):.
+        /// </summary>
+        internal static string TargetStartedProjectDepends {
+            get {
+                return ResourceManager.GetString("TargetStartedProjectDepends", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target &quot;{0}&quot; in project &quot;{1}&quot; (entry point):.
+        /// </summary>
+        internal static string TargetStartedProjectEntry {
+            get {
+                return ResourceManager.GetString("TargetStartedProjectEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (TaskId:{1}).
+        /// </summary>
+        internal static string TaskMessageWithId {
+            get {
+                return ResourceManager.GetString("TaskMessageWithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task Performance Summary:.
+        /// </summary>
+        internal static string TaskPerformanceSummary {
+            get {
+                return ResourceManager.GetString("TaskPerformanceSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Elapsed {0}.
+        /// </summary>
+        internal static string TimeElapsed {
+            get {
+                return ResourceManager.GetString("TimeElapsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Warning(s).
+        /// </summary>
+        internal static string WarningCount {
+            get {
+                return ResourceManager.GetString("WarningCount", resourceCulture);
+            }
+        }
     }
 }

@@ -88,6 +88,8 @@
                 TcTagsAttr = message.GetValue("tc:tags");
                 IdentityAttr = message.GetValue("identity");
                 DescriptionAttr = message.GetValue("description");
+                KeyAttr = message.GetValue("key");
+                ValueAttr = message.GetValue("value");
             }
 
             public string Name { get; }
@@ -115,11 +117,16 @@
             public string IdentityAttr { get; }
 
             public string DescriptionAttr { get; }
+
+            public string KeyAttr { get; }
+
+            public string ValueAttr { get; }
         }
 
         private class Flow
         {
             private readonly Stack<Message> _messages = new Stack<Message>();
+            private readonly HashSet<string> _statistics = new HashSet<string>(StringComparer.CurrentCultureIgnoreCase);
 
             public Flow(string flowId)
             {
@@ -232,6 +239,16 @@
                     case "buildProblem":
                         IsNotEmpty(message.IdentityAttr, "Identity attribute is empty");
                         IsNotEmpty(message.DescriptionAttr, "Description attribute is empty");
+                        break;
+
+                    case "buildStatisticValue":
+                        IsNotEmpty(message.KeyAttr, "Key attribute is empty");
+                        IsNotEmpty(message.ValueAttr, "Value attribute is empty");
+                        if (!_statistics.Add(message.KeyAttr))
+                        {
+                            Fail($"Statistics {message.KeyAttr} already exists");
+                        }
+
                         break;
 
                     default:

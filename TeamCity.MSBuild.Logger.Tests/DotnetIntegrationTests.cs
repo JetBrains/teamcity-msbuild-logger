@@ -1,6 +1,5 @@
 ﻿namespace TeamCity.MSBuild.Logger.Tests
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
@@ -94,7 +93,10 @@
             {
                 File.Delete(globalJsonPath);
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private class TestDataGenerator : IEnumerable<object[]>

@@ -81,6 +81,7 @@
 
                 case "TEAMCITY":
                     parameters.TeamCityMode = TeamCityMode.SupportHierarchy;
+                    parameters.StatisticsMode = StatisticsMode.TeamCity;
                     parameters.ColorMode = ColorMode.TeamCity;
                     parameters.ColorThemeMode = ColorThemeMode.TeamCity;
                     parameters.ForceNoAlign = true;

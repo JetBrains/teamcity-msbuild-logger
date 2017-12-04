@@ -8,6 +8,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class BuildFinishedHandler : IBuildEventHandler<BuildFinishedEventArgs>
     {
+        [NotNull] private readonly IStatistics _statistics;
         [NotNull] private readonly IStringService _stringService;
         [NotNull] private readonly IHierarchicalMessageWriter _hierarchicalMessageWriter;
         [NotNull] private readonly IEventFormatter _eventFormatter;
@@ -25,8 +26,10 @@
             [NotNull] ILogFormatter logFormatter,
             [NotNull] IEventFormatter eventFormatter,
             [NotNull] IHierarchicalMessageWriter hierarchicalMessageWriter,
-            [NotNull] IStringService stringService)
+            [NotNull] IStringService stringService,
+            [NotNull] IStatistics statistics)
         {
+            _statistics = statistics ?? throw new ArgumentNullException(nameof(statistics));
             _stringService = stringService ?? throw new ArgumentNullException(nameof(stringService));
             _hierarchicalMessageWriter = hierarchicalMessageWriter ?? throw new ArgumentNullException(nameof(hierarchicalMessageWriter));
             _eventFormatter = eventFormatter ?? throw new ArgumentNullException(nameof(eventFormatter));
@@ -40,6 +43,9 @@
         public void Handle(BuildFinishedEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
+
+            _statistics.Publish();
+
             if (!_context.Parameters.ShowOnlyErrors && !_context.Parameters.ShowOnlyWarnings && _context.DeferredMessages.Count > 0 && _context.IsVerbosityAtLeast(LoggerVerbosity.Normal))
             {
                 _messageWriter.WriteLinePrettyFromResource("DeferredMessages");
@@ -83,6 +89,7 @@
                 }
 
                 _messageWriter.WriteLinePrettyFromResource(2, "WarningCount", _context.WarningCount);
+
                 _logWriter.ResetColor();
                 if (_context.ErrorCount > 0)
                 {

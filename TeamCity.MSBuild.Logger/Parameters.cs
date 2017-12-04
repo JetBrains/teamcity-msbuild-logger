@@ -40,6 +40,8 @@
 
         public TeamCityMode TeamCityMode { get; set; } = TeamCityMode.Off;
 
+        public StatisticsMode StatisticsMode { get; set; } = StatisticsMode.Default;
+
         public ColorThemeMode ColorThemeMode { get; set; } = ColorThemeMode.Default;
     }
 }
