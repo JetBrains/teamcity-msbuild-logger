@@ -1,7 +1,6 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System.Collections.Generic;
-    using DevTeam.IoC.Contracts;
     using System;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -12,10 +11,10 @@
 
         public LogWriter(
             [NotNull] ILoggerContext context,
-            [NotNull] [Tag(ColorMode.Default)] ILogWriter defaultLogWriter,
-            [NotNull] [Tag(ColorMode.TeamCity)] ILogWriter ansiLogWriter,
-            [NotNull] [Tag(ColorMode.NoColor)] ILogWriter noColorLogWriter,
-            [NotNull] [Tag(ColorMode.AnsiColor)] ILogWriter ansiColorLogWriter)
+            [NotNull] ILogWriter defaultLogWriter,
+            [NotNull] ILogWriter ansiLogWriter,
+            [NotNull] ILogWriter noColorLogWriter,
+            [NotNull] ILogWriter ansiColorLogWriter)
         {
             _logWriters = new Dictionary<ColorMode, ILogWriter>
             {

@@ -20,8 +20,8 @@
 
         public void Publish()
         {
-            _writer.WriteBuildStatistics("BuildStatsW", _context.WarningCount.ToString(CultureInfo.InvariantCulture));
-            _writer.WriteBuildStatistics("BuildStatsE", _context.ErrorCount.ToString(CultureInfo.InvariantCulture));
+            // _writer.WriteBuildStatistics("BuildStatsW", _context.WarningCount.ToString(CultureInfo.InvariantCulture));
+            // _writer.WriteBuildStatistics("BuildStatsE", _context.ErrorCount.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

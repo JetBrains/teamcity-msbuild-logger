@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using DevTeam.IoC.Contracts;
     using Microsoft.Build.Framework;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -17,8 +16,8 @@
         [NotNull] private readonly IPerformanceCounterFactory _performanceCounterFactory;
         private int _calls;
 
-        internal PerformanceCounter(
-            [NotNull] [State] string scopeName,
+        public PerformanceCounter(
+            [NotNull] string scopeName,
             [NotNull] ILogWriter logWriter,
             [NotNull] IPerformanceCounterFactory performanceCounterFactory,
             [NotNull] IMessageWriter messageWriter)

@@ -70,6 +70,7 @@
             process.OutputDataReceived += (sender, args) => { if(args.Data!= null) stdOut.Add(args.Data); };
             process.ErrorDataReceived += (sender, args) => { if(args.Data != null) stdError.Add(args.Data); };
 
+            // ReSharper disable once LocalizableElement
             Console.WriteLine($"Run: {process.StartInfo.FileName} {process.StartInfo.Arguments}");
             if (!process.Start())
             {

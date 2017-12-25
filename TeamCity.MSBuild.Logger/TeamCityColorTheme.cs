@@ -1,7 +1,6 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System;
-    using DevTeam.IoC.Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class TeamCityColorTheme : IColorTheme
@@ -9,7 +8,7 @@
         [NotNull] private readonly IColorTheme _defaultColorTheme;
 
         public TeamCityColorTheme(
-            [NotNull] [Tag(ColorThemeMode.Default)] IColorTheme defaultColorTheme)
+            [NotNull] IColorTheme defaultColorTheme)
         {
             _defaultColorTheme = defaultColorTheme ?? throw new ArgumentNullException(nameof(defaultColorTheme));
         }

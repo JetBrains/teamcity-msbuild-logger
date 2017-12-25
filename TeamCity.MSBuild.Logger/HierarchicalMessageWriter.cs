@@ -1,6 +1,5 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
-    using DevTeam.IoC.Contracts;
     using System;
     using System.Collections.Generic;
 
@@ -12,8 +11,8 @@
 
         public HierarchicalMessageWriter(
             [NotNull] ILoggerContext context,
-            [NotNull] [Tag(TeamCityMode.Off)] IHierarchicalMessageWriter defaultHierarchicalMessageWriter,
-            [NotNull] [Tag(TeamCityMode.SupportHierarchy)] IHierarchicalMessageWriter teamcityHierarchicalMessageWriter)
+            [NotNull] IHierarchicalMessageWriter defaultHierarchicalMessageWriter,
+            [NotNull] IHierarchicalMessageWriter teamcityHierarchicalMessageWriter)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _hierarchicalMessageWriter = new Dictionary<TeamCityMode, IHierarchicalMessageWriter>

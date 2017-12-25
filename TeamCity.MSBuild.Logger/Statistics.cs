@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using DevTeam.IoC.Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class Statistics : IStatistics
@@ -12,8 +11,8 @@
 
         public Statistics(
             [NotNull] ILoggerContext context,
-            [NotNull] [Tag(StatisticsMode.Default)] IStatistics defaultStatistics,
-            [NotNull] [Tag(StatisticsMode.TeamCity)] IStatistics teamcityStatistics)
+            [NotNull] IStatistics defaultStatistics,
+            [NotNull] IStatistics teamcityStatistics)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _statistics = new Dictionary<StatisticsMode, IStatistics>

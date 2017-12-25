@@ -1,6 +1,5 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
-    using DevTeam.IoC.Contracts;
     using System;
     using System.Collections.Generic;
 
@@ -12,8 +11,8 @@
 
         public ColorTheme(
             [NotNull] ILoggerContext context,
-            [NotNull] [Tag(ColorThemeMode.Default)] IColorTheme defaultColorTheme,
-            [NotNull] [Tag(ColorThemeMode.TeamCity)] IColorTheme teamCityColorTheme)
+            [NotNull] IColorTheme defaultColorTheme,
+            [NotNull] IColorTheme teamCityColorTheme)
         {
             _colorThemes = new Dictionary<ColorThemeMode, IColorTheme>
             {
