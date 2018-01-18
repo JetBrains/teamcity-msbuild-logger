@@ -3,24 +3,28 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using JetBrains.TeamCity.ServiceMessages;
+    using JetBrains.TeamCity.ServiceMessages.Read;
     using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class TeamCityHierarchicalMessageWriter : IHierarchicalMessageWriter, ILogWriter, IDisposable
     {
-        [NotNull] private readonly IColorStorage _colorStorage;
         private const int DefaultFlowId = 0;
+        [NotNull] private readonly IColorStorage _colorStorage;
         [NotNull] private readonly Func<IMessageWriter> _messageWriter;
         [NotNull] private readonly Dictionary<int, Flow> _flows = new Dictionary<int, Flow>();
         [NotNull] private readonly IColorTheme _colorTheme;
-        private readonly ITeamCityWriter _writer;
-        private readonly Dictionary<Flow, MessageInfo> _messages = new Dictionary<Flow, MessageInfo>();
-        private readonly List<string> _buildProblems = new List<string>();
+        [NotNull] private readonly ITeamCityWriter _writer;
+        [NotNull] private readonly IServiceMessageParser _serviceMessageParser;
+        [NotNull] private readonly Dictionary<Flow, MessageInfo> _messages = new Dictionary<Flow, MessageInfo>();
+        [NotNull] private readonly List<string> _buildProblems = new List<string>();
         private int _flowId = DefaultFlowId;
 
         public TeamCityHierarchicalMessageWriter(
             [NotNull] IColorTheme colorTheme,
             [NotNull] ITeamCityWriter writer,
+            [NotNull] IServiceMessageParser serviceMessageParser,
             [NotNull] IColorStorage colorStorage,
             [NotNull] Func<IMessageWriter> messageWriter)
         {
@@ -28,6 +32,7 @@
             _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
             _colorTheme = colorTheme ?? throw new ArgumentNullException(nameof(colorTheme));
             _writer = writer ?? throw new ArgumentNullException(nameof(writer));
+            _serviceMessageParser = serviceMessageParser ?? throw new ArgumentNullException(nameof(serviceMessageParser));
         }
 
         private bool TryGetFlow(int flowId, out Flow flow, bool forceCreate)
@@ -157,7 +162,30 @@
             }
 
             var text = messageInfo.Text.ToString().TrimEnd();
-            flow.Write(messageState == MessageState.Normal && messageInfo.Color.HasValue ? $"\x001B[{_colorTheme.GetAnsiColor(messageInfo.Color.Value)}m{text}" : text, messageState);
+
+            // TeamCity service message
+            var hasServiceMessage = false;
+            var trimed = text.TrimStart();
+            if (trimed.StartsWith("##teamcity[", StringComparison.CurrentCultureIgnoreCase))
+            {
+                foreach (var serviceMessage in _serviceMessageParser.ParseServiceMessages(trimed))
+                {
+                    hasServiceMessage = true;
+                    flow.Write(serviceMessage);
+                }
+            }
+            
+
+            // MSBuild output
+            if (!hasServiceMessage)
+            {
+                flow.Write(FormatMessage(messageState, messageInfo, text), messageState);
+            }
+        }
+
+        private string FormatMessage(MessageState messageState, MessageInfo messageInfo, string text)
+        {
+            return messageState == MessageState.Normal && messageInfo.Color.HasValue ? $"\x001B[{_colorTheme.GetAnsiColor(messageInfo.Color.Value)}m{text}" : text;
         }
 
         private enum MessageState
@@ -223,6 +251,12 @@
                         break;
 
                 }
+            }
+
+            public void Write([NotNull] IServiceMessage message)
+            {
+                if (message == null) throw new ArgumentNullException(nameof(message));
+                _writer.WriteRawMessage(message);
             }
 
             public void Dispose()
