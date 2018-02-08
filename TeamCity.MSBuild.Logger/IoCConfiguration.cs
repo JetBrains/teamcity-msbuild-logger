@@ -30,24 +30,40 @@
             yield return container.Bind<IMessageWriter>().Lifetime(Lifetime.Singletone).To<MessageWriter>();
 
             // IColorTheme
-            yield return container.Bind<IColorTheme>().Lifetime(Lifetime.Singletone).To<ColorTheme>(Has.Ref("defaultColorTheme", ColorThemeMode.Default), Has.Ref("teamCityColorTheme", ColorThemeMode.TeamCity));
+            yield return container.Bind<IColorTheme>().Lifetime(Lifetime.Singletone).To<ColorTheme>(
+                ctx => new ColorTheme(ctx.Container.Inject<ILoggerContext>(),
+                    ctx.Container.Inject<IColorTheme>(ColorThemeMode.Default),
+                    ctx.Container.Inject<IColorTheme>(ColorThemeMode.TeamCity)));
             yield return container.Bind<IColorTheme>().Tag(ColorThemeMode.Default).Lifetime(Lifetime.Singletone).To<DefaultColorTheme>();
-            yield return container.Bind<IColorTheme>().Tag(ColorThemeMode.TeamCity).Lifetime(Lifetime.Singletone).To<TeamCityColorTheme>(Has.Ref("defaultColorTheme", ColorThemeMode.Default));
+            yield return container.Bind<IColorTheme>().Tag(ColorThemeMode.TeamCity).Lifetime(Lifetime.Singletone).To<TeamCityColorTheme>(
+                    ctx => new TeamCityColorTheme(ctx.Container.Inject<IColorTheme>(ColorThemeMode.Default)));
 
             // IColorTheme
-            yield return container.Bind<IStatistics>().Lifetime(Lifetime.Singletone).To<Statistics>(Has.Ref("defaultStatistics", StatisticsMode.Default), Has.Ref("teamcityStatistics", StatisticsMode.TeamCity));
+            yield return container.Bind<IStatistics>().Lifetime(Lifetime.Singletone).To<Statistics>(
+                ctx => new Statistics(ctx.Container.Inject<ILoggerContext>(),
+                    ctx.Container.Inject<IStatistics>(StatisticsMode.Default),
+                    ctx.Container.Inject<IStatistics>(StatisticsMode.TeamCity)));
             yield return container.Bind<IStatistics>().Tag(StatisticsMode.Default).Lifetime(Lifetime.Singletone).To<DefaultStatistics>();
             yield return container.Bind<IStatistics>().Tag(StatisticsMode.TeamCity).Lifetime(Lifetime.Singletone).To<TeamCityStatistics>();
 
             // ILogWriter
-            yield return container.Bind<ILogWriter>().Lifetime(Lifetime.Singletone).To<LogWriter>(Has.Ref("defaultLogWriter", ColorMode.Default), Has.Ref("ansiLogWriter", ColorMode.TeamCity), Has.Ref("noColorLogWriter", ColorMode.NoColor), Has.Ref("ansiColorLogWriter", ColorMode.AnsiColor));
+            yield return container.Bind<ILogWriter>().Lifetime(Lifetime.Singletone).To<LogWriter>(
+                ctx => new LogWriter(ctx.Container.Inject<ILoggerContext>(),
+                    ctx.Container.Inject<ILogWriter>(ColorMode.Default),
+                    ctx.Container.Inject<ILogWriter>(ColorMode.TeamCity),
+                    ctx.Container.Inject<ILogWriter>(ColorMode.NoColor),
+                    ctx.Container.Inject<ILogWriter>(ColorMode.AnsiColor)));
             yield return container.Bind<ILogWriter>().Tag(ColorMode.Default).Lifetime(Lifetime.Singletone).To<DefaultLogWriter>();
             yield return container.Bind<TeamCityHierarchicalMessageWriter, ILogWriter, IHierarchicalMessageWriter>().Tag(ColorMode.TeamCity).Tag(TeamCityMode.SupportHierarchy).To();
             yield return container.Bind<ILogWriter>().Tag(ColorMode.NoColor).Lifetime(Lifetime.Singletone).To<NoColorLogWriter>();
             yield return container.Bind<ILogWriter>().Tag(ColorMode.AnsiColor).Lifetime(Lifetime.Singletone).To<AnsiLogWriter>();
 
             // IHierarchicalMessageWriter
-            yield return container.Bind<IHierarchicalMessageWriter>().Lifetime(Lifetime.Singletone).To<HierarchicalMessageWriter>(Has.Ref("defaultHierarchicalMessageWriter", TeamCityMode.Off), Has.Ref("teamcityHierarchicalMessageWriter", TeamCityMode.SupportHierarchy));
+            yield return container.Bind<IHierarchicalMessageWriter>().Lifetime(Lifetime.Singletone).To<HierarchicalMessageWriter>(
+                ctx => new HierarchicalMessageWriter(
+                    ctx.Container.Inject<ILoggerContext>(),
+                    ctx.Container.Inject<IHierarchicalMessageWriter>(TeamCityMode.Off),
+                    ctx.Container.Inject<IHierarchicalMessageWriter>(TeamCityMode.SupportHierarchy)));
             yield return container.Bind<IHierarchicalMessageWriter>().Tag(TeamCityMode.Off).Lifetime(Lifetime.Singletone).To<DefaultHierarchicalMessageWriter>();
 
             // Build event handlers
@@ -64,18 +80,21 @@
             yield return container.Bind<IBuildEventHandler<TaskStartedEventArgs>>().Lifetime(Lifetime.Singletone).To<TaskStartedHandler>();
             yield return container.Bind<IBuildEventHandler<BuildWarningEventArgs>>().Lifetime(Lifetime.Singletone).To<WarningHandler>();
 
-            yield return container.Bind<ITeamCityWriter>().To(ctx =>
-                {
-                    var logWriter = ctx.ResolvingContainer.Tag(ColorMode.NoColor).Get<ILogWriter>();
-                    return new TeamCityServiceMessages(
-                        new ServiceMessageFormatter(),
-                        new FlowIdGenerator(),
-                        new IServiceMessageUpdater[] { new TimestampUpdater(() => DateTime.Now) }).CreateWriter(str => logWriter.Write(str + "\n"));
-                });
-
+            yield return container.Bind<ITeamCityWriter>().To(
+                ctx => CreateWriter(ctx.Container.Inject<ILogWriter>(ColorMode.NoColor)));
+            
             yield return container.Bind<IServiceMessageParser>().To<ServiceMessageParser>();
-            yield return container.Bind<IPerformanceCounter>().To<PerformanceCounter>(Has.Arg("scopeName", 0));
+            yield return container.Bind<IPerformanceCounter>().To<PerformanceCounter>(
+                ctx => new PerformanceCounter((string)ctx.Args[0], ctx.Container.Inject<ILogWriter>(), ctx.Container.Inject<IPerformanceCounterFactory>(), ctx.Container.Inject<IMessageWriter>()));
             yield return container.Bind<IColorStorage>().To<ColorStorage>();
+        }
+
+        private static ITeamCityWriter CreateWriter(ILogWriter writer)
+        {
+            return new TeamCityServiceMessages(
+                new ServiceMessageFormatter(),
+                new FlowIdGenerator(),
+                new IServiceMessageUpdater[] { new TimestampUpdater(() => DateTime.Now) }).CreateWriter(str => writer.Write(str + "\n"));
         }
     }
 }

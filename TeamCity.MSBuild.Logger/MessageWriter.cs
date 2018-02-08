@@ -15,7 +15,6 @@
         private static readonly string[] NewLines = { "\r\n", "\n" };
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly ILogWriter _logWriter;
-        private readonly object _lockObject = new object();
 
         public MessageWriter(
             [NotNull] ILoggerContext context,
@@ -40,30 +39,27 @@
 
         public void WriteMessageAligned(string message, bool prefixAlreadyWritten, int prefixAdjustment = 0)
         {
-            lock (_lockObject)
+            var adjustedPrefixWidth = _context.PrefixWidth + prefixAdjustment;
+            var strArray = SplitStringOnNewLines(message);
+            for (var index = 0; index < strArray.Length; ++index)
             {
-                var adjustedPrefixWidth = _context.PrefixWidth + prefixAdjustment;
-                var strArray = SplitStringOnNewLines(message);
-                for (var index = 0; index < strArray.Length; ++index)
+                var nonNullMessage = strArray[index];
+                var num = _context.Parameters.BufferWidth - 1;
+                if ((num > adjustedPrefixWidth) & (nonNullMessage.Length + adjustedPrefixWidth > num) && _context.Parameters.AlignMessages)
                 {
-                    var nonNullMessage = strArray[index];
-                    var num = _context.Parameters.BufferWidth - 1;
-                    if ((num > adjustedPrefixWidth) & (nonNullMessage.Length + adjustedPrefixWidth > num) && _context.Parameters.AlignMessages)
+                    var str = nonNullMessage.Replace("\t", "        ");
+                    var startIndex = 0;
+                    var length1 = str.Length;
+                    while (startIndex < length1)
                     {
-                        var str = nonNullMessage.Replace("\t", "        ");
-                        var startIndex = 0;
-                        var length1 = str.Length;
-                        while (startIndex < length1)
-                        {
-                            var length2 = length1 - startIndex < num - adjustedPrefixWidth ? length1 - startIndex : num - adjustedPrefixWidth;
-                            WriteBasedOnPrefix(str.Substring(startIndex, length2), prefixAlreadyWritten && startIndex == 0 && index == 0, adjustedPrefixWidth);
-                            startIndex += length2;
-                        }
+                        var length2 = length1 - startIndex < num - adjustedPrefixWidth ? length1 - startIndex : num - adjustedPrefixWidth;
+                        WriteBasedOnPrefix(str.Substring(startIndex, length2), prefixAlreadyWritten && startIndex == 0 && index == 0, adjustedPrefixWidth);
+                        startIndex += length2;
                     }
-                    else
-                    {
-                        WriteBasedOnPrefix(nonNullMessage, prefixAlreadyWritten, adjustedPrefixWidth);
-                    }
+                }
+                else
+                {
+                    WriteBasedOnPrefix(nonNullMessage, prefixAlreadyWritten, adjustedPrefixWidth);
                 }
             }
         }

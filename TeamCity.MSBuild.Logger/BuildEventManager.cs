@@ -25,6 +25,8 @@
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             var projectStartedEvent = GetProjectStartedEvent(e.ParentProjectBuildEventContext);
+            int projectIncrementKey;
+            int entryPointKey;
             lock (_projectStartedEvents)
             {
                 if (_projectStartedEvents.ContainsKey(e.BuildEventContext))
@@ -32,14 +34,14 @@
                     return;
                 }
 
-                if (!_projectKey.TryGetValue(e.ProjectFile, out int projectIncrementKey))
+                if (!_projectKey.TryGetValue(e.ProjectFile, out projectIncrementKey))
                 {
                     _projectIncrementKey = _projectIncrementKey + 1;
                     _projectKey.Add(e.ProjectFile, _projectIncrementKey);
                     projectIncrementKey = _projectIncrementKey;
                 }
 
-                if (!_projectTargetKey.TryGetValue(e.ProjectFile, out int entryPointKey))
+                if (!_projectTargetKey.TryGetValue(e.ProjectFile, out entryPointKey))
                 {
                     _projectTargetKey.Add(e.ProjectFile, 1);
                 }
@@ -47,9 +49,9 @@
                 {
                     _projectTargetKey[e.ProjectFile] = entryPointKey + 1;
                 }
-
-                _projectStartedEvents.Add(e.BuildEventContext, new ProjectStartedEventMinimumFields(projectIncrementKey, entryPointKey, e, projectStartedEvent, requireTimestamp));
             }
+
+            _projectStartedEvents.Add(e.BuildEventContext, new ProjectStartedEventMinimumFields(projectIncrementKey, entryPointKey, e, projectStartedEvent, requireTimestamp));
         }
 
         public void AddTargetStartedEvent(TargetStartedEventArgs e, bool requireTimeStamp)
