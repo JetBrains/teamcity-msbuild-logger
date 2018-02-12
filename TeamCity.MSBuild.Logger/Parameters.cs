@@ -43,5 +43,7 @@
         public StatisticsMode StatisticsMode { get; set; } = StatisticsMode.Default;
 
         public ColorThemeMode ColorThemeMode { get; set; } = ColorThemeMode.Default;
+
+        public bool PlaneServiceMessage { get; set; } = false;
     }
 }

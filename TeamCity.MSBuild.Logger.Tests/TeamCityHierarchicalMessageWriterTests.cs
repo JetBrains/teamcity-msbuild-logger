@@ -1,5 +1,10 @@
 ﻿namespace TeamCity.MSBuild.Logger.Tests
 {
+    using System.Linq;
+    using IoC;
+    using JetBrains.TeamCity.ServiceMessages;
+    using JetBrains.TeamCity.ServiceMessages.Read;
+    using JetBrains.TeamCity.ServiceMessages.Write;
     using JetBrains.TeamCity.ServiceMessages.Write.Special;
     using Moq;
     using Xunit;
@@ -10,12 +15,14 @@
         private readonly Mock<ITeamCityWriter> _rootWriter;
         private readonly Mock<IMessageWriter> _messageWriter;
         private readonly Mock<IColorStorage> _colorStorage;
+        private readonly Mock<IServiceMessageParser> _serviceMessageParser;
 
         public TeamCityHierarchicalMessageWriterTests()
         {
             _colorTheme = new Mock<IColorTheme>();
             _rootWriter = new Mock<ITeamCityWriter>();
             _colorStorage = new Mock<IColorStorage>();
+            _serviceMessageParser = new Mock<IServiceMessageParser>();
             Color? currentColor = null;
             _colorStorage.Setup(i => i.SetColor(It.IsAny<Color>())).Callback<Color>(i => currentColor = i);
             _colorStorage.Setup(i => i.ResetColor()).Callback(() => currentColor = null);
@@ -49,6 +56,43 @@
 
             // Then
             _rootWriter.Verify(i => i.WriteMessage("my message"), Times.Once());
+        }
+
+        [Theory]
+        [InlineData("##teamcity[abc")]
+        [InlineData("##teamcity[abc]  ")]
+        [InlineData(" ##teamcity[abc")]
+        [InlineData("    ##teamcity[abc")]
+        [InlineData(" ##TeamCity[Abc")]
+        public void ShouldNotCreateNestedServiceMessage(string serviceMessage)
+        {
+            // Given
+            var writer = CreateInstance(new Parameters {PlaneServiceMessage = true});
+            var serviceMessage1 = new ServiceMessage("message");
+            var serviceMessage2 = new ServiceMessage("publishArtifacts");
+            _serviceMessageParser.Setup(i => i.ParseServiceMessages(serviceMessage.Trim())).Returns(new IServiceMessage[] { serviceMessage1, serviceMessage2 });
+
+            // When
+            writer.Write(serviceMessage + "\n");
+
+            // Then
+            _rootWriter.Verify(i => i.WriteMessage(It.IsAny<string>()), Times.Never);
+            _rootWriter.Verify(i => i.WriteRawMessage(It.IsAny<IServiceMessage>()), Times.Exactly(2));
+        }
+
+        [Fact]
+        public void ShouldSendMessageAsIsWhenCanntoParseAnyServiceMessages()
+        {
+            // Given
+            var writer = CreateInstance();
+            var serviceMessage = "##teamcity[abc]";
+            _serviceMessageParser.Setup(i => i.ParseServiceMessages(serviceMessage.Trim())).Returns(Enumerable.Empty<IServiceMessage>());
+
+            // When
+            writer.Write(serviceMessage + "\n");
+
+            // Then
+            _rootWriter.Verify(i => i.WriteMessage(serviceMessage), Times.Once());
         }
 
         [Fact]
@@ -432,11 +476,15 @@
             _rootWriter.Verify(i => i.WriteMessage("abc 3"), Times.Once);
         }
 
-        private TeamCityHierarchicalMessageWriter CreateInstance()
+        private TeamCityHierarchicalMessageWriter CreateInstance([CanBeNull] Parameters parameters = null)
         {
+            var loggerContext = new Mock<ILoggerContext>();
+            loggerContext.SetupGet(i => i.Parameters).Returns(parameters ?? new Parameters());
             return new TeamCityHierarchicalMessageWriter(
+                loggerContext.Object,
                 _colorTheme.Object,
                 _rootWriter.Object,
+                _serviceMessageParser.Object,
                 _colorStorage.Object,
                 () => _messageWriter.Object);
         }

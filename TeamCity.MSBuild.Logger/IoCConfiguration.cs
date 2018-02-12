@@ -5,6 +5,7 @@
     using Microsoft.Build.Framework;
     using EventHandlers;
     using IoC;
+    using JetBrains.TeamCity.ServiceMessages.Read;
     using JetBrains.TeamCity.ServiceMessages.Write;
     using JetBrains.TeamCity.ServiceMessages.Write.Special;
     using JetBrains.TeamCity.ServiceMessages.Write.Special.Impl.Updater;
@@ -72,6 +73,7 @@
                         new IServiceMessageUpdater[] { new TimestampUpdater(() => DateTime.Now) }).CreateWriter(str => logWriter.Write(str + "\n"));
                 });
 
+            yield return container.Bind<IServiceMessageParser>().To<ServiceMessageParser>();
             yield return container.Bind<IPerformanceCounter>().To<PerformanceCounter>(Has.Arg("scopeName", 0));
             yield return container.Bind<IColorStorage>().To<ColorStorage>();
         }
