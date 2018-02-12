@@ -115,8 +115,8 @@
                     return true;
 
                 // Do not use nested TeamCity service messages
-                case "PLANE":
-                    parameters.PlaneServiceMessage = true;
+                case "PLAIN":
+                    parameters.PlainServiceMessage = true;
                     return true;
 
                 case "SHOWPROJECTFILE":

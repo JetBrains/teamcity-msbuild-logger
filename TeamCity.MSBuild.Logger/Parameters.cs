@@ -44,6 +44,6 @@
 
         public ColorThemeMode ColorThemeMode { get; set; } = ColorThemeMode.Default;
 
-        public bool PlaneServiceMessage { get; set; } = false;
+        public bool PlainServiceMessage { get; set; } = false;
     }
 }

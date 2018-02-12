@@ -166,7 +166,7 @@
 
             var text = messageInfo.Text.ToString().TrimEnd();
             var hasServiceMessage = false;
-            if (_context.Parameters.PlaneServiceMessage)
+            if (_context.Parameters.PlainServiceMessage)
             {
 
                 // TeamCity service message

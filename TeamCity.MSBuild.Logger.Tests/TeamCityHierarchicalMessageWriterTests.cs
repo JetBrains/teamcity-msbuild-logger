@@ -67,7 +67,7 @@
         public void ShouldNotCreateNestedServiceMessage(string serviceMessage)
         {
             // Given
-            var writer = CreateInstance(new Parameters {PlaneServiceMessage = true});
+            var writer = CreateInstance(new Parameters {PlainServiceMessage = true});
             var serviceMessage1 = new ServiceMessage("message");
             var serviceMessage2 = new ServiceMessage("publishArtifacts");
             _serviceMessageParser.Setup(i => i.ParseServiceMessages(serviceMessage.Trim())).Returns(new IServiceMessage[] { serviceMessage1, serviceMessage2 });
