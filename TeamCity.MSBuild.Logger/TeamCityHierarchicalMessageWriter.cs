@@ -11,6 +11,7 @@
     internal class TeamCityHierarchicalMessageWriter : IHierarchicalMessageWriter, ILogWriter, IDisposable
     {
         private const int DefaultFlowId = 0;
+        [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IColorStorage _colorStorage;
         [NotNull] private readonly Func<IMessageWriter> _messageWriter;
         [NotNull] private readonly Dictionary<int, Flow> _flows = new Dictionary<int, Flow>();
@@ -22,12 +23,14 @@
         private int _flowId = DefaultFlowId;
 
         public TeamCityHierarchicalMessageWriter(
+            [NotNull] ILoggerContext context,
             [NotNull] IColorTheme colorTheme,
             [NotNull] ITeamCityWriter writer,
             [NotNull] IServiceMessageParser serviceMessageParser,
             [NotNull] IColorStorage colorStorage,
             [NotNull] Func<IMessageWriter> messageWriter)
         {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _colorStorage = colorStorage ?? throw new ArgumentNullException(nameof(colorStorage));
             _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
             _colorTheme = colorTheme ?? throw new ArgumentNullException(nameof(colorTheme));
@@ -162,19 +165,21 @@
             }
 
             var text = messageInfo.Text.ToString().TrimEnd();
-
-            // TeamCity service message
             var hasServiceMessage = false;
-            var trimed = text.TrimStart();
-            if (trimed.StartsWith("##teamcity[", StringComparison.CurrentCultureIgnoreCase))
+            if (_context.Parameters.PlaneServiceMessage)
             {
-                foreach (var serviceMessage in _serviceMessageParser.ParseServiceMessages(trimed))
+
+                // TeamCity service message
+                var trimed = text.TrimStart();
+                if (trimed.StartsWith("##teamcity[", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    hasServiceMessage = true;
-                    flow.Write(serviceMessage);
+                    foreach (var serviceMessage in _serviceMessageParser.ParseServiceMessages(trimed))
+                    {
+                        hasServiceMessage = true;
+                        flow.Write(serviceMessage);
+                    }
                 }
             }
-            
 
             // MSBuild output
             if (!hasServiceMessage)

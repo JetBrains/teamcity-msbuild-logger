@@ -114,6 +114,11 @@
                     parameters.ShowOnlyErrors = true;
                     return true;
 
+                // Do not use nested TeamCity service messages
+                case "PLANE":
+                    parameters.PlaneServiceMessage = true;
+                    return true;
+
                 case "SHOWPROJECTFILE":
                     parameters.ShowProjectFile = parameterValue == null || (parameterValue.Length == 0 || parameterValue.ToUpperInvariant() == "TRUE");
                     return true;

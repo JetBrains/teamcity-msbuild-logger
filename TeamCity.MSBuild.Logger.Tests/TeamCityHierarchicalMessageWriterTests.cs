@@ -1,6 +1,7 @@
 ﻿namespace TeamCity.MSBuild.Logger.Tests
 {
     using System.Linq;
+    using IoC;
     using JetBrains.TeamCity.ServiceMessages;
     using JetBrains.TeamCity.ServiceMessages.Read;
     using JetBrains.TeamCity.ServiceMessages.Write;
@@ -66,7 +67,7 @@
         public void ShouldNotCreateNestedServiceMessage(string serviceMessage)
         {
             // Given
-            var writer = CreateInstance();
+            var writer = CreateInstance(new Parameters {PlaneServiceMessage = true});
             var serviceMessage1 = new ServiceMessage("message");
             var serviceMessage2 = new ServiceMessage("publishArtifacts");
             _serviceMessageParser.Setup(i => i.ParseServiceMessages(serviceMessage.Trim())).Returns(new IServiceMessage[] { serviceMessage1, serviceMessage2 });
@@ -475,9 +476,12 @@
             _rootWriter.Verify(i => i.WriteMessage("abc 3"), Times.Once);
         }
 
-        private TeamCityHierarchicalMessageWriter CreateInstance()
+        private TeamCityHierarchicalMessageWriter CreateInstance([CanBeNull] Parameters parameters = null)
         {
+            var loggerContext = new Mock<ILoggerContext>();
+            loggerContext.SetupGet(i => i.Parameters).Returns(parameters ?? new Parameters());
             return new TeamCityHierarchicalMessageWriter(
+                loggerContext.Object,
                 _colorTheme.Object,
                 _rootWriter.Object,
                 _serviceMessageParser.Object,
