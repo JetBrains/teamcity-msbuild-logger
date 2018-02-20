@@ -170,9 +170,8 @@
 
             try
             {
-                lock (_lockObject)
+                using (new HierarchicalContext(e.BuildEventContext?.NodeId ?? 0))
                 {
-                    _hierarchicalMessageWriter().SelectFlow(e.BuildEventContext?.NodeId ?? 0);
                     handler.Handle(e);
                 }
             }

@@ -282,11 +282,13 @@
         {
             // Given
             var writer = CreateInstance();
-            
+
             // When
-            writer.SelectFlow(2);
-            writer.Write("my");
-            writer.Dispose();
+            using (new HierarchicalContext(2))
+            {
+                writer.Write("my");
+                writer.Dispose();
+            }
 
             // Then
             _rootWriter.Verify(i => i.WriteMessage("my"), Times.Once());
@@ -342,10 +344,12 @@
             flow1Writer.Setup(i => i.OpenBlock("block1")).Returns(block1Writer.Object);
 
             // When
-            writer.SelectFlow(10);
-            writer.StartBlock("block1");
-            writer.Write("my");
-            writer.FinishBlock();
+            using (new HierarchicalContext(10))
+            {
+                writer.StartBlock("block1");
+                writer.Write("my");
+                writer.FinishBlock();
+            }
 
             // Then
             block1Writer.Verify(i => i.WriteMessage("my"), Times.Once());
@@ -362,12 +366,14 @@
             flow1Writer.Setup(i => i.OpenBlock("block1")).Returns(block1Writer.Object);
 
             // When
-            writer.SelectFlow(10);
-            writer.StartBlock("block1");
-            writer.Write("my");
-            writer.Write(" message\n");
-            writer.Write("abc\n");
-            writer.FinishBlock();
+            using (new HierarchicalContext(10))
+            {
+                writer.StartBlock("block1");
+                writer.Write("my");
+                writer.Write(" message\n");
+                writer.Write("abc\n");
+                writer.FinishBlock();
+            }
 
             // Then
             _rootWriter.Verify(i => i.OpenFlow(), Times.Once());
@@ -388,12 +394,16 @@
             flow2Writer.Setup(i => i.OpenBlock("block1")).Returns(block1Writer.Object);
 
             // When
-            writer.SelectFlow(2);
-            writer.Write("abc 2\n");
-            writer.SelectFlow(3);
-            writer.StartBlock("block1");
-            writer.Write("abc 3\n");
-            writer.FinishBlock();
+            using (new HierarchicalContext(2))
+            {
+                writer.Write("abc 2\n");
+                using (new HierarchicalContext(3))
+                {
+                    writer.StartBlock("block1");
+                    writer.Write("abc 3\n");
+                    writer.FinishBlock();
+                }
+            }
 
             // Then
             _rootWriter.Verify(i => i.OpenFlow(), Times.Exactly(1));
@@ -402,7 +412,7 @@
         }
 
         [Fact]
-        public void ShouldCloseFlowWhenHasNotClosedBlock()
+        public void ShouldCloseFlowWhenHasNoClosedBlock()
         {
             // Given
             var writer = CreateInstance();
@@ -416,12 +426,17 @@
             block1Writer.Setup(i => i.OpenBlock("block2")).Returns(block2Writer.Object);
 
             // When
-            writer.SelectFlow(2);
-            writer.Write("abc 2\n");
-            writer.SelectFlow(3);
-            writer.StartBlock("block1");
-            writer.Write("abc 3\n");
-            writer.StartBlock("block2");
+            using (new HierarchicalContext(2))
+            {
+                writer.Write("abc 2\n");
+                using (new HierarchicalContext(3))
+                {
+                    writer.StartBlock("block1");
+                    writer.Write("abc 3\n");
+                    writer.StartBlock("block2");
+                }
+            }
+
             writer.FinishBlock();
 
             // Then
@@ -439,15 +454,17 @@
             _rootWriter.Setup(i => i.OpenFlow()).Returns(flow2Writer.Object);
             var block1Writer = new Mock<ITeamCityWriter>();
             flow2Writer.Setup(i => i.OpenBlock("block1")).Returns(block1Writer.Object);
-            
+
             // When
-            writer.SelectFlow(3);
-            writer.StartBlock("block1");
-            writer.Write("abc 3\n");
-            writer.FinishBlock();
-            writer.FinishBlock();
-            writer.FinishBlock();
-            writer.FinishBlock();
+            using (new HierarchicalContext(3))
+            {
+                writer.StartBlock("block1");
+                writer.Write("abc 3\n");
+                writer.FinishBlock();
+                writer.FinishBlock();
+                writer.FinishBlock();
+                writer.FinishBlock();
+            }
 
             // Then
             _rootWriter.Verify(i => i.OpenFlow(), Times.Once);
@@ -465,10 +482,15 @@
             _rootWriter.Setup(i => i.OpenFlow()).Returns(flow2Writer.Object);
 
             // When
-            writer.SelectFlow(2);
-            writer.Write("abc 2\n");
-            writer.SelectFlow(3);
-            writer.Write("abc 3\n");
+            using (new HierarchicalContext(2))
+            {
+                writer.Write("abc 2\n");
+            }
+
+            using (new HierarchicalContext(3))
+            {
+                writer.Write("abc 3\n");
+            }
 
             // Then
             _rootWriter.Verify(i => i.OpenFlow(), Times.Never);

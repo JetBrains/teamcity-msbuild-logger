@@ -24,11 +24,6 @@
 
         private IHierarchicalMessageWriter CurrentHierarchicalMessageWriter => _hierarchicalMessageWriter[_context.Parameters?.TeamCityMode ?? TeamCityMode.Off];
 
-        public void SelectFlow(int? flowId)
-        {
-            CurrentHierarchicalMessageWriter.SelectFlow(flowId);
-        }
-
         public void StartBlock(string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));

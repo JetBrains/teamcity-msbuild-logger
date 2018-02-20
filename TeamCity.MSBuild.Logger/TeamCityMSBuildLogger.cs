@@ -10,13 +10,14 @@
         private readonly INodeLogger _logger;
 
         public TeamCityMsBuildLogger()
-            :this(Container.Create().Using(new IoCConfiguration()))
+            :this(Container.Create().Using<IoCConfiguration>())
         {
         }
 
         public TeamCityMsBuildLogger(IContainer container)
         {
             _container = container;
+            container.Validate();
             _logger = _container.Get<INodeLogger>();
         }
 

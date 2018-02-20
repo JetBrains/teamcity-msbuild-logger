@@ -1,4 +1,3 @@
-rem SET Build_Number=42
-nuget restore
-msbuild build.proj /t:Build;Publish;Test /p:Configuration=Debug
-rem msbuild build.proj /t:Build;Publish;Test /p:Configuration=Release
+rem nuget restore
+dotnet restore TeamCity.MSBuild.Logger.sln
+dotnet msbuild build.proj /t:Build;Publish /p:Configuration=Debug

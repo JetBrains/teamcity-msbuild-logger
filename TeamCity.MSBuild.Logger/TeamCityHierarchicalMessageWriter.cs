@@ -10,7 +10,6 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class TeamCityHierarchicalMessageWriter : IHierarchicalMessageWriter, ILogWriter, IDisposable
     {
-        private const int DefaultFlowId = 0;
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IColorStorage _colorStorage;
         [NotNull] private readonly Func<IMessageWriter> _messageWriter;
@@ -20,7 +19,8 @@
         [NotNull] private readonly IServiceMessageParser _serviceMessageParser;
         [NotNull] private readonly Dictionary<Flow, MessageInfo> _messages = new Dictionary<Flow, MessageInfo>();
         [NotNull] private readonly List<string> _buildProblems = new List<string>();
-        private int _flowId = DefaultFlowId;
+
+        private int FlowId => HierarchicalContext.Current.FlowId;
 
         public TeamCityHierarchicalMessageWriter(
             [NotNull] ILoggerContext context,
@@ -44,8 +44,8 @@
             {
                 if (forceCreate)
                 {
-                    flow = new Flow(_writer, flowId == DefaultFlowId);
-                    _flows.Add(_flowId, flow);
+                    flow = new Flow(_writer, flowId == HierarchicalContext.DefaultFlowId);
+                    _flows.Add(FlowId, flow);
                     return true;
                 }
 
@@ -55,15 +55,10 @@
             return true;
         }
 
-        public void SelectFlow(int? flowId)
-        {
-            _flowId = flowId ?? DefaultFlowId;
-        }
-
         public void StartBlock(string name)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
-            if (TryGetFlow(_flowId, out var flow, true))
+            if (TryGetFlow(FlowId, out var flow, true))
             {
                 flow.StartBlock(_messageWriter().IndentString(name).TrimEnd());
             }
@@ -71,13 +66,13 @@
 
         public void FinishBlock()
         {
-            if (TryGetFlow(_flowId, out var flow, false))
+            if (TryGetFlow(FlowId, out var flow, false))
             {
                 Write("\n", flow);
                 flow.FinishBlock();
                 if (flow.IsFinished)
                 {
-                    _flows.Remove(_flowId);
+                    _flows.Remove(FlowId);
                     flow.Dispose();
                 }
             }
@@ -90,7 +85,7 @@
                 return;
             }
 
-            if (TryGetFlow(_flowId, out var flow, false) || TryGetFlow(DefaultFlowId, out flow, true))
+            if (TryGetFlow(FlowId, out var flow, false) || TryGetFlow(HierarchicalContext.DefaultFlowId, out flow, true))
             {
                 // ReSharper disable once AssignNullToNotNullAttribute
                 Write(message, flow);
