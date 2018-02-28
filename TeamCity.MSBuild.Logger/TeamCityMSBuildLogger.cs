@@ -17,8 +17,7 @@
         public TeamCityMsBuildLogger(IContainer container)
         {
             _container = container;
-            container.Validate();
-            _logger = _container.Get<INodeLogger>();
+            _logger = _container.Resolve<INodeLogger>();
         }
 
         public string Parameters

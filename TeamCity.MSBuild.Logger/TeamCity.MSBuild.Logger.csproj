@@ -4,6 +4,10 @@
     <TargetFrameworks>netcoreapp1.0;net452;net45</TargetFrameworks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp1.0|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
     <PackageReference Include="Microsoft.Build.Framework">
       <Version>15.1.1012</Version>
@@ -23,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IoC.Container" Version="1.1.0-beta146" />
+    <PackageReference Include="IoC.Container.Source" Version="1.1.0-beta222" />
     <PackageReference Include="TeamCity.ServiceMessages" Version="3.0.10" />
   </ItemGroup>
 

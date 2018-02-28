@@ -12,7 +12,7 @@
             <AssemblyVersion>$(PackageVersion).$(Build_Number)</AssemblyVersion>
         </PropertyGroup>
 
-        <MSBuild Projects="TeamCity.MSBuild.Logger.sln" Targets="Restore;Rebuild" Properties="Configuration=$(Configuration);AssemblyVersion=$(AssemblyVersion)"/>
+        <MSBuild Projects="TeamCity.MSBuild.Logger.sln" Targets="Clean;Restore;Rebuild" Properties="Configuration=$(Configuration);AssemblyVersion=$(AssemblyVersion)"/>
     </Target>
 
     <Target Name="Test">
