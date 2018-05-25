@@ -55,7 +55,7 @@
                     ctx.Container.Inject<ILogWriter>(ColorMode.NoColor),
                     ctx.Container.Inject<ILogWriter>(ColorMode.AnsiColor)));
             yield return container.Bind<ILogWriter>().Tag(ColorMode.Default).As(Singleton).To<DefaultLogWriter>();
-            yield return container.Bind<TeamCityHierarchicalMessageWriter, ILogWriter, IHierarchicalMessageWriter>().Tag(ColorMode.TeamCity).Tag(TeamCityMode.SupportHierarchy).To();
+            yield return container.Bind<TeamCityHierarchicalMessageWriter, ILogWriter, IHierarchicalMessageWriter>().As(Singleton).Tag(ColorMode.TeamCity).Tag(TeamCityMode.SupportHierarchy).To();
             yield return container.Bind<ILogWriter>().Tag(ColorMode.NoColor).As(Singleton).To<NoColorLogWriter>();
             yield return container.Bind<ILogWriter>().Tag(ColorMode.AnsiColor).As(Singleton).To<AnsiLogWriter>();
 
@@ -84,7 +84,7 @@
             yield return container.Bind<ITeamCityWriter>().To(
                 ctx => CreateWriter(ctx.Container.Inject<ILogWriter>(ColorMode.NoColor)));
             
-            yield return container.Bind<IServiceMessageParser>().To<ServiceMessageParser>();
+            yield return container.Bind<IServiceMessageParser>().As(Singleton).To<ServiceMessageParser>();
             yield return container.Bind<IPerformanceCounter>().To<PerformanceCounter>(
                 ctx => new PerformanceCounter((string)ctx.Args[0], ctx.Container.Inject<ILogWriter>(), ctx.Container.Inject<IPerformanceCounterFactory>(), ctx.Container.Inject<IMessageWriter>()));
             yield return container.Bind<IColorStorage>().To<ColorStorage>();

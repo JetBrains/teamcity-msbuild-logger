@@ -9,7 +9,6 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class NodeLogger : INodeLogger
     {
-        [NotNull] private readonly Func<IHierarchicalMessageWriter> _hierarchicalMessageWriter;
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IBuildEventHandler<BuildMessageEventArgs> _messageHandler;
         [NotNull] private readonly IBuildEventHandler<BuildFinishedEventArgs> _buildFinishedHandler;
@@ -32,7 +31,6 @@
             [NotNull] IParametersParser parametersParser,
             [NotNull] ILogWriter logWriter,
             [NotNull] ILoggerContext context,
-            [NotNull] Func<IHierarchicalMessageWriter> hierarchicalMessageWriter,
             [NotNull] IBuildEventHandler<BuildStartedEventArgs> buildStartedHandler,
             [NotNull] IBuildEventHandler<BuildMessageEventArgs> messageHandler,
             [NotNull] IBuildEventHandler<BuildFinishedEventArgs> buildFinishedHandler,
@@ -46,7 +44,6 @@
             [NotNull] IBuildEventHandler<BuildWarningEventArgs> warningHandler,
             [NotNull] IBuildEventHandler<CustomBuildEventArgs> customEventHandler)
         {
-            _hierarchicalMessageWriter = hierarchicalMessageWriter ?? throw new ArgumentNullException(nameof(hierarchicalMessageWriter));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _parametersParser = parametersParser ?? throw new ArgumentNullException(nameof(parametersParser));
             _logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
@@ -170,9 +167,12 @@
 
             try
             {
-                using (new HierarchicalContext(e.BuildEventContext?.NodeId ?? 0))
+                lock (_lockObject)
                 {
-                    handler.Handle(e);
+                    using (new HierarchicalContext(e.BuildEventContext?.NodeId ?? 0))
+                    {
+                        handler.Handle(e);
+                    }
                 }
             }
             catch (Exception ex)

@@ -12,7 +12,6 @@
     {
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IColorStorage _colorStorage;
-        [NotNull] private readonly Func<IMessageWriter> _messageWriter;
         [NotNull] private readonly Dictionary<int, Flow> _flows = new Dictionary<int, Flow>();
         [NotNull] private readonly IColorTheme _colorTheme;
         [NotNull] private readonly ITeamCityWriter _writer;
@@ -20,19 +19,17 @@
         [NotNull] private readonly Dictionary<Flow, MessageInfo> _messages = new Dictionary<Flow, MessageInfo>();
         [NotNull] private readonly List<string> _buildProblems = new List<string>();
 
-        private int FlowId => HierarchicalContext.Current.FlowId;
+        private static int FlowId => HierarchicalContext.Current.FlowId;
 
         public TeamCityHierarchicalMessageWriter(
             [NotNull] ILoggerContext context,
             [NotNull] IColorTheme colorTheme,
             [NotNull] ITeamCityWriter writer,
             [NotNull] IServiceMessageParser serviceMessageParser,
-            [NotNull] IColorStorage colorStorage,
-            [NotNull] Func<IMessageWriter> messageWriter)
+            [NotNull] IColorStorage colorStorage)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _colorStorage = colorStorage ?? throw new ArgumentNullException(nameof(colorStorage));
-            _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
             _colorTheme = colorTheme ?? throw new ArgumentNullException(nameof(colorTheme));
             _writer = writer ?? throw new ArgumentNullException(nameof(writer));
             _serviceMessageParser = serviceMessageParser ?? throw new ArgumentNullException(nameof(serviceMessageParser));
@@ -60,7 +57,7 @@
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (TryGetFlow(FlowId, out var flow, true))
             {
-                flow.StartBlock(_messageWriter().IndentString(name).TrimEnd());
+                flow.StartBlock(name.Trim());
             }
         }
 
@@ -249,7 +246,6 @@
                     default:
                         _writer.WriteMessage(message);
                         break;
-
                 }
             }
 
