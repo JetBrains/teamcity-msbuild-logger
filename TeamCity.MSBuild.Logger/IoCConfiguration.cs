@@ -39,7 +39,7 @@
             yield return container.Bind<IColorTheme>().Tag(ColorThemeMode.TeamCity).As(Singleton).To<TeamCityColorTheme>(
                     ctx => new TeamCityColorTheme(ctx.Container.Inject<IColorTheme>(ColorThemeMode.Default)));
 
-            // IColorTheme
+            // IStatistics
             yield return container.Bind<IStatistics>().As(Singleton).To<Statistics>(
                 ctx => new Statistics(ctx.Container.Inject<ILoggerContext>(),
                     ctx.Container.Inject<IStatistics>(StatisticsMode.Default),
