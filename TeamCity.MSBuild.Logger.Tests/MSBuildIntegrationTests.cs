@@ -1,5 +1,6 @@
 ﻿namespace TeamCity.MSBuild.Logger.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using Helpers;
@@ -37,6 +38,9 @@
             bool producesTeamCityServiceMessages)
         {
             // Given
+            Console.WriteLine();
+            Console.WriteLine($@"Run: framework={framework}, processCount={processCount}, verbosity={verbosity}");
+
             var environmentVariables = new Dictionary<string, string>();
             var loggerString = framework.CreateLoggerString(parameters);
             var projectPath = Path.GetFullPath(Path.Combine(CommandLine.WorkingDirectory, @"IntegrationTests\Console\Console.csproj"));
@@ -75,11 +79,17 @@
                 $"/m:{processCount}");
 
             // When
-            restoreWithLoggerCommandLine.TryExecute(out var restoreWithLoggerResult).ShouldBe(true);
-            restoreCommandLine.TryExecute(out var restoreResult).ShouldBe(true);
+            Console.WriteLine();
+            Console.WriteLine(@"Without TeamCity logger");
 
-            buildWithLoggerCommandLine.TryExecute(out var buildWithLoggerResult).ShouldBe(true);
+            restoreWithLoggerCommandLine.TryExecute(out var restoreWithLoggerResult).ShouldBe(true);
             buildCommandLine.TryExecute(out var buildResult).ShouldBe(true);
+
+            Console.WriteLine();
+            Console.WriteLine(@"With TeamCity logger");
+
+            restoreCommandLine.TryExecute(out var restoreResult).ShouldBe(true);
+            buildWithLoggerCommandLine.TryExecute(out var buildWithLoggerResult).ShouldBe(true);
 
             // Then
             restoreWithLoggerResult.ResultShouldBe(restoreResult, producesTeamCityServiceMessages);

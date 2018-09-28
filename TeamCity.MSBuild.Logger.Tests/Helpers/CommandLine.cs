@@ -7,6 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using Shouldly;
 
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class CommandLine
@@ -67,20 +68,43 @@
 
             IList<string> stdOut = new List<string>();
             IList<string> stdError = new List<string>();
-            process.OutputDataReceived += (sender, args) => { if(args.Data!= null) stdOut.Add(args.Data); };
-            process.ErrorDataReceived += (sender, args) => { if(args.Data != null) stdError.Add(args.Data); };
+            process.OutputDataReceived += (sender, args) =>
+            {
+                if (args.Data != null)
+                {
+                    stdOut.Add(args.Data);
+                    //Console.Write(".");
+                }
+            };
+
+            process.ErrorDataReceived += (sender, args) =>
+            {
+                if (args.Data != null)
+                {
+                    stdError.Add(args.Data);
+                    Console.Error.WriteLine(args.Data);
+                }
+            };
 
             // ReSharper disable once LocalizableElement
             Console.WriteLine($"Run: {process.StartInfo.FileName} {process.StartInfo.Arguments}");
+            var stopwatch = new Stopwatch();
             if (!process.Start())
             {
                 result = default(CommandLineResult);
                 return false;
             }
 
+            stopwatch.Start();
+            Console.WriteLine($@"Process Id: {process.Id}");
+
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-            process.WaitForExit();
+
+            process.WaitForExit(10000).ShouldBe(true, "Timeout");
+            stopwatch.Stop();
+            Console.WriteLine($@"Elapsed Milliseconds: {stopwatch.ElapsedMilliseconds}");
+
             result = new CommandLineResult(this, process.ExitCode, stdOut, stdError);
             return true;
         }

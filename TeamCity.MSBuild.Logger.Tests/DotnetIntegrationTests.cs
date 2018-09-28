@@ -1,5 +1,6 @@
 ﻿namespace TeamCity.MSBuild.Logger.Tests
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
@@ -23,6 +24,9 @@
             string dotnetVersion)
         {
             // Given
+            Console.WriteLine();
+            Console.WriteLine($@"Run: framework={framework}, sdk={dotnetVersion}, processCount={processCount}, verbosity={verbosity}");
+
             var environmentVariables = new Dictionary<string, string>();
             var loggerString = framework.CreateLoggerString(parameters);
             var projectDir = Path.GetFullPath(Path.Combine(CommandLine.WorkingDirectory, @"IntegrationTests\Console"));
@@ -79,11 +83,17 @@
                 $"/m:{processCount}");
 
             // When
-            restoreWithLoggerCommandLine.TryExecute(out var restoreWithLoggerResult).ShouldBe(true);
-            restoreCommandLine.TryExecute(out var restoreResult).ShouldBe(true);
+            Console.WriteLine();
+            Console.WriteLine(@"Without TeamCity logger");
 
-            buildWithLoggerCommandLine.TryExecute(out var buildWithLoggerResult).ShouldBe(true);
+            restoreCommandLine.TryExecute(out var restoreResult).ShouldBe(true);
             buildCommandLine.TryExecute(out var buildResult).ShouldBe(true);
+
+            Console.WriteLine();
+            Console.WriteLine(@"With TeamCity logger");
+
+            restoreWithLoggerCommandLine.TryExecute(out var restoreWithLoggerResult).ShouldBe(true);
+            buildWithLoggerCommandLine.TryExecute(out var buildWithLoggerResult).ShouldBe(true);
 
             // Then
             restoreWithLoggerResult.ResultShouldBe(restoreResult);
