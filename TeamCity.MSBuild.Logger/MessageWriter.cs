@@ -104,7 +104,7 @@
 
         public void WriteNewLine()
         {
-            _logWriter.Write(Environment.NewLine);
+            _logWriter.Write(System.Environment.NewLine);
         }
 
         public bool WriteTargetMessagePrefix(BuildEventArgs e, BuildEventContext context, DateTime timeStamp)
@@ -179,7 +179,7 @@
         {
             if (prefixAlreadyWritten)
             {
-                _logWriter.Write(nonNullMessage + Environment.NewLine);
+                _logWriter.Write(nonNullMessage + System.Environment.NewLine);
             }
             else
             {
@@ -220,7 +220,7 @@
             }
 
             var lines = SplitStringOnNewLines(str);
-            var stringBuilder = new StringBuilder(lines.Length * indent + lines.Length * Environment.NewLine.Length + str.Length);
+            var stringBuilder = new StringBuilder(lines.Length * indent + lines.Length * System.Environment.NewLine.Length + str.Length);
             foreach (var line in lines)
             {
                 stringBuilder.Append(' ', indent).Append(line);

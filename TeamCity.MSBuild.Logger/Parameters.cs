@@ -44,6 +44,8 @@
 
         public ColorThemeMode ColorThemeMode { get; set; } = ColorThemeMode.Default;
 
-        public bool PlainServiceMessage { get; set; } = false;
+        public bool PlainServiceMessage { get; set; }
+
+        public override string ToString() => $"{nameof(Debug)}: {Debug}, {nameof(ShowOnlyWarnings)}: {ShowOnlyWarnings}, {nameof(ShowEnvironment)}: {ShowEnvironment}, {nameof(Verbosity)}: {Verbosity}, {nameof(ShowPerfSummary)}: {ShowPerfSummary}, {nameof(ShowItemAndPropertyList)}: {ShowItemAndPropertyList}, {nameof(ShowSummary)}: {ShowSummary}, {nameof(ShowOnlyErrors)}: {ShowOnlyErrors}, {nameof(ShowProjectFile)}: {ShowProjectFile}, {nameof(ShowCommandLine)}: {ShowCommandLine}, {nameof(ShowTimeStamp)}: {ShowTimeStamp}, {nameof(ShowEventId)}: {ShowEventId}, {nameof(ForceNoAlign)}: {ForceNoAlign}, {nameof(AlignMessages)}: {AlignMessages}, {nameof(ShowTargetOutputs)}: {ShowTargetOutputs}, {nameof(BufferWidth)}: {BufferWidth}, {nameof(ColorMode)}: {ColorMode}, {nameof(TeamCityMode)}: {TeamCityMode}, {nameof(StatisticsMode)}: {StatisticsMode}, {nameof(ColorThemeMode)}: {ColorThemeMode}, {nameof(PlainServiceMessage)}: {PlainServiceMessage}";
     }
 }

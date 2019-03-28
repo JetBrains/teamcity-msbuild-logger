@@ -18,6 +18,8 @@
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             yield return container.Bind<INodeLogger>().As(Singleton).To<NodeLogger>();
+            yield return container.Bind<IEnvironment>().As(Singleton).To<Environment>();
+            yield return container.Bind<IDiagnostics>().As(Singleton).To<Diagnostics>();
             yield return container.Bind<ILoggerContext>().As(Singleton).To<LoggerContext>();
             yield return container.Bind<IConsole>().As(Singleton).To<DefaultConsole>();
             yield return container.Bind<IStringService>().As(Singleton).To<StringService>();

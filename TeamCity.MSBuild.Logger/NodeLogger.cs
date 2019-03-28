@@ -10,6 +10,8 @@
     internal class NodeLogger : INodeLogger
     {
         [NotNull] private readonly ILoggerContext _context;
+        [NotNull] private readonly IEnvironment _environment;
+        [NotNull] private readonly IDiagnostics _diagnostics;
         [NotNull] private readonly IBuildEventHandler<BuildMessageEventArgs> _messageHandler;
         [NotNull] private readonly IBuildEventHandler<BuildFinishedEventArgs> _buildFinishedHandler;
         [NotNull] private readonly IBuildEventHandler<ProjectStartedEventArgs> _projectStartedHandler;
@@ -25,12 +27,15 @@
         [NotNull] private readonly IParametersParser _parametersParser;
         [NotNull] private readonly ILogWriter _logWriter;
         [NotNull] private readonly Parameters _parameters = new Parameters();
-        [NotNull] private readonly object _lockObject = new object();
+        // ReSharper disable once IdentifierTypo
+        private int _reentrancy;
 
         public NodeLogger(
             [NotNull] IParametersParser parametersParser,
             [NotNull] ILogWriter logWriter,
             [NotNull] ILoggerContext context,
+            [NotNull] IEnvironment environment,
+            [NotNull] IDiagnostics diagnostics,
             [NotNull] IBuildEventHandler<BuildStartedEventArgs> buildStartedHandler,
             [NotNull] IBuildEventHandler<BuildMessageEventArgs> messageHandler,
             [NotNull] IBuildEventHandler<BuildFinishedEventArgs> buildFinishedHandler,
@@ -45,6 +50,8 @@
             [NotNull] IBuildEventHandler<CustomBuildEventArgs> customEventHandler)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+            _diagnostics = diagnostics ?? throw new ArgumentNullException(nameof(diagnostics));
             _parametersParser = parametersParser ?? throw new ArgumentNullException(nameof(parametersParser));
             _logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
 
@@ -81,6 +88,7 @@
 
         public void Initialize(IEventSource eventSource, int nodeCount)
         {
+            _diagnostics.Send(() => $"Initialize({eventSource}, {nodeCount})");
             _parameters.Verbosity = Verbosity;
             if (Parameters != null)
             {
@@ -118,7 +126,7 @@
                 _parameters.ShowPerfSummary = true;
             }
 
-            _parameters.ShowTargetOutputs = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MSBUILDTARGETOUTPUTLOGGING"));
+            _parameters.ShowTargetOutputs = _environment.TargetOutputLogging;
             if (!_parameters.ShowSummary.HasValue && _context.IsVerbosityAtLeast(LoggerVerbosity.Normal))
             {
                 _parameters.ShowSummary = true;
@@ -146,6 +154,8 @@
             eventSource.WarningRaised += (sender, e) => Handle(_warningHandler, e);
             eventSource.MessageRaised += (sender, e) => Handle(_messageHandler, e);
             eventSource.CustomEventRaised += (sender, e) => Handle(_customEventHandler, e);
+
+            _diagnostics.Send(() => _parameters.ToString());
         }
 
         public void Initialize(IEventSource eventSource)
@@ -155,6 +165,7 @@
 
         public virtual void Shutdown()
         {
+            _diagnostics.Send(() => "Shutdown()");
         }
 
         private void Handle<TBuildEventArgs>(IBuildEventHandler<TBuildEventArgs> handler, TBuildEventArgs e)
@@ -165,19 +176,27 @@
                 return;
             }
 
+            // ReSharper disable once IdentifierTypo
+            var reentrancy = Interlocked.Increment(ref _reentrancy) - 1;
+            // ReSharper disable once AccessToModifiedClosure
+            _diagnostics.Send(() => $"[{reentrancy} +] Handle<{typeof(TBuildEventArgs).Name}>()");
             try
             {
-                lock (_lockObject)
+                using (new HierarchicalContext(e.BuildEventContext?.NodeId ?? 0))
                 {
-                    using (new HierarchicalContext(e.BuildEventContext?.NodeId ?? 0))
-                    {
-                        handler.Handle(e);
-                    }
+                    handler.Handle(e);
                 }
             }
             catch (Exception ex)
             {
-                _logWriter.Write($"Exception was occured while processing a message of type \"{e.GetType()}\":\n{ex}");
+                var error = $"Exception was occured while processing a message of type \"{e.GetType()}\":\n{ex}";
+                _logWriter.Write(error);
+                _diagnostics.Send(() => error);                
+            }
+            finally
+            {
+                reentrancy = Interlocked.Decrement(ref _reentrancy);
+                _diagnostics.Send(() => $"[{reentrancy} -] Handle<{typeof(TBuildEventArgs).Name}>()");
             }
         }
     }
