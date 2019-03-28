@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using Microsoft.Build.Framework;
-
-namespace TeamCity.MSBuild.Logger
+﻿namespace TeamCity.MSBuild.Logger
 {
+    using System.Collections.Generic;
+    using Microsoft.Build.Framework;
+    using IoC;
+
     internal interface IBuildEventManager
     {
         void AddProjectStartedEvent([NotNull] ProjectStartedEventArgs e, bool requireTimestamp);

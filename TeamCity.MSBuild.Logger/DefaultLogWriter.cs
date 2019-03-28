@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DefaultLogWriter : ILogWriter

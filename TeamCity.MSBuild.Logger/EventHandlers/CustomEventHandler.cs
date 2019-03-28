@@ -1,6 +1,7 @@
 ﻿namespace TeamCity.MSBuild.Logger.EventHandlers
 {
     using System;
+    using IoC;
     using Microsoft.Build.Framework;
 
     // ReSharper disable once ClassNeverInstantiated.Global

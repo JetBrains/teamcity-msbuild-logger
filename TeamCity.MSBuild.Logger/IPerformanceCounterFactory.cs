@@ -1,6 +1,7 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System.Collections.Generic;
+    using IoC;
 
     internal interface IPerformanceCounterFactory
     {

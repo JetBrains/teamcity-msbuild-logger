@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using IoC;
     using Microsoft.Build.Framework;
 
     internal interface IPerformanceCounter

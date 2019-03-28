@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class Statistics : IStatistics

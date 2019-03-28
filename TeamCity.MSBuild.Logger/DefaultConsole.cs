@@ -2,11 +2,13 @@
 {
     using System;
     using System.Threading;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DefaultConsole : IConsole
     {
         [NotNull] private readonly IDiagnostics _diagnostics;
+        // ReSharper disable once IdentifierTypo
         private int _reentrancy;
 
         public DefaultConsole([NotNull] IDiagnostics diagnostics)

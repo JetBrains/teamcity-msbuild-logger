@@ -1,6 +1,7 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System;
+    using IoC;
 
     internal interface ILogFormatter
     {

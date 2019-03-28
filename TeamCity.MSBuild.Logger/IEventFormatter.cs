@@ -1,7 +1,8 @@
-﻿using Microsoft.Build.Framework;
-
-namespace TeamCity.MSBuild.Logger
+﻿namespace TeamCity.MSBuild.Logger
 {
+    using Microsoft.Build.Framework;
+    using IoC;
+
     internal interface IEventFormatter
     {
         [NotNull] string FormatEventMessage([NotNull] BuildErrorEventArgs e, bool removeCarriageReturn, bool showProjectFile);

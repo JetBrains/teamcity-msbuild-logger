@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class BuildStartedHandler : IBuildEventHandler<BuildStartedEventArgs>

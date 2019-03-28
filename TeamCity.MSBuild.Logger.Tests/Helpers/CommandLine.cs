@@ -7,18 +7,19 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using IoC;
     using Shouldly;
 
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class CommandLine
     {
-        private readonly IDictionary<string, string> _envitonmentVariables;
+        private readonly IDictionary<string, string> _environmentVariables;
 
-        public CommandLine([NotNull] string executableFile, [NotNull] IDictionary<string, string> envitonmentVariables, [NotNull] params string[] args)
+        public CommandLine([NotNull] string executableFile, [NotNull] IDictionary<string, string> environmentVariables, [NotNull] params string[] args)
         {
             ExecutableFile = executableFile ?? throw new ArgumentNullException(nameof(executableFile));
             Args = args ?? throw new ArgumentNullException(nameof(args));
-            _envitonmentVariables = envitonmentVariables ?? throw new ArgumentNullException(nameof(envitonmentVariables));
+            _environmentVariables = environmentVariables ?? throw new ArgumentNullException(nameof(environmentVariables));
         }
 
         public static string WorkingDirectory => Path.GetFullPath(Path.Combine(typeof(CommandLine).GetTypeInfo().Assembly.Location, "../../../../../"));
@@ -43,7 +44,7 @@
                 }
             };
 
-            foreach (var envVar in _envitonmentVariables)
+            foreach (var envVar in _environmentVariables)
             {
 #if NET45
                 if (envVar.Value == null)

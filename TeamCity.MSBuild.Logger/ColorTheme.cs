@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ColorTheme : IColorTheme
@@ -14,6 +15,8 @@
             [NotNull] IColorTheme defaultColorTheme,
             [NotNull] IColorTheme teamCityColorTheme)
         {
+            if (defaultColorTheme == null) throw new ArgumentNullException(nameof(defaultColorTheme));
+            if (teamCityColorTheme == null) throw new ArgumentNullException(nameof(teamCityColorTheme));
             _colorThemes = new Dictionary<ColorThemeMode, IColorTheme>
             {
                 { ColorThemeMode.Default, defaultColorTheme },

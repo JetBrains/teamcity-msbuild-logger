@@ -1,6 +1,8 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
+    using IoC;
     using Microsoft.Build.Framework;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -51,6 +53,7 @@
             return true;
         }
 
+        [SuppressMessage("ReSharper", "StringLiteralTypo")]
         private static bool ApplyParameter([NotNull] Parameters parameters, [NotNull] string parameterName, [CanBeNull] string parameterValue, out string error)
         {
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));

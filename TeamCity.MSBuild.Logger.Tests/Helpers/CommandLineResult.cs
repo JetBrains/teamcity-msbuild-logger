@@ -4,6 +4,7 @@ namespace TeamCity.MSBuild.Logger.Tests.Helpers
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using IoC;
 
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class CommandLineResult

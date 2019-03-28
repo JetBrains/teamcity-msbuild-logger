@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using IoC;
     using Shouldly;
     using Xunit;
 

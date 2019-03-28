@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using Helpers;
+    using IoC;
     using Shouldly;
     using Xunit;
 

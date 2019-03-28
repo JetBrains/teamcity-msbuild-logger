@@ -23,7 +23,14 @@
             return new StringBuilder(capacity);
         }
 
-        public static void Release(StringBuilder sb)
+        public static string GetStringAndRelease(StringBuilder sb)
+        {
+            var str = sb.ToString();
+            Release(sb);
+            return str;
+        }
+
+        private static void Release(StringBuilder sb)
         {
             if (sb.Capacity > 360)
             {
@@ -31,13 +38,6 @@
             }
 
             _cachedInstance = sb;
-        }
-
-        public static string GetStringAndRelease(StringBuilder sb)
-        {
-            var str = sb.ToString();
-            Release(sb);
-            return str;
         }
     }
 }

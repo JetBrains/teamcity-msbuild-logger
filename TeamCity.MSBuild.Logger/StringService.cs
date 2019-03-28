@@ -2,13 +2,15 @@
 {
     using System;
     using System.Globalization;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class StringService : IStringService
     {
+        // ReSharper disable once IdentifierTypo
         public string UnescapeAll(string escapedString)
         {
-            return UnescapeAll(escapedString, out bool _);
+            return UnescapeAll(escapedString, out var _);
         }
 
         public string FormatResourceString(string resourceName, params object[] args)
@@ -19,6 +21,7 @@
         }
 
         [CanBeNull]
+        // ReSharper disable once IdentifierTypo
         private static string UnescapeAll([CanBeNull] string escapedString, out bool escapingWasNecessary)
         {
             escapingWasNecessary = false;

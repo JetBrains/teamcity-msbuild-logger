@@ -4,6 +4,7 @@
     using Microsoft.Build.Framework;
     using System.Linq;
     using System.Collections.Generic;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class BuildFinishedHandler : IBuildEventHandler<BuildFinishedEventArgs>

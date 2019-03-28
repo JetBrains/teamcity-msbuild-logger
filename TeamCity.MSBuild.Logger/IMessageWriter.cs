@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Build.Framework;
-
-namespace TeamCity.MSBuild.Logger
+﻿namespace TeamCity.MSBuild.Logger
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.Build.Framework;
+    using IoC;
+
     internal interface IMessageWriter
     {
         void DisplayCounters(IDictionary<string, IPerformanceCounter> counters);

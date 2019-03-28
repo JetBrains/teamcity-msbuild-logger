@@ -17,8 +17,7 @@
 
         public override bool Equals(object obj)
         {
-            var summaryDictionaryKey = obj as ErrorWarningSummaryDictionaryKey;
-            if (summaryDictionaryKey == null || !ComparerContextNodeId.Shared.Equals(EntryPointContext, summaryDictionaryKey.EntryPointContext))
+            if (!(obj is ErrorWarningSummaryDictionaryKey summaryDictionaryKey) || !ComparerContextNodeId.Shared.Equals(EntryPointContext, summaryDictionaryKey.EntryPointContext))
             {
                 return false;
             }

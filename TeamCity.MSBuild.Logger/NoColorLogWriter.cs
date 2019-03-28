@@ -1,6 +1,7 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class NoColorLogWriter : ILogWriter
