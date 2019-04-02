@@ -102,7 +102,7 @@
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
 
-            process.WaitForExit(10000).ShouldBe(true, "Timeout");
+            process.WaitForExit(20000).ShouldBe(true, "Timeout");
             stopwatch.Stop();
             Console.WriteLine($@"Elapsed Milliseconds: {stopwatch.ElapsedMilliseconds}");
 
