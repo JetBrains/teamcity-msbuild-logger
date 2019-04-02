@@ -16,7 +16,7 @@
         public string FormatResourceString(string resourceName, params object[] args)
         {
             if (args == null) throw new ArgumentNullException(nameof(args));
-            var formatString = Properties.Resources.ResourceManager.GetString(resourceName);
+            var formatString = Properties.Resources.ResourceManager.GetString(resourceName, CultureInfo.InvariantCulture);
             return string.IsNullOrEmpty(formatString) ? string.Empty : FormatString(formatString, args);
         }
 

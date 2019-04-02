@@ -1,203 +1,219 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" />
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-
-    <!-- ReSharper disable DuplicateResource -->
-    <data name="ProjectStackWithTargetNames" xml:space="preserve">
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ProjectStackWithTargetNames" xml:space="preserve">
     <value>"{0}" ({1} target) ({2}) -&gt;</value>
   </data>
-    <data name="ProjectStackWithDefaultTargets" xml:space="preserve">
+  <data name="ProjectStackWithDefaultTargets" xml:space="preserve">
     <value>"{0}" (default target) ({1}) -&gt;</value>
   </data>
-    <data name="ProjectStartedTopLevelProjectWithDefaultTargets" xml:space="preserve">
+  <data name="ProjectStartedTopLevelProjectWithDefaultTargets" xml:space="preserve">
     <value>Project "{0}" on node {1} (default targets).</value>
   </data>
-    <data name="ProjectStartedTopLevelProjectWithTargetNames" xml:space="preserve">
+  <data name="ProjectStartedTopLevelProjectWithTargetNames" xml:space="preserve">
     <value>Project "{0}" on node {1} ({2} target(s)).</value>
   </data>
-    <data name="ProjectStartedWithDefaultTargetsMultiProc" xml:space="preserve">
+  <data name="ProjectStartedWithDefaultTargetsMultiProc" xml:space="preserve">
     <value>Project "{0}" ({1}) is building "{2}" ({3}) on node {4} (default targets).</value>
   </data>
-    <data name="ProjectStartedWithTargetsMultiProc" xml:space="preserve">
+  <data name="ProjectStartedWithTargetsMultiProc" xml:space="preserve">
     <value>Project "{0}" ({1}) is building "{2}" ({3}) on node {4} ({5} target(s)).</value>
   </data>
-    <data name="TargetMessageWithId" xml:space="preserve">
+  <data name="TargetMessageWithId" xml:space="preserve">
     <value>{0}: (TargetId:{1})</value>
   </data>
-    <data name="TargetStartedProjectDepends" xml:space="preserve">
+  <data name="TargetStartedProjectDepends" xml:space="preserve">
     <value>Target "{0}" in project "{1}" (target "{2}" depends on it):</value>
   </data>
-    <data name="TargetStartedProjectEntry" xml:space="preserve">
+  <data name="TargetStartedProjectEntry" xml:space="preserve">
     <value>Target "{0}" in project "{1}" (entry point):</value>
   </data>
-    <data name="TargetStartedFileProjectDepends" xml:space="preserve">
+  <data name="TargetStartedFileProjectDepends" xml:space="preserve">
     <value>Target "{0}" in file "{1}" from project "{2}" (target "{3}" depends on it):</value>
   </data>
-    <data name="TargetStartedFileProjectEntry" xml:space="preserve">
+  <data name="TargetStartedFileProjectEntry" xml:space="preserve">
     <value>Target "{0}" in file "{1}" from project "{2}" (entry point):</value>
   </data>
-    <data name="ErrorWarningInTarget" xml:space="preserve">
+  <data name="ErrorWarningInTarget" xml:space="preserve">
     <value>({0} target) -&gt; </value>
   </data>
-    <data name="EnvironmentHeader" xml:space="preserve">
+  <data name="EnvironmentHeader" xml:space="preserve">
     <value>Environment at start of build:</value>
   </data>
-    <data name="ProjectFinishedPrefixWithDefaultTargetsMultiProc" xml:space="preserve">
+  <data name="ProjectFinishedPrefixWithDefaultTargetsMultiProc" xml:space="preserve">
     <value>Done Building Project "{0}" (default targets).</value>
   </data>
-    <data name="ProjectFinishedPrefixWithDefaultTargetsMultiProcFailed" xml:space="preserve">
+  <data name="ProjectFinishedPrefixWithDefaultTargetsMultiProcFailed" xml:space="preserve">
     <value>Done Building Project "{0}" (default targets) -- FAILED.</value>
   </data>
-    <data name="ProjectFinishedPrefixWithTargetNamesMultiProc" xml:space="preserve">
+  <data name="ProjectFinishedPrefixWithTargetNamesMultiProc" xml:space="preserve">
     <value>Done Building Project "{0}" ({1} target(s)).</value>
   </data>
-    <data name="ProjectFinishedPrefixWithTargetNamesMultiProcFailed" xml:space="preserve">
+  <data name="ProjectFinishedPrefixWithTargetNamesMultiProcFailed" xml:space="preserve">
     <value>Done Building Project "{0}" ({1} target(s)) -- FAILED.</value>
   </data>
-    <data name="ItemListHeader" xml:space="preserve">
+  <data name="ItemListHeader" xml:space="preserve">
     <value>Initial Items:</value>
   </data>
-    <data name="PropertyListHeader" xml:space="preserve">
+  <data name="PropertyListHeader" xml:space="preserve">
     <value>Initial Properties:</value>
   </data>
-    <data name="TargetOutputItemsHeader" xml:space="preserve">
+  <data name="TargetOutputItemsHeader" xml:space="preserve">
     <value>Target output items:</value>
   </data>
-    <data name="TargetOutputItem" xml:space="preserve">
+  <data name="TargetOutputItem" xml:space="preserve">
     <value>    {0}</value>
   </data>
-    <data name="TaskMessageWithId" xml:space="preserve">
+  <data name="TaskMessageWithId" xml:space="preserve">
     <value>{0} (TaskId:{1})</value>
   </data>
-    <data name="BuildEventContext" xml:space="preserve">
+  <data name="BuildEventContext" xml:space="preserve">
     <value>{0} {1,5}</value>
   </data>
-    <data name="DeferredMessages" xml:space="preserve">
+  <data name="DeferredMessages" xml:space="preserve">
     <value>Deferred Messages</value>
   </data>
-    <data name="TimeElapsed" xml:space="preserve">
+  <data name="TimeElapsed" xml:space="preserve">
     <value>Time Elapsed {0}</value>
   </data>
-    <data name="ProjectPerformanceSummary" xml:space="preserve">
+  <data name="ProjectPerformanceSummary" xml:space="preserve">
     <value>Project Performance Summary:</value>
   </data>
-    <data name="TargetPerformanceSummary" xml:space="preserve">
+  <data name="TargetPerformanceSummary" xml:space="preserve">
     <value>Target Performance Summary:</value>
   </data>
-    <data name="TaskPerformanceSummary" xml:space="preserve">
+  <data name="TaskPerformanceSummary" xml:space="preserve">
     <value>Task Performance Summary:</value>
   </data>
-    <data name="BuildStartedWithTime" xml:space="preserve">
+  <data name="BuildStartedWithTime" xml:space="preserve">
     <value>Build started {0}.</value>
   </data>
-    <data name="WarningCount" xml:space="preserve">
+  <data name="WarningCount" xml:space="preserve">
     <value>{0} Warning(s)</value>
   </data>
-    <data name="ErrorCount" xml:space="preserve">
+  <data name="ErrorCount" xml:space="preserve">
     <value>{0} Error(s)</value>
   </data>
-    <data name="PerformanceReentrancyNote" xml:space="preserve">
+  <data name="PerformanceReentrancyNote" xml:space="preserve">
     <value>(* = timing was not recorded because of reentrancy)</value>
   </data>
-    <data name="PerformanceLine" xml:space="preserve">
+  <data name="PerformanceLine" xml:space="preserve">
     <value>{0} ms  {1} {2} calls</value>
   </data>
-    <!-- ReSharper restore DuplicateResource -->
 </root>

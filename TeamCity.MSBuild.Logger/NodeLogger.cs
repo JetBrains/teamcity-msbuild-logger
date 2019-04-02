@@ -28,6 +28,7 @@
         [NotNull] private readonly IParametersParser _parametersParser;
         [NotNull] private readonly ILogWriter _logWriter;
         [NotNull] private readonly Parameters _parameters = new Parameters();
+        [NotNull] private readonly object _lockObject = new object();
         // ReSharper disable once IdentifierTypo
         private int _reentrancy;
 
@@ -183,9 +184,12 @@
             _diagnostics.Send(() => $"[{reentrancy} +] Handle<{typeof(TBuildEventArgs).Name}>()");
             try
             {
-                using (new HierarchicalContext(e.BuildEventContext?.NodeId ?? 0))
+                lock (_lockObject)
                 {
-                    handler.Handle(e);
+                    using (new HierarchicalContext(e.BuildEventContext?.NodeId ?? 0))
+                    {
+                        handler.Handle(e);
+                    }
                 }
             }
             catch (Exception ex)
