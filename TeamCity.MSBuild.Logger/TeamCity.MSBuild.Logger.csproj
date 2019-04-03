@@ -4,10 +4,6 @@
     <TargetFrameworks>netcoreapp1.0;net452;net45</TargetFrameworks>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
     <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" />
   </ItemGroup>
