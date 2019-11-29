@@ -67,6 +67,17 @@
                 {
                     _logWriter.SetColor(Color.Success);
                 }
+                else
+                {
+                    if (_context.ErrorCount > 0)
+                    {
+                        _logWriter.SetColor(Color.Error);
+                    }
+                    else
+                    {
+                        _logWriter.SetColor(Color.Warning);
+                    }
+                }
 
                 _messageWriter.WriteNewLine();
                 _messageWriter.WriteLinePretty(e.Message);
