@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using IoC;
     using JetBrains.TeamCity.ServiceMessages;
     using JetBrains.TeamCity.ServiceMessages.Read;
     using Shouldly;
@@ -15,8 +14,8 @@
     {
         private static readonly IServiceMessageParser Parser = new ServiceMessageParser();
 
-        [NotNull]
-        public static IEnumerable<string> FilterTeamCityServiceMessages([NotNull] IEnumerable<string> lines)
+        [IoC.NotNull]
+        public static IEnumerable<string> FilterTeamCityServiceMessages([IoC.NotNull] IEnumerable<string> lines)
         {
             if (lines == null) throw new ArgumentNullException(nameof(lines));
             foreach (var line in lines)
@@ -30,25 +29,25 @@
             }
         }
 
-        public static int GetNumberServiceMessage([NotNull] IEnumerable<string> lines)
+        public static int GetNumberServiceMessage([IoC.NotNull] IEnumerable<string> lines)
         {
             if (lines == null) throw new ArgumentNullException(nameof(lines));
             return GetNumberServiceMessage(string.Join("\n", lines));
         }
 
-        public static void ResultShouldContainCorrectStructureAndSequence([NotNull] IEnumerable<string> lines)
+        public static void ResultShouldContainCorrectStructureAndSequence([IoC.NotNull] IEnumerable<string> lines)
         {
             ResultShouldContainCorrectStructureAndSequence(string.Join("\n", lines));
         }
 
-        private static int GetNumberServiceMessage([NotNull] string text)
+        private static int GetNumberServiceMessage([IoC.NotNull] string text)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
             var actualMessages = Parser.ParseServiceMessages(text).ToList();
             return actualMessages.Count;
         }
 
-        private static void ResultShouldContainCorrectStructureAndSequence([NotNull] string text)
+        private static void ResultShouldContainCorrectStructureAndSequence([IoC.NotNull] string text)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
             var messages = Parser.ParseServiceMessages(text).ToList();

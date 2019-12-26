@@ -7,7 +7,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using IoC;
     using Shouldly;
 
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
@@ -15,7 +14,7 @@
     {
         private readonly IDictionary<string, string> _environmentVariables;
 
-        public CommandLine([NotNull] string executableFile, [NotNull] IDictionary<string, string> environmentVariables, [NotNull] params string[] args)
+        public CommandLine([IoC.NotNull] string executableFile, [IoC.NotNull] IDictionary<string, string> environmentVariables, [IoC.NotNull] params string[] args)
         {
             ExecutableFile = executableFile ?? throw new ArgumentNullException(nameof(executableFile));
             Args = args ?? throw new ArgumentNullException(nameof(args));
@@ -24,9 +23,9 @@
 
         public static string WorkingDirectory => Path.GetFullPath(Path.Combine(typeof(CommandLine).GetTypeInfo().Assembly.Location, "../../../../../"));
 
-        public string ExecutableFile { [NotNull] get; }
+        public string ExecutableFile { [IoC.NotNull] get; }
 
-        public string[] Args { [NotNull] get; }
+        public string[] Args { [IoC.NotNull] get; }
 
         public bool TryExecute(out CommandLineResult result)
         {
