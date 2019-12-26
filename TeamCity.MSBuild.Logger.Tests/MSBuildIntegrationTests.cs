@@ -1,18 +1,22 @@
-﻿namespace TeamCity.MSBuild.Logger.Tests
+﻿// ReSharper disable StringLiteralTypo
+namespace TeamCity.MSBuild.Logger.Tests
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using Helpers;
     using IoC;
     using Shouldly;
     using Xunit;
+    using Xunit.Abstractions;
 
-#if NETCOREAPP1_0
     [Collection("Integration")]
     // ReSharper disable once InconsistentNaming
     public class MSBuildIntegrationTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public MSBuildIntegrationTests(ITestOutputHelper testOutputHelper) => _testOutputHelper = testOutputHelper;
+
         [Theory]
         [InlineData("net452", 10, "minimal", null, false)]
         [InlineData("net452", 1, "m", null, false)]
@@ -39,8 +43,8 @@
             bool producesTeamCityServiceMessages)
         {
             // Given
-            Console.WriteLine();
-            Console.WriteLine($@"Run: framework={framework}, processCount={processCount}, verbosity={verbosity}");
+            WriteLine();
+            WriteLine($@"Run: framework={framework}, processCount={processCount}, verbosity={verbosity}");
 
             var environmentVariables = new Dictionary<string, string>();
             var loggerString = framework.CreateLoggerString(parameters);
@@ -80,14 +84,14 @@
                 $"/m:{processCount}");
 
             // When
-            Console.WriteLine();
-            Console.WriteLine(@"Without TeamCity logger");
+            WriteLine();
+            WriteLine(@"Without TeamCity logger");
 
             restoreWithLoggerCommandLine.TryExecute(out var restoreWithLoggerResult).ShouldBe(true);
             buildCommandLine.TryExecute(out var buildResult).ShouldBe(true);
 
-            Console.WriteLine();
-            Console.WriteLine(@"With TeamCity logger");
+            WriteLine();
+            WriteLine(@"With TeamCity logger");
 
             restoreCommandLine.TryExecute(out var restoreResult).ShouldBe(true);
             buildWithLoggerCommandLine.TryExecute(out var buildWithLoggerResult).ShouldBe(true);
@@ -96,6 +100,7 @@
             restoreWithLoggerResult.ResultShouldBe(restoreResult, producesTeamCityServiceMessages);
             buildWithLoggerResult.ResultShouldBe(buildResult);
         }
+
+        private void WriteLine(string message = "") => _testOutputHelper.WriteLine(message);
     }
-#endif
 }

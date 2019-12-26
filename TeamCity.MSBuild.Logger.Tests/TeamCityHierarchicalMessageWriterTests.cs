@@ -78,7 +78,7 @@
         }
 
         [Fact]
-        public void ShouldSendMessageAsIsWhenCanntoParseAnyServiceMessages()
+        public void ShouldSendMessageAsIsWhenCannotParseAnyServiceMessages()
         {
             // Given
             var writer = CreateInstance();
@@ -314,7 +314,7 @@
         }
 
         [Fact]
-        public void ShouldSendBufferdMessageWhenBlockClosedWhenMainFlow()
+        public void ShouldSendBufferedMessageWhenBlockClosedWhenMainFlow()
         {
             // Given
             var writer = CreateInstance();
@@ -331,7 +331,7 @@
         }
 
         [Fact]
-        public void ShouldSendBufferdMessageWhenBlockClosedWhenSomeFlow()
+        public void ShouldSendBufferedMessageWhenBlockClosedWhenSomeFlow()
         {
             // Given
             var writer = CreateInstance();
