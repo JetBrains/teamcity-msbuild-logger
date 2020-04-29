@@ -11,10 +11,11 @@
             {
                 case Color.BuildStage:
                     return ConsoleColor.Cyan;
-                case Color.Success:
                 case Color.SummaryHeader:
                 case Color.PerformanceHeader:
                 case Color.Items:
+                    return ConsoleColor.Blue;
+                case Color.Success:
                     return ConsoleColor.Green;
                 case Color.Warning:
                 case Color.WarningSummary:
@@ -48,10 +49,11 @@
                 case Color.Details:
                     return "30;1";
                 case Color.Success:
+                    return "32;1";
                 case Color.SummaryHeader:
                 case Color.PerformanceHeader:
                 case Color.Items:
-                    return "32;1";
+                    return "34;1";
                 case Color.BuildStage:
                     return "36;1";
                 case Color.Error:

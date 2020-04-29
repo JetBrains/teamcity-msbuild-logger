@@ -112,9 +112,16 @@
 
             if (_parameters.Debug)
             {
-                _logWriter.SetColor(Color.Warning);
-                _logWriter.Write($"\nWaiting for debugger in process: [{Process.GetCurrentProcess().Id}] \"{Process.GetCurrentProcess().ProcessName}\"\n");
-                _logWriter.ResetColor();
+                try
+                {
+                    _logWriter.SetColor(Color.Warning);
+                    _logWriter.Write($"\nWaiting for debugger in process: [{Process.GetCurrentProcess().Id}] \"{Process.GetCurrentProcess().ProcessName}\"\n");
+                }
+                finally
+                {
+                    _logWriter.ResetColor();
+                }
+
                 while (!Debugger.IsAttached)
                 {
                     Thread.Sleep(100);
@@ -142,6 +149,19 @@
                 }
 
                 _parameters.ShowPerfSummary = false;
+            }
+
+            if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic))
+            {
+                try
+                {
+                    _logWriter.SetColor(Color.Details);
+                    _logWriter.Write($"Logger parameters: {_parameters}\n");
+                }
+                finally
+                {
+                    _logWriter.ResetColor();
+                }
             }
 
             eventSource.BuildStarted += (sender, e) => Handle(_buildStartedEventHandler, e);

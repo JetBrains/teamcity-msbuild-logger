@@ -35,30 +35,30 @@
 
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (e.BuildEventContext == null) throw new ArgumentException(nameof(e));
-            bool flag;
+            bool showMessages;
             var lightenText = false;
             if (e is TaskCommandLineEventArgs)
             {
-                if (_context.Parameters.ShowCommandLine.HasValue && !_context.Parameters.ShowCommandLine.Value || !_context.Parameters.ShowCommandLine.HasValue && !_context.IsVerbosityAtLeast(LoggerVerbosity.Normal))
+                if (_context.Parameters.ShowCommandLine.HasValue && !_context.Parameters.ShowCommandLine.Value && !_context.IsVerbosityAtLeast(LoggerVerbosity.Normal))
                 {
                     return;
                 }
 
-                flag = true;
+                showMessages = true;
             }
             else
             {
                 switch (e.Importance)
                 {
                     case MessageImportance.High:
-                        flag = _context.IsVerbosityAtLeast(LoggerVerbosity.Minimal);
+                        showMessages = _context.IsVerbosityAtLeast(LoggerVerbosity.Minimal);
                         break;
                     case MessageImportance.Normal:
-                        flag = _context.IsVerbosityAtLeast(LoggerVerbosity.Normal);
+                        showMessages = _context.IsVerbosityAtLeast(LoggerVerbosity.Normal);
                         lightenText = true;
                         break;
                     case MessageImportance.Low:
-                        flag = _context.IsVerbosityAtLeast(LoggerVerbosity.Detailed);
+                        showMessages = _context.IsVerbosityAtLeast(LoggerVerbosity.Detailed);
                         lightenText = true;
                         break;
                     default:
@@ -66,14 +66,14 @@
                 }
             }
 
-            if (!flag)
+            if (!showMessages)
             {
                 return;
             }
 
             if (_context.HasBuildStarted && e.BuildEventContext.ProjectContextId != -2 && _buildEventManager.GetProjectStartedEvent(e.BuildEventContext) == null && _context.IsVerbosityAtLeast(LoggerVerbosity.Normal))
             {
-                if (!_context.DeferredMessages.TryGetValue(e.BuildEventContext, out IList<BuildMessageEventArgs> messageEventArgsList))
+                if (!_context.DeferredMessages.TryGetValue(e.BuildEventContext, out var messageEventArgsList))
                 {
                     messageEventArgsList = new List<BuildMessageEventArgs>();
                     _context.DeferredMessages.Add(e.BuildEventContext, messageEventArgsList);

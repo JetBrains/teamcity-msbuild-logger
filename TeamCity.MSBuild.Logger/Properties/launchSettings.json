@@ -3,7 +3,7 @@
     "TeamCity.MSBuild.Logger": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
-      "commandLineArgs": "build C:\\Projects\\TeamCity\\TeamCity.MSBuild.Logger\\IntegrationTests\\Console\\Console.csproj --verbosity Detailed /noconsolelogger /l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,C:\\Projects\\TeamCity\\TeamCity.MSBuild.Logger\\TeamCity.MSBuild.Logger\\bin\\Debug\\net452\\TeamCity.MSBuild.Logger.dll;teamcity"
+      "commandLineArgs": "build C:\\Projects\\TeamCity\\TeamCity.MSBuild.Logger\\IntegrationTests\\Console\\Console.csproj --verbosity diag /clp:NoSummary;NoItemAndPropertyList;ErrorsOnly /noconsolelogger /l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,C:\\Projects\\TeamCity\\TeamCity.MSBuild.Logger\\TeamCity.MSBuild.Logger\\bin\\Debug\\net452\\TeamCity.MSBuild.Logger.dll;teamcity;debug"
     }
   }
 }
