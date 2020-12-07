@@ -39,7 +39,7 @@
             var lightenText = false;
             if (e is TaskCommandLineEventArgs)
             {
-                if (_context.Parameters.ShowCommandLine.HasValue && !_context.Parameters.ShowCommandLine.Value && !_context.IsVerbosityAtLeast(LoggerVerbosity.Normal))
+                if (!_context.Parameters.ShowCommandLine && !_context.IsVerbosityAtLeast(LoggerVerbosity.Normal))
                 {
                     return;
                 }

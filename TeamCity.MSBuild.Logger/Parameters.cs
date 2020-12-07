@@ -22,7 +22,7 @@
 
         public bool ShowProjectFile { get; set; }
 
-        public bool? ShowCommandLine { get; set; }
+        public bool ShowCommandLine { get; set; }
 
         public bool ShowTimeStamp { get; set; }
 
