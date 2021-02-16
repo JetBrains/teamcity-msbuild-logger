@@ -29,6 +29,20 @@ msbuild.exe my.csproj /t:build /noconsolelogger /l:TeamCity.MSBuild.Logger.TeamC
 
 TeamCity Integration is working from-the-box while you are using [TeamCity dotnet plugin](https://github.com/JetBrains/teamcity-dotnet-plugin). Also it is possible to use TeamCity logger manually, see more details in the [Wiki](https://github.com/JetBrains/TeamCity.MSBuild.Logger/wiki/How-to-use).
 
+## Contribution
+
+We would be a grateful contribution.
+
+- clone this repo
+- open the solution _TeamCity.MSBuild.Logger.sln_ in IDE
+- configure debugging for _TeamCity.MSBuild.Logger_
+  - specify the executable to _dotnet.exe_ for instance like _C:\Program Files\dotnet\dotnet.exe_
+  - specify command-line arguments for your case, for instance _build <my_project_path>\MyProject.csproj --verbosity normal /noconsolelogger /l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,<this_repo_path>\TeamCity.MSBuild.Logger\bin\Debug\net452\TeamCity.MSBuild.Logger.dll;teamcity;DEBUG_ - the last option _DEBUG_ is needed to debug this logger.
+- set breakpoints
+- run debugging for _TeamCity.MSBuild.Logger_
+- attach to the process _dotnet.exe_ with a number from stdOut
+- _test.cmd_ to run integration tests
+
 ## License
 
 It is under the [Apache License](LICENSE).
