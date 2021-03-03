@@ -27,7 +27,7 @@
                 case Color.PerformanceCounterInfo:
                     return "35";
                 case Color.Details:
-                    return "34";
+                    return "34;1";
                 case Color.Task:
                     return "36";
                 default:
