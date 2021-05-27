@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using System.Threading;
     using EventHandlers;
-    using IoC;
+    using JetBrains.Annotations;
     using Microsoft.Build.Framework;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -214,7 +214,7 @@
             }
             catch (Exception ex)
             {
-                var error = $"Exception was occured while processing a message of type \"{e.GetType()}\":\n{ex}";
+                var error = $"Exception was occurred while processing a message of type \"{e.GetType()}\":\n{ex}";
                 _logWriter.Write(error);
                 _diagnostics.Send(() => error);                
             }

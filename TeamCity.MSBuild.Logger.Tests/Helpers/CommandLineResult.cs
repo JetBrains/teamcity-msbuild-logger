@@ -3,16 +3,15 @@ namespace TeamCity.MSBuild.Logger.Tests.Helpers
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    using JetBrains.Annotations;
 
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class CommandLineResult
     {
         public CommandLineResult(
-            [IoC.NotNull] CommandLine commandLine,
+            [NotNull] CommandLine commandLine,
             int exitCode,
-            [IoC.NotNull] IList<string> stdOut,
-            [IoC.NotNull] IList<string> stdError)
+            [NotNull] IList<string> stdOut,
+            [NotNull] IList<string> stdError)
         {
             CommandLine = commandLine ?? throw new ArgumentNullException(nameof(commandLine));
             ExitCode = exitCode;
@@ -20,12 +19,12 @@ namespace TeamCity.MSBuild.Logger.Tests.Helpers
             StdError = stdError ?? throw new ArgumentNullException(nameof(stdError));
         }
 
-        public CommandLine CommandLine { [IoC.NotNull] get; }
+        public CommandLine CommandLine { [NotNull] get; }
 
         public int ExitCode { get; }
 
-        public IEnumerable<string> StdOut { [IoC.NotNull] get; }
+        public IEnumerable<string> StdOut { [NotNull] get; }
 
-        public IEnumerable<string> StdError { [IoC.NotNull] get; }
+        public IEnumerable<string> StdError { [NotNull] get; }
     }
 }

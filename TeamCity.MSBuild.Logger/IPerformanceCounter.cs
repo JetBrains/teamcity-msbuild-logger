@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using IoC;
+    using JetBrains.Annotations;
     using Microsoft.Build.Framework;
 
     internal interface IPerformanceCounter
     {
+        string ScopeName { get; set; }
+
         TimeSpan ElapsedTime { get; }
 
         bool ReenteredScope { get; }

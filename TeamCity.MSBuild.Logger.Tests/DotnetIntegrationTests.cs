@@ -6,7 +6,7 @@ namespace TeamCity.MSBuild.Logger.Tests
     using System.IO;
     using System.Linq;
     using Helpers;
-    using IoC;
+    using JetBrains.Annotations;
     using Shouldly;
     using Xunit;
     using Xunit.Abstractions;

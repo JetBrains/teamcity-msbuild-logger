@@ -1,7 +1,8 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System;
-    using IoC;
+    using JetBrains.Annotations;
+    using JetBrains.Annotations;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class AnsiLogWriter : ILogWriter

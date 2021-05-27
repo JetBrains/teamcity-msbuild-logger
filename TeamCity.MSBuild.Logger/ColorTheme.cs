@@ -2,7 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using IoC;
+    using JetBrains.Annotations;
+    using Pure.DI;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ColorTheme : IColorTheme
@@ -12,8 +13,8 @@
 
         public ColorTheme(
             [NotNull] ILoggerContext context,
-            [NotNull] IColorTheme defaultColorTheme,
-            [NotNull] IColorTheme teamCityColorTheme)
+            [NotNull][Tag(ColorThemeMode.Default)] IColorTheme defaultColorTheme,
+            [NotNull][Tag(ColorThemeMode.TeamCity)] IColorTheme teamCityColorTheme)
         {
             if (defaultColorTheme == null) throw new ArgumentNullException(nameof(defaultColorTheme));
             if (teamCityColorTheme == null) throw new ArgumentNullException(nameof(teamCityColorTheme));

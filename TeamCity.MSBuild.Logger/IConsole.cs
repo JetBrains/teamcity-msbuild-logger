@@ -1,6 +1,6 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
-    using IoC;
+    using JetBrains.Annotations;
 
     internal interface IConsole
     {

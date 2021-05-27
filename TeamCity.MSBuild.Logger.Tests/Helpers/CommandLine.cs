@@ -3,18 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using Shouldly;
+    using JetBrains.Annotations;
 
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class CommandLine
     {
         private readonly IDictionary<string, string> _environmentVariables;
 
-        public CommandLine([IoC.NotNull] string executableFile, [IoC.NotNull] IDictionary<string, string> environmentVariables, [IoC.NotNull] params string[] args)
+        public CommandLine([NotNull] string executableFile, [NotNull] IDictionary<string, string> environmentVariables, [NotNull] params string[] args)
         {
             ExecutableFile = executableFile ?? throw new ArgumentNullException(nameof(executableFile));
             Args = args ?? throw new ArgumentNullException(nameof(args));
@@ -23,9 +22,9 @@
 
         public static string WorkingDirectory => Path.GetFullPath(Path.Combine(typeof(CommandLine).GetTypeInfo().Assembly.Location, "../../../../../"));
 
-        public string ExecutableFile { [IoC.NotNull] get; }
+        public string ExecutableFile { [NotNull] get; }
 
-        public string[] Args { [IoC.NotNull] get; }
+        public string[] Args { [NotNull] get; }
 
         public bool TryExecute(out CommandLineResult result)
         {

@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
-    using IoC;
+    using JetBrains.Annotations;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class MessageWriter: IMessageWriter

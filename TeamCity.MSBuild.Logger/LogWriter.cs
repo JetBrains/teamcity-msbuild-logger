@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System;
-    using IoC;
+    using JetBrains.Annotations;
+    using Pure.DI;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class LogWriter : ILogWriter
@@ -12,10 +13,10 @@
 
         public LogWriter(
             [NotNull] ILoggerContext context,
-            [NotNull] ILogWriter defaultLogWriter,
-            [NotNull] ILogWriter ansiLogWriter,
-            [NotNull] ILogWriter noColorLogWriter,
-            [NotNull] ILogWriter ansiColorLogWriter)
+            [NotNull][Tag(ColorMode.Default)] ILogWriter defaultLogWriter,
+            [NotNull][Tag(ColorMode.TeamCity)] ILogWriter ansiLogWriter,
+            [NotNull][Tag(ColorMode.NoColor)] ILogWriter noColorLogWriter,
+            [NotNull][Tag(ColorMode.AnsiColor)] ILogWriter ansiColorLogWriter)
         {
             _logWriters = new Dictionary<ColorMode, ILogWriter>
             {

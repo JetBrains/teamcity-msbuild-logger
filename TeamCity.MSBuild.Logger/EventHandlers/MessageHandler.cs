@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using IoC;
+    using JetBrains.Annotations;
     using Microsoft.Build.Framework;
 
     // ReSharper disable once ClassNeverInstantiated.Global

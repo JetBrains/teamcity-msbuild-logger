@@ -1,7 +1,7 @@
 ﻿namespace TeamCity.MSBuild.Logger.Tests
 {
     using System.Linq;
-    using IoC;
+    using JetBrains.Annotations;
     using JetBrains.TeamCity.ServiceMessages;
     using JetBrains.TeamCity.ServiceMessages.Read;
     using JetBrains.TeamCity.ServiceMessages.Write;

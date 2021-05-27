@@ -7,7 +7,7 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Globalization;
-    using IoC;
+    using JetBrains.Annotations;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ProjectStartedHandler : IBuildEventHandler<ProjectStartedEventArgs>

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Globalization;
-    using IoC;
+    using JetBrains.Annotations;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class StringService : IStringService

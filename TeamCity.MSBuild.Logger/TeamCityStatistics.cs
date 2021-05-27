@@ -2,7 +2,7 @@
 {
     using System;
     using System.Globalization;
-    using IoC;
+    using JetBrains.Annotations;
     using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
     // ReSharper disable once ClassNeverInstantiated.Global

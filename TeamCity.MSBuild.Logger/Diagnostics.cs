@@ -2,7 +2,7 @@
 {
     using System;
     using System.IO;
-    using IoC;
+    using JetBrains.Annotations;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class Diagnostics : IDiagnostics

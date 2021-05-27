@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using IoC;
+    using JetBrains.Annotations;
     using Microsoft.Build.Framework;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -12,22 +12,21 @@
         [NotNull] private readonly IMessageWriter _messageWriter;
         private readonly IDictionary<string, IPerformanceCounter> _internalPerformanceCounters = new Dictionary<string, IPerformanceCounter>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<BuildEventContext, long> _startedEvent;
-        private readonly string _scopeName;
         [NotNull] private readonly ILogWriter _logWriter;
         [NotNull] private readonly IPerformanceCounterFactory _performanceCounterFactory;
         private int _calls;
 
         public PerformanceCounter(
-            [NotNull] string scopeName,
             [NotNull] ILogWriter logWriter,
             [NotNull] IPerformanceCounterFactory performanceCounterFactory,
             [NotNull] IMessageWriter messageWriter)
         {
             _messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
-            _scopeName = scopeName ?? throw new ArgumentNullException(nameof(scopeName));
             _logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
             _performanceCounterFactory = performanceCounterFactory ?? throw new ArgumentNullException(nameof(performanceCounterFactory));
         }
+
+        public string ScopeName { get; set; } = string.Empty;
 
         public TimeSpan ElapsedTime { get; private set; } = new TimeSpan(0L);
 
@@ -82,7 +81,7 @@
         public void PrintCounterMessage()
         {
             var str = string.Format(CultureInfo.CurrentCulture, "{0,5}", Math.Round(ElapsedTime.TotalMilliseconds, 0));
-            _messageWriter.WriteLinePrettyFromResource(MessageIdentLevel, "PerformanceLine", str, string.Format(CultureInfo.CurrentCulture, "{0,-40}", _scopeName), string.Format(CultureInfo.CurrentCulture, "{0,3}", _calls));
+            _messageWriter.WriteLinePrettyFromResource(MessageIdentLevel, "PerformanceLine", str, string.Format(CultureInfo.CurrentCulture, "{0,-40}", ScopeName), string.Format(CultureInfo.CurrentCulture, "{0,3}", _calls));
             if (_internalPerformanceCounters == null || _internalPerformanceCounters.Count <= 0)
             {
                 return;

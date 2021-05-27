@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using Microsoft.Build.Framework;
-    using IoC;
+    using JetBrains.Annotations;
 
     internal interface IBuildEventManager
     {

@@ -1,24 +1,12 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
-    using IoC;
+    using JetBrains.Annotations;
     using Microsoft.Build.Framework;
 
     // ReSharper disable once UnusedMember.Global
     public class TeamCityMsBuildLogger : INodeLogger
     {
-        private readonly IMutableContainer _container;
-        private readonly INodeLogger _logger;
-
-        public TeamCityMsBuildLogger()
-            :this(Container.Create().Using<IoCConfiguration>())
-        {
-        }
-
-        public TeamCityMsBuildLogger(IMutableContainer container)
-        {
-            _container = container;
-            _logger = _container.Resolve<INodeLogger>();
-        }
+        private readonly INodeLogger _logger = Composer.Resolve<INodeLogger>();
 
         public string Parameters
         {
@@ -45,7 +33,6 @@
         public void Shutdown()
         {
             _logger.Shutdown();
-            _container.Dispose();
         }
     }
 }

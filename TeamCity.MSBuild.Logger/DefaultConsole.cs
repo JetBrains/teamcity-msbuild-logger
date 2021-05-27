@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading;
-    using IoC;
+    using JetBrains.Annotations;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DefaultConsole : IConsole

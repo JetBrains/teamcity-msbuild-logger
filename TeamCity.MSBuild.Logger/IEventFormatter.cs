@@ -1,7 +1,7 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using Microsoft.Build.Framework;
-    using IoC;
+    using JetBrains.Annotations;
 
     internal interface IEventFormatter
     {

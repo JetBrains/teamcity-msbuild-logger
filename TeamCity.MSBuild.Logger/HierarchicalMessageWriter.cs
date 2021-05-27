@@ -2,7 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using IoC;
+    using JetBrains.Annotations;
+    using Pure.DI;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class HierarchicalMessageWriter : IHierarchicalMessageWriter
@@ -12,8 +13,8 @@
 
         public HierarchicalMessageWriter(
             [NotNull] ILoggerContext context,
-            [NotNull] IHierarchicalMessageWriter defaultHierarchicalMessageWriter,
-            [NotNull] IHierarchicalMessageWriter teamcityHierarchicalMessageWriter)
+            [NotNull][Tag(TeamCityMode.Off)] IHierarchicalMessageWriter defaultHierarchicalMessageWriter,
+            [NotNull][Tag(TeamCityMode.SupportHierarchy)] IHierarchicalMessageWriter teamcityHierarchicalMessageWriter)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _hierarchicalMessageWriter = new Dictionary<TeamCityMode, IHierarchicalMessageWriter>
