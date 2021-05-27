@@ -46,6 +46,8 @@
 
         public bool PlainServiceMessage { get; set; }
 
+        public string FlowId => System.Environment.GetEnvironmentVariable("TEAMCITY_PROCESS_FLOW_ID") ?? string.Empty;
+
         public override string ToString() => $"{nameof(Debug)}: {Debug}, {nameof(ShowOnlyWarnings)}: {ShowOnlyWarnings}, {nameof(ShowEnvironment)}: {ShowEnvironment}, {nameof(Verbosity)}: {Verbosity}, {nameof(ShowPerfSummary)}: {ShowPerfSummary}, {nameof(ShowItemAndPropertyList)}: {ShowItemAndPropertyList}, {nameof(ShowSummary)}: {ShowSummary}, {nameof(ShowOnlyErrors)}: {ShowOnlyErrors}, {nameof(ShowProjectFile)}: {ShowProjectFile}, {nameof(ShowCommandLine)}: {ShowCommandLine}, {nameof(ShowTimeStamp)}: {ShowTimeStamp}, {nameof(ShowEventId)}: {ShowEventId}, {nameof(ForceNoAlign)}: {ForceNoAlign}, {nameof(AlignMessages)}: {AlignMessages}, {nameof(ShowTargetOutputs)}: {ShowTargetOutputs}, {nameof(BufferWidth)}: {BufferWidth}, {nameof(ColorMode)}: {ColorMode}, {nameof(TeamCityMode)}: {TeamCityMode}, {nameof(StatisticsMode)}: {StatisticsMode}, {nameof(ColorThemeMode)}: {ColorThemeMode}, {nameof(PlainServiceMessage)}: {PlainServiceMessage}";
     }
 }

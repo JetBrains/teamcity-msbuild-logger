@@ -1,6 +1,5 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
-    using JetBrains.Annotations;
     using Microsoft.Build.Framework;
 
     // ReSharper disable once UnusedMember.Global

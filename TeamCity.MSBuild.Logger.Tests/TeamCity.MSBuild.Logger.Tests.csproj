@@ -5,7 +5,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
 		<PackageReference Include="Moq" Version="4.16.1" />
 		<PackageReference Include="Shouldly" Version="4.0.3" />
