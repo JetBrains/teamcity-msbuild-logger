@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
-    <PackageReference Include="Pure.DI" Version="1.0.0-beta69">
+    <PackageReference Include="Pure.DI" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
