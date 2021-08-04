@@ -18,12 +18,14 @@
         public IPerformanceCounter GetOrCreatePerformanceCounter(string scopeName, IDictionary<string, IPerformanceCounter> performanceCounters)
         {
             if (scopeName == null) throw new ArgumentNullException(nameof(scopeName));
-            if (!performanceCounters.TryGetValue(scopeName, out IPerformanceCounter performanceCounter))
+            if (performanceCounters.TryGetValue(scopeName, out var performanceCounter))
             {
-                performanceCounter = _performanceCounterFactory();
-                performanceCounter.ScopeName = scopeName;
-                performanceCounters.Add(scopeName, performanceCounter);
+                return performanceCounter;
             }
+
+            performanceCounter = _performanceCounterFactory();
+            performanceCounter.ScopeName = scopeName;
+            performanceCounters.Add(scopeName, performanceCounter);
 
             return performanceCounter;
         }

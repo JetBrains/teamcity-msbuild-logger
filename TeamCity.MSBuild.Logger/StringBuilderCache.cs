@@ -1,12 +1,14 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     internal static class StringBuilderCache
     {
         [ThreadStatic] private static StringBuilder _cachedInstance;
 
+        [SuppressMessage("ReSharper", "InvertIf")]
         public static StringBuilder Acquire(int capacity = 16)
         {
             if (capacity <= 360)

@@ -69,14 +69,7 @@
                 }
                 else
                 {
-                    if (_context.ErrorCount > 0)
-                    {
-                        _logWriter.SetColor(Color.Error);
-                    }
-                    else
-                    {
-                        _logWriter.SetColor(Color.Warning);
-                    }
+                    _logWriter.SetColor(_context.ErrorCount > 0 ? Color.Error : Color.Warning);
                 }
 
                 _messageWriter.WriteNewLine();
@@ -228,7 +221,7 @@
                 }
 
                 var key = new ErrorWarningSummaryDictionaryKey(warningEventArgs.BuildEventContext, targetName);
-                if (!dictionary.TryGetValue(key, out List<T> list))
+                if (!dictionary.TryGetValue(key, out var list))
                 {
                     list = new List<T>();
                     dictionary.Add(key, list);
@@ -256,7 +249,7 @@
                 {
                     if (!string.IsNullOrEmpty(keyValuePair.Key.TargetName))
                     {
-                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ErrorWarningInTarget", (object)keyValuePair.Key.TargetName), false);
+                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("ErrorWarningInTarget", keyValuePair.Key.TargetName), false);
                     }
 
                     curTargetName = keyValuePair.Key.TargetName;
@@ -264,17 +257,15 @@
 
                 foreach (var obj in keyValuePair.Value)
                 {
-                    var errorEventArgs = obj as BuildErrorEventArgs;
-                    if (errorEventArgs != null)
+                    switch (obj)
                     {
-                        _messageWriter.WriteMessageAligned("  " + _eventFormatter.FormatEventMessage(errorEventArgs, false, _context.Parameters.ShowProjectFile), false);
-                        continue;
-                    }
+                        case BuildErrorEventArgs errorEventArgs:
+                            _messageWriter.WriteMessageAligned("  " + _eventFormatter.FormatEventMessage(errorEventArgs, false, _context.Parameters.ShowProjectFile), false);
+                            continue;
 
-                    var warningEventArgs = obj as BuildWarningEventArgs;
-                    if (warningEventArgs != null)
-                    {
-                        _messageWriter.WriteMessageAligned("  " + _eventFormatter.FormatEventMessage(warningEventArgs, false, _context.Parameters.ShowProjectFile), false);
+                        case BuildWarningEventArgs warningEventArgs:
+                            _messageWriter.WriteMessageAligned("  " + _eventFormatter.FormatEventMessage(warningEventArgs, false, _context.Parameters.ShowProjectFile), false);
+                            break;
                     }
                 }
 

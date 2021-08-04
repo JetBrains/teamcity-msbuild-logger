@@ -4,7 +4,7 @@
     using JetBrains.Annotations;
     using Microsoft.Build.Framework;
 
-    internal struct TaskItem
+    internal readonly struct TaskItem
     {
         public readonly string Name;
 

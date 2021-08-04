@@ -1,4 +1,5 @@
-﻿namespace TeamCity.MSBuild.Logger
+﻿// ReSharper disable UnusedType.Global
+namespace TeamCity.MSBuild.Logger
 {
     using Microsoft.Build.Framework;
 

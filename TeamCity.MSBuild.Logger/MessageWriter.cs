@@ -67,7 +67,7 @@
 
         public void PrintMessage(BuildMessageEventArgs e, bool lightenText)
         {
-            var message = e.File == null ? (e.Message ?? string.Empty) : _eventFormatter.FormatEventMessage(e, false, _context.Parameters.ShowProjectFile);
+            var message = e.File == null ? e.Message ?? string.Empty : _eventFormatter.FormatEventMessage(e, false, _context.Parameters.ShowProjectFile);
             var prefixAdjustment = 0;
             if (e.BuildEventContext.TaskId != -1 && e.File == null)
             {
@@ -208,11 +208,6 @@
             _logWriter.Write(stringBuilder.ToString());
         }
 
-        public string IndentString(string str)
-        {
-            return IndentString(str, _context.PrefixWidth);
-        }
-
         private static string IndentString([CanBeNull] string str, int indent)
         {
             if (str == null)
@@ -241,7 +236,7 @@
             var buildEventContext = e.BuildEventContext;
             var flag1 = false;
             var str = string.Empty;
-            var flag2 = ComparerContextNodeIdTargetId.Shared.Equals(buildEventContext, _context.LastDisplayedBuildEventContext == (BuildEventContext)null ? null : _context.LastDisplayedBuildEventContext);
+            var flag2 = ComparerContextNodeIdTargetId.Shared.Equals(buildEventContext, _context.LastDisplayedBuildEventContext == default ? null : _context.LastDisplayedBuildEventContext);
             TargetStartedEventMinimumFields eventMinimumFields = null;
             if (!flag2)
             {
@@ -262,7 +257,7 @@
             _logWriter.SetColor(Color.BuildStage);
             if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || (_context.Parameters.ShowEventId ?? false))
             {
-                WriteMessageAligned(_stringService.FormatResourceString("TargetMessageWithId", (object)str, (object)e.BuildEventContext.TargetId), prefixAlreadyWritten);
+                WriteMessageAligned(_stringService.FormatResourceString("TargetMessageWithId", str, e.BuildEventContext.TargetId), prefixAlreadyWritten);
             }
             else
             {

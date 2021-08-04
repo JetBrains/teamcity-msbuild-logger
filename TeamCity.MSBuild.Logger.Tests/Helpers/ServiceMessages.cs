@@ -106,6 +106,8 @@
 
             public string OutAttr { get; }
 
+            // ReSharper disable once MemberCanBePrivate.Local
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public string MessageAttr { get; }
 
             public string DetailsAttr { get; }

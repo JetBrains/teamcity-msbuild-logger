@@ -82,7 +82,7 @@
         {
             // Given
             var writer = CreateInstance();
-            var serviceMessage = "##teamcity[abc]";
+            const string serviceMessage = "##teamcity[abc]";
             _serviceMessageParser.Setup(i => i.ParseServiceMessages(serviceMessage.Trim())).Returns(Enumerable.Empty<IServiceMessage>());
 
             // When

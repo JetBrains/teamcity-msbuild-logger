@@ -43,7 +43,7 @@
                     _logWriter.SetColor(Color.Task);
                     if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || (_context.Parameters.ShowEventId ?? false))
                     {
-                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TaskMessageWithId", (object)e.Message, (object)e.BuildEventContext.TaskId), prefixAlreadyWritten);
+                        _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TaskMessageWithId", e.Message, e.BuildEventContext.TaskId), prefixAlreadyWritten);
                     }
                     else
                     {

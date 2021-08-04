@@ -37,7 +37,7 @@
 
                 if (!_projectKey.TryGetValue(e.ProjectFile, out projectIncrementKey))
                 {
-                    _projectIncrementKey = _projectIncrementKey + 1;
+                    _projectIncrementKey += 1;
                     _projectKey.Add(e.ProjectFile, _projectIncrementKey);
                     projectIncrementKey = _projectIncrementKey;
                 }
@@ -98,13 +98,13 @@
         public ProjectStartedEventMinimumFields GetProjectStartedEvent(BuildEventContext e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
-            return _projectStartedEvents.TryGetValue(e, out ProjectStartedEventMinimumFields result) ? result : null;
+            return _projectStartedEvents.TryGetValue(e, out var result) ? result : null;
         }
 
         public TargetStartedEventMinimumFields GetTargetStartedEvent(BuildEventContext e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
-            return _targetStartedEvents.TryGetValue(e, out TargetStartedEventMinimumFields result) ? result : null;
+            return _targetStartedEvents.TryGetValue(e, out var result) ? result : null;
         }
 
         public void RemoveProjectStartedEvent(BuildEventContext e)

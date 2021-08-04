@@ -10,7 +10,7 @@
         // ReSharper disable once IdentifierTypo
         public string UnescapeAll(string escapedString)
         {
-            return UnescapeAll(escapedString, out var _);
+            return UnescapeAll(escapedString, out _);
         }
 
         public string FormatResourceString(string resourceName, params object[] args)
@@ -40,6 +40,7 @@
             var startIndex = 0;
             for (; num != -1; num = escapedString.IndexOf('%', num + 1))
             {
+                // ReSharper disable once InvertIf
                 if (num <= escapedString.Length - 3 && IsHexDigit(escapedString[num + 1]) && IsHexDigit(escapedString[num + 2]))
                 {
                     sb.Append(escapedString, startIndex, num - startIndex);

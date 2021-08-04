@@ -16,8 +16,8 @@
             if (actualResult == null) throw new ArgumentNullException(nameof(actualResult));
             if (expectedResult == null) throw new ArgumentNullException(nameof(expectedResult));
             actualResult.ExitCode.ShouldBe(expectedResult.ExitCode);
-            CheckOutput(actualResult.StdOut, expectedResult.StdOut);
-            CheckOutput(actualResult.StdError, expectedResult.StdError);
+            CheckOutput(actualResult.StdOut);
+            CheckOutput(actualResult.StdError);
             if (producesTeamCityServiceMessages.HasValue)
             {
                 (ServiceMessages.GetNumberServiceMessage(actualResult.StdOut) > 0).ShouldBe(producesTeamCityServiceMessages.Value);
@@ -27,10 +27,9 @@
             ServiceMessages.ResultShouldContainCorrectStructureAndSequence(actualResult.StdError);
         }
 
-        private static void CheckOutput([NotNull] this IEnumerable<string> actualLines, [NotNull] IEnumerable<string> expectedLines)
+        private static void CheckOutput([NotNull] this IEnumerable<string> actualLines)
         {
             if (actualLines == null) throw new ArgumentNullException(nameof(actualLines));
-            if (expectedLines == null) throw new ArgumentNullException(nameof(expectedLines));
             // ReSharper disable once PossibleMultipleEnumeration
             var filteredActualLines = ServiceMessages.FilterTeamCityServiceMessages(actualLines).ToList();
             // ReSharper disable once PossibleMultipleEnumeration
@@ -44,25 +43,17 @@
 
         private static void CheckLines([CanBeNull] this string actualLine, [CanBeNull] string expectedLine)
         {
-            var modifiedActualLine = ReplaceChangableItems(actualLine);
-            var modifiedExpectedLine = ReplaceChangableItems(expectedLine);
+            var modifiedActualLine = ReplaceChangeableItems(actualLine);
+            var modifiedExpectedLine = ReplaceChangeableItems(expectedLine);
             if (modifiedActualLine != modifiedExpectedLine)
             {
                 Assert.Equal(modifiedActualLine, modifiedExpectedLine);
             }
         }
 
-        private static string ReplaceChangableItems([CanBeNull] string line)
-        {
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                return line;
-            }
+        private static string ReplaceChangeableItems([CanBeNull] string line) => string.IsNullOrWhiteSpace(line) ? line : new string(ExcludeChangeableChars(line).ToArray());
 
-            return new string(ExcludeChangableChars(line).ToArray());
-        }
-
-        private static IEnumerable<char> ExcludeChangableChars([NotNull] IEnumerable<char> chars)
+        private static IEnumerable<char> ExcludeChangeableChars([NotNull] IEnumerable<char> chars)
         {
             if (chars == null) throw new ArgumentNullException(nameof(chars));
             foreach (var c in chars)
@@ -94,20 +85,6 @@
             }
 
             return $"TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{loggerPath}{parameters}";
-        }
-
-        public static IDictionary<string, string> ExtractDictionary([CanBeNull] string dict)
-        {
-            if (string.IsNullOrWhiteSpace(dict))
-            {
-                return new Dictionary<string, string>();
-            }
-
-            return (
-                from item in dict.Split(';')
-                let parts = item.Split('=')
-                where parts.Length == 2
-                select new { name = parts[0].Trim(), value = parts[1].Trim() }).ToDictionary(i => i.name, i => i.value);
         }
     }
 }

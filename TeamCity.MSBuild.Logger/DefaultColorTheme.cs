@@ -40,6 +40,7 @@
 
         public string GetAnsiColor(Color color)
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (color)
             {
                 case Color.Task:

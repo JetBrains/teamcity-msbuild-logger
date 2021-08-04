@@ -14,6 +14,7 @@ namespace TeamCity.MSBuild.Logger
 
         public string NewFlowId()
         {
+            // ReSharper disable once InvertIf
             if (_isFirst)
             {
                 _isFirst = false;

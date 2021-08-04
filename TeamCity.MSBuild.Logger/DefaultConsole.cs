@@ -22,21 +22,23 @@
 
         public void Write(string text)
         {
-            if (!string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
             {
-                // ReSharper disable once IdentifierTypo
-                var reentrancy = Interlocked.Increment(ref _reentrancy) - 1;
-                // ReSharper disable once AccessToModifiedClosure
-                _diagnostics.Send(() => $"[{reentrancy} +] Write({text.Trim()})");
-                try
-                {
-                    _out.Write(text);
-                }
-                finally
-                {
-                    reentrancy = Interlocked.Decrement(ref _reentrancy);
-                    _diagnostics.Send(() => $"[{reentrancy} -] Write({text.Trim()})");
-                }
+                return;
+            }
+
+            // ReSharper disable once IdentifierTypo
+            var reentrancy = Interlocked.Increment(ref _reentrancy) - 1;
+            // ReSharper disable once AccessToModifiedClosure
+            _diagnostics.Send(() => $"[{reentrancy} +] Write({text.Trim()})");
+            try
+            {
+                _out.Write(text);
+            }
+            finally
+            {
+                reentrancy = Interlocked.Decrement(ref _reentrancy);
+                _diagnostics.Send(() => $"[{reentrancy} -] Write({text.Trim()})");
             }
         }
     }

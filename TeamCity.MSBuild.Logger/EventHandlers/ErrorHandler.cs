@@ -35,7 +35,7 @@
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (e.BuildEventContext == null) throw new ArgumentException(nameof(e));
 
-            _context.ErrorCount = _context.ErrorCount + 1;
+            _context.ErrorCount += 1;
             _buildEventManager.SetErrorWarningFlagOnCallStack(e.BuildEventContext);
             var targetStartedEvent = _buildEventManager.GetTargetStartedEvent(e.BuildEventContext);
             if (targetStartedEvent != null)

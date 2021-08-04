@@ -2,7 +2,6 @@
 {
     using System;
     using JetBrains.Annotations;
-    using JetBrains.Annotations;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class AnsiLogWriter : ILogWriter

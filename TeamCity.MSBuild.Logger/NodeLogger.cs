@@ -8,6 +8,7 @@
     using Microsoft.Build.Framework;
 
     // ReSharper disable once ClassNeverInstantiated.Global
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     internal class NodeLogger : INodeLogger
     {
         [NotNull] private readonly ILoggerContext _context;
@@ -94,7 +95,7 @@
             _parameters.Verbosity = Verbosity;
             if (Parameters != null)
             {
-                if (!_parametersParser.TryParse(Parameters, _parameters, out string error))
+                if (!_parametersParser.TryParse(Parameters, _parameters, out var error))
                 {
                     throw new LoggerException(error);
                 }

@@ -1,4 +1,5 @@
-﻿namespace TeamCity.MSBuild.Logger.Tests.Helpers
+﻿// ReSharper disable MemberCanBePrivate.Global
+namespace TeamCity.MSBuild.Logger.Tests.Helpers
 {
     using System;
     using System.Collections.Generic;
@@ -42,25 +43,25 @@
                 }
             };
 
-            foreach (var envVar in _environmentVariables)
+            foreach (var (key, value) in _environmentVariables)
             {
 #if NET45
-                if (envVar.Value == null)
+                if (value == null)
                 {
-                    process.StartInfo.EnvironmentVariables.Remove(envVar.Key);
+                    process.StartInfo.EnvironmentVariables.Remove(key);
                 }
                 else
                 {
-                    process.StartInfo.EnvironmentVariables[envVar.Key] = envVar.Value;
+                    process.StartInfo.EnvironmentVariables[key] = value;
                 }
 #else
-                if (envVar.Value == null)
+                if (value == null)
                 {
-                    process.StartInfo.Environment.Remove(envVar.Key);
+                    process.StartInfo.Environment.Remove(key);
                 }
                 else
                 {
-                    process.StartInfo.Environment[envVar.Key] = envVar.Value;
+                    process.StartInfo.Environment[key] = value;
                 }
 #endif
             }
@@ -78,11 +79,13 @@
 
             process.ErrorDataReceived += (sender, args) =>
             {
-                if (args.Data != null)
+                if (args.Data == null)
                 {
-                    stdError.Add(args.Data);
-                    Console.Error.WriteLine(args.Data);
+                    return;
                 }
+
+                stdError.Add(args.Data);
+                Console.Error.WriteLine(args.Data);
             };
 
             // ReSharper disable once LocalizableElement
@@ -90,7 +93,7 @@
             var stopwatch = new Stopwatch();
             if (!process.Start())
             {
-                result = default(CommandLineResult);
+                result = default;
                 return false;
             }
 

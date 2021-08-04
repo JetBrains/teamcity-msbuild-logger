@@ -54,7 +54,7 @@
             }
 
             _startedEvent.Add(buildEventContext, eventTimeStamp.Ticks);
-            _calls = _calls + 1;
+            _calls += 1;
         }
 
         public void AddEventFinished(string projectTargetNames, BuildEventContext buildEventContext, DateTime eventTimeStamp)
@@ -69,12 +69,12 @@
                 throw new InvalidOperationException("Cannot have finished counter without started counter.");
             }
 
-            if (!_startedEvent.TryGetValue(buildEventContext, out long ticks))
+            if (!_startedEvent.TryGetValue(buildEventContext, out var ticks))
             {
                 return;
             }
 
-            ElapsedTime = ElapsedTime + TimeSpan.FromTicks(eventTimeStamp.Ticks - ticks);
+            ElapsedTime += TimeSpan.FromTicks(eventTimeStamp.Ticks - ticks);
             _startedEvent.Remove(buildEventContext);
         }
 

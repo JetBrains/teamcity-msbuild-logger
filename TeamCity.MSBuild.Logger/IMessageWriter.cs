@@ -28,7 +28,5 @@
         void WriteNewLine();
 
         bool WriteTargetMessagePrefix(BuildEventArgs e, BuildEventContext context, DateTime timeStamp);
-
-        string IndentString([CanBeNull] string str);
     }
 }

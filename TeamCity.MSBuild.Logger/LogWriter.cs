@@ -23,7 +23,7 @@
                 { ColorMode.Default, defaultLogWriter ?? throw new ArgumentNullException(nameof(defaultLogWriter))},
                 { ColorMode.TeamCity, ansiLogWriter ?? throw new ArgumentNullException(nameof(ansiLogWriter))},
                 { ColorMode.NoColor, noColorLogWriter ?? throw new ArgumentNullException(nameof(noColorLogWriter))},
-                { ColorMode.AnsiColor, ansiColorLogWriter ?? throw new ArgumentNullException(nameof(ansiColorLogWriter))},
+                { ColorMode.AnsiColor, ansiColorLogWriter ?? throw new ArgumentNullException(nameof(ansiColorLogWriter))}
             };
 
             _context = context ?? throw new ArgumentNullException(nameof(context));

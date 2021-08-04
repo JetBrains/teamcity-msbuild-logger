@@ -37,17 +37,19 @@
 
             parameters.AlignMessages = false;
             parameters.BufferWidth = -1;
-            if (!parameters.ForceNoAlign)
+            if (parameters.ForceNoAlign)
             {
-                try
-                {
-                    parameters.BufferWidth = Console.BufferWidth;
-                    parameters.AlignMessages = true;
-                }
-                catch (Exception)
-                {
-                    parameters.AlignMessages = false;
-                }
+                return true;
+            }
+
+            try
+            {
+                parameters.BufferWidth = Console.BufferWidth;
+                parameters.AlignMessages = true;
+            }
+            catch (Exception)
+            {
+                parameters.AlignMessages = false;
             }
 
             return true;
@@ -94,6 +96,7 @@
 
                 case "V":
                 case "VERBOSITY":
+                    // ReSharper disable once InvertIf
                     if (TryApplyVerbosityParameter(parameterValue, out error, out var verbosity))
                     {
                         parameters.Verbosity = verbosity;
@@ -123,7 +126,7 @@
                     return true;
 
                 case "SHOWPROJECTFILE":
-                    parameters.ShowProjectFile = parameterValue == null || (parameterValue.Length == 0 || parameterValue.ToUpperInvariant() == "TRUE");
+                    parameters.ShowProjectFile = string.IsNullOrEmpty(parameterValue) || parameterValue.ToUpperInvariant() == "TRUE";
                     return true;
 
                 case "SUMMARY":
@@ -186,7 +189,7 @@
 
                 default:
                     error = $"Invalid verbosity \"{parameterValue}\"";
-                    verbosity = default(LoggerVerbosity);
+                    verbosity = default;
                     return false;
             }
         }

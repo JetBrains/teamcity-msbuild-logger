@@ -78,7 +78,7 @@
                         _logWriter.SetColor(Color.BuildStage);
                         if (_context.IsVerbosityAtLeast(LoggerVerbosity.Diagnostic) || (_context.Parameters.ShowEventId ?? false))
                         {
-                            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetMessageWithId", (object)e.Message, (object)e.BuildEventContext.TargetId), true);
+                            _messageWriter.WriteMessageAligned(_stringService.FormatResourceString("TargetMessageWithId", e.Message, e.BuildEventContext.TargetId), true);
                         }
                         else
                         {

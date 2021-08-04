@@ -1,4 +1,5 @@
-﻿namespace TeamCity.MSBuild.Logger
+﻿// ReSharper disable UnusedMemberInSuper.Global
+namespace TeamCity.MSBuild.Logger
 {
     using System;
     using System.Collections.Generic;

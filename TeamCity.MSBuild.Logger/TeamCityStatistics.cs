@@ -1,7 +1,7 @@
-﻿namespace TeamCity.MSBuild.Logger
+﻿// ReSharper disable NotAccessedField.Local
+namespace TeamCity.MSBuild.Logger
 {
     using System;
-    using System.Globalization;
     using JetBrains.Annotations;
     using JetBrains.TeamCity.ServiceMessages.Write.Special;
 

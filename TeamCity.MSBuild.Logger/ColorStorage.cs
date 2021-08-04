@@ -3,18 +3,10 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ColorStorage : IColorStorage
     {
-        private Color? _color = default(Color?);
+        public Color? Color { get; private set; }
 
-        public Color? Color => _color;
+        public void SetColor(Color color) => Color = color;
 
-        public void SetColor(Color color)
-        {
-            _color = color;
-        }
-
-        public void ResetColor()
-        {
-            _color = default(Color?);
-        }
+        public void ResetColor() => Color = default;
     }
 }

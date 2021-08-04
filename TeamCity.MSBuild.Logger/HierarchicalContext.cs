@@ -5,7 +5,7 @@
 
     internal class HierarchicalContext: IDisposable
     {
-        public static readonly int DefaultFlowId = 0;
+        public const int DefaultFlowId = 0;
         private static readonly HierarchicalContext Default = new HierarchicalContext(0);
 
         [CanBeNull][ThreadStatic] private static HierarchicalContext _currentHierarchicalContext;

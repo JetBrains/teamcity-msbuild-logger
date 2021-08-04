@@ -38,18 +38,18 @@
 
         private bool TryGetFlow(int flowId, out Flow flow, bool forceCreate)
         {
-            if (!_flows.TryGetValue(flowId, out flow))
+            if (_flows.TryGetValue(flowId, out flow))
             {
-                if (forceCreate)
-                {
-                    flow = new Flow(_writer, flowId == HierarchicalContext.DefaultFlowId);
-                    _flows.Add(FlowId, flow);
-                    return true;
-                }
+                return true;
+            }
 
+            if (!forceCreate)
+            {
                 return false;
             }
 
+            flow = new Flow(_writer, flowId == HierarchicalContext.DefaultFlowId);
+            _flows.Add(FlowId, flow);
             return true;
         }
 
@@ -64,16 +64,20 @@
 
         public void FinishBlock()
         {
-            if (TryGetFlow(FlowId, out var flow, false))
+            if (!TryGetFlow(FlowId, out var flow, false))
             {
-                Write("\n", flow);
-                flow.FinishBlock();
-                if (flow.IsFinished)
-                {
-                    _flows.Remove(FlowId);
-                    flow.Dispose();
-                }
+                return;
             }
+
+            Write("\n", flow);
+            flow.FinishBlock();
+            if (!flow.IsFinished)
+            {
+                return;
+            }
+
+            _flows.Remove(FlowId);
+            flow.Dispose();
         }
 
         public void Write(string message, IConsole console = null)
@@ -110,11 +114,13 @@
             }
 
             _flows.Clear();
-            if (_buildProblems.Count > 0)
+            if (_buildProblems.Count <= 0)
             {
-                _writer.WriteBuildProblem("msbuild", string.Join("\n", _buildProblems));
-                _buildProblems.Clear();
+                return;
             }
+
+            _writer.WriteBuildProblem("msbuild", string.Join("\n", _buildProblems));
+            _buildProblems.Clear();
         }
 
         private void Write([NotNull] string message, [NotNull] Flow flow)
@@ -140,6 +146,7 @@
             var messageState = MessageState.Normal;
             if (messageInfo.Color.HasValue)
             {
+                // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
                 switch (messageInfo.Color.Value)
                 {
                     case Color.Error:
@@ -163,10 +170,10 @@
             {
 
                 // TeamCity service message
-                var trimed = text.TrimStart();
-                if (trimed.StartsWith("##teamcity[", StringComparison.CurrentCultureIgnoreCase))
+                var trimmed = text.TrimStart();
+                if (trimmed.StartsWith("##teamcity[", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    foreach (var serviceMessage in _serviceMessageParser.ParseServiceMessages(trimed))
+                    foreach (var serviceMessage in _serviceMessageParser.ParseServiceMessages(trimmed))
                     {
                         hasServiceMessage = true;
                         flow.Write(serviceMessage);
@@ -234,6 +241,7 @@
             public void Write([NotNull] string message, MessageState messageState)
             {
                 if (message == null) throw new ArgumentNullException(nameof(message));
+                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                 switch (messageState)
                 {
                     case MessageState.Warning:

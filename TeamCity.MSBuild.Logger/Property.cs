@@ -1,6 +1,6 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
-    internal struct Property
+    internal readonly struct Property
     {
         public readonly string Name;
 

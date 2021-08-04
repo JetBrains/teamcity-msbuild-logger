@@ -20,7 +20,7 @@
             _statistics = new Dictionary<StatisticsMode, IStatistics>
             {
                 { StatisticsMode.Default, defaultStatistics ?? throw new ArgumentNullException(nameof(defaultStatistics))},
-                { StatisticsMode.TeamCity, teamcityStatistics ?? throw new ArgumentNullException(nameof(teamcityStatistics))},
+                { StatisticsMode.TeamCity, teamcityStatistics ?? throw new ArgumentNullException(nameof(teamcityStatistics))}
             };
         }
 

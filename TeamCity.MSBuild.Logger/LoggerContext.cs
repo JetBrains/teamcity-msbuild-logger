@@ -21,7 +21,7 @@
 
         public Parameters Parameters { get; private set; }
 
-        public int CurrentIndentLevel { get; } = 0;
+        public int CurrentIndentLevel => 0;
 
         public int NumberOfProcessors { get; private set; }
 
@@ -87,7 +87,7 @@
             LastDisplayedBuildEventContext = null;
             LastProjectFullKey = new ProjectFullKey(-1, -1);
             HasBuildStarted = false;
-            BuildStarted = default(DateTime);
+            BuildStarted = default;
             PrefixWidth = 0;
             ProjectPerformanceCounters.Clear();
             TargetPerformanceCounters.Clear();
@@ -102,6 +102,7 @@
                 eventMinimumFields = _buildEventManager.GetProjectStartedEvent(e);
             }
 
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (eventMinimumFields == null)
             {
                 return new ProjectFullKey(0, 0);

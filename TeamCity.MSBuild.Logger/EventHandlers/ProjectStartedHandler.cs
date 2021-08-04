@@ -52,7 +52,7 @@
                 _performanceCounterFactory.GetOrCreatePerformanceCounter(e.ProjectFile, _context.ProjectPerformanceCounters).AddEventStarted(e.TargetNames, e.BuildEventContext, e.Timestamp, ComparerContextNodeId.Shared);
             }
 
-            if (_context.DeferredMessages.TryGetValue(e.BuildEventContext, out IList<BuildMessageEventArgs> messages))
+            if (_context.DeferredMessages.TryGetValue(e.BuildEventContext, out var messages))
             {
                 if (!_context.Parameters.ShowOnlyErrors && !_context.Parameters.ShowOnlyWarnings)
                 {
@@ -169,7 +169,7 @@
             _messageWriter.WriteNewLine();
         }
 
-        private void WriteProperties(BuildEventArgs e, IList<Property> properties)
+        private void WriteProperties(BuildEventArgs e, ICollection<Property> properties)
         {
             if (_context.Parameters.ShowOnlyErrors || _context.Parameters.ShowOnlyWarnings)
             {

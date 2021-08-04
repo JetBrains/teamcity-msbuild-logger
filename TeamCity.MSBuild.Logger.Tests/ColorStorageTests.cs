@@ -14,7 +14,7 @@
             // When
 
             // Then
-            storage.Color.ShouldBe(default(Color?));
+            storage.Color.ShouldBe(default);
         }
 
         [Fact]
@@ -42,7 +42,7 @@
             storage.ResetColor();
 
             // Then
-            storage.Color.ShouldBe(default(Color?));
+            storage.Color.ShouldBe(default);
         }
 
         [Fact]
@@ -56,7 +56,7 @@
             storage.ResetColor();
 
             // Then
-            storage.Color.ShouldBe(default(Color?));
+            storage.Color.ShouldBe(default);
         }
 
         [Fact]
@@ -73,7 +73,7 @@
             storage.ResetColor();
 
             // Then
-            storage.Color.ShouldBe(default(Color?));
+            storage.Color.ShouldBe(default);
         }
     }
 }

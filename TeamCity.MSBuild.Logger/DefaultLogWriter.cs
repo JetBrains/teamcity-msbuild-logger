@@ -34,6 +34,7 @@
         {
             get
             {
+                // ReSharper disable once InvertIf
                 if (_supportReadingBackgroundColor)
                 {
                     try
