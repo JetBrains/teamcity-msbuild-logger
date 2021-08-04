@@ -1,6 +1,7 @@
 ﻿namespace TeamCity.MSBuild.Logger
 {
     using System;
+    using System.IO;
     using System.Threading;
     using JetBrains.Annotations;
 
@@ -8,12 +9,15 @@
     internal class DefaultConsole : IConsole
     {
         [NotNull] private readonly IDiagnostics _diagnostics;
+        [NotNull] private readonly TextWriter _out;
         // ReSharper disable once IdentifierTypo
         private int _reentrancy;
 
         public DefaultConsole([NotNull] IDiagnostics diagnostics)
         {
             _diagnostics = diagnostics ?? throw new ArgumentNullException(nameof(diagnostics));
+            // https://youtrack.jetbrains.com/issue/TW-72330
+            _out = Console.Out;
         }
 
         public void Write(string text)
@@ -26,7 +30,7 @@
                 _diagnostics.Send(() => $"[{reentrancy} +] Write({text.Trim()})");
                 try
                 {
-                    Console.Write(text);
+                    _out.Write(text);
                 }
                 finally
                 {
