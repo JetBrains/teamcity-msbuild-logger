@@ -34,6 +34,9 @@
         private int _reentrancy;
 
         public NodeLogger(
+            // ReSharper disable once UnusedParameter.Local
+            // ReSharper disable once IdentifierTypo
+            [NotNull] IInitializable[] initializables,
             [NotNull] IParametersParser parametersParser,
             [NotNull] ILogWriter logWriter,
             [NotNull] ILoggerContext context,

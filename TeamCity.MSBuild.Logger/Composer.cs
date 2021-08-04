@@ -20,7 +20,7 @@
                 .Bind<IEnvironment>().To<Environment>()
                 .Bind<IDiagnostics>().To<Diagnostics>()
                 .Bind<ILoggerContext>().To<LoggerContext>()
-                .Bind<IConsole>().To<DefaultConsole>()
+                .Bind<IConsole>().Bind<IInitializable>().To<DefaultConsole>()
                 .Bind<IStringService>().To<StringService>()
                 .Bind<IPathService>().To<PathService>()
                 .Bind<IParametersParser>().To<ParametersParser>()

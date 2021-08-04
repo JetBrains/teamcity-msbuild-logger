@@ -6,7 +6,7 @@
     using JetBrains.Annotations;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class DefaultConsole : IConsole
+    internal class DefaultConsole : IConsole, IInitializable
     {
         [NotNull] private readonly IDiagnostics _diagnostics;
         [NotNull] private readonly TextWriter _out;
@@ -19,6 +19,8 @@
             // https://youtrack.jetbrains.com/issue/TW-72330
             _out = Console.Out;
         }
+        
+        public void Initialize() { }
 
         public void Write(string text)
         {
