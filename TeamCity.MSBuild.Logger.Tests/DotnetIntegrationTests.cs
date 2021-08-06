@@ -120,22 +120,22 @@ namespace TeamCity.MSBuild.Logger.Tests
         {
             private static readonly object[][] Cases =
             {
-                new object[] { "netcoreapp1.0", 10, "minimal", null, false },
-                new object[] { "netcoreapp1.0", 1, "m", null, false },
-                new object[] { "netcoreapp1.0", 1, "quiet", null, false },
-                new object[] { "netcoreapp1.0", 10, "quiet", null, false },
-                new object[] { "netcoreapp1.0", 1, "q", null, false },
-                new object[] { "netcoreapp1.0", 10, "q", null, false },
-                new object[] { "netcoreapp1.0", 10, "normal", null, false },
-                new object[] { "netcoreapp1.0", 10, "normal", "TEAMcity", true },
-                new object[] { "netcoreapp1.0", 10, "n", null, false },
-                new object[] { "netcoreapp1.0", 10, "detailed", null, false },
-                new object[] { "netcoreapp1.0", 10, "d", null, false },
-                new object[] { "netcoreapp1.0", 10, "diagnostic", null, false },
-                new object[] { "netcoreapp1.0", 10, "diag", null, false },
-                new object[] { "netcoreapp1.0", 10, "deTailed", null, false },
-                new object[] { "netcoreapp1.0", 10, "diag", "teamcity", true },
-                new object[] { "netcoreapp1.0", 10, "deTailed", "teamcity", true }
+                new object[] { "netstandard1.6", 10, "minimal", null, false },
+                new object[] { "netstandard1.6", 1, "m", null, false },
+                new object[] { "netstandard1.6", 1, "quiet", null, false },
+                new object[] { "netstandard1.6", 10, "quiet", null, false },
+                new object[] { "netstandard1.6", 1, "q", null, false },
+                new object[] { "netstandard1.6", 10, "q", null, false },
+                new object[] { "netstandard1.6", 10, "normal", null, false },
+                new object[] { "netstandard1.6", 10, "normal", "TEAMcity", true },
+                new object[] { "netstandard1.6", 10, "n", null, false },
+                new object[] { "netstandard1.6", 10, "detailed", null, false },
+                new object[] { "netstandard1.6", 10, "d", null, false },
+                new object[] { "netstandard1.6", 10, "diagnostic", null, false },
+                new object[] { "netstandard1.6", 10, "diag", null, false },
+                new object[] { "netstandard1.6", 10, "deTailed", null, false },
+                new object[] { "netstandard1.6", 10, "diag", "teamcity", true },
+                new object[] { "netstandard1.6", 10, "deTailed", "teamcity", true }
             };
 
             public IEnumerator<object[]> GetEnumerator() => CreateCases().GetEnumerator();
