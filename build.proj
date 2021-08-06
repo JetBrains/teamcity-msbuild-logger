@@ -27,7 +27,7 @@
             <MSBuildVersion Include="net452">
                 <MSBuildLoggerPath>msbuild14</MSBuildLoggerPath>
             </MSBuildVersion>
-            <MSBuildVersion Include="netcoreapp1.0">
+            <MSBuildVersion Include="netstandard1.6">
                 <MSBuildLoggerPath>msbuild15</MSBuildLoggerPath>
             </MSBuildVersion>
         </ItemGroup>
