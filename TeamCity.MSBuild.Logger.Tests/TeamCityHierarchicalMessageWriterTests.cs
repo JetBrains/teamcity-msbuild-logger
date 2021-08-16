@@ -222,6 +222,23 @@
             // Then
             _rootWriter.Verify(i => i.WriteBuildProblem("errorCode", "my error"), Times.Once());
         }
+        
+        [Fact]
+        public void ShouldSendBuildProblemWhenBuildErrorEventAndCodeIsNull()
+        {
+            // Given
+            var writer = CreateInstance();
+            writer.SetColor(Color.Error);
+            BuildEventArgs error = new BuildErrorEventArgs(string.Empty, null, string.Empty, 0, 0, 1, 1, string.Empty, string.Empty, string.Empty);
+            _eventContext.Setup(i => i.TryGetEvent(out error)).Returns(true);
+
+            // When
+            writer.Write("my");
+            writer.Write(" error\n");
+
+            // Then
+            _rootWriter.Verify(i => i.WriteBuildProblem("my error", "my error"), Times.Once());
+        }
 
         [Fact]
         public void ShouldSendBuildProblemWhenFinished()
