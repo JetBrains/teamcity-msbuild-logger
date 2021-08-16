@@ -32,6 +32,7 @@
                 .Bind<IMessageWriter>().To<MessageWriter>()
                 .Bind<IPerformanceCounter>().As(Transient).To<PerformanceCounter>()
                 .Bind<IColorStorage>().As(Transient).To<ColorStorage>()
+                .Bind<IEventContext>().Bind<IEventRegistry>().To<EventContext>()
 
                 // Colors
                 .Bind<IColorTheme>().To<ColorTheme>()

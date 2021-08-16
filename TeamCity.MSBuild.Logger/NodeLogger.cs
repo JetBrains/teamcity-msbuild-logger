@@ -14,6 +14,7 @@
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IEnvironment _environment;
         [NotNull] private readonly IDiagnostics _diagnostics;
+        [NotNull] private readonly IEventRegistry _eventRegistry;
         [NotNull] private readonly IBuildEventHandler<BuildMessageEventArgs> _messageHandler;
         [NotNull] private readonly IBuildEventHandler<BuildFinishedEventArgs> _buildFinishedHandler;
         [NotNull] private readonly IBuildEventHandler<ProjectStartedEventArgs> _projectStartedHandler;
@@ -42,6 +43,7 @@
             [NotNull] ILoggerContext context,
             [NotNull] IEnvironment environment,
             [NotNull] IDiagnostics diagnostics,
+            [NotNull] IEventRegistry eventRegistry,
             [NotNull] IBuildEventHandler<BuildStartedEventArgs> buildStartedHandler,
             [NotNull] IBuildEventHandler<BuildMessageEventArgs> messageHandler,
             [NotNull] IBuildEventHandler<BuildFinishedEventArgs> buildFinishedHandler,
@@ -58,6 +60,7 @@
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
             _diagnostics = diagnostics ?? throw new ArgumentNullException(nameof(diagnostics));
+            _eventRegistry = eventRegistry;
             _parametersParser = parametersParser ?? throw new ArgumentNullException(nameof(parametersParser));
             _logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
 
@@ -210,6 +213,7 @@
             {
                 lock (_lockObject)
                 {
+                    using (_eventRegistry.Register(e))
                     using (new HierarchicalContext(e.BuildEventContext?.NodeId ?? 0))
                     {
                         handler.Handle(e);

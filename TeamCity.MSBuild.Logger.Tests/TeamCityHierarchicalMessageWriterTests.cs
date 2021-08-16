@@ -15,6 +15,7 @@
         private readonly Mock<ITeamCityWriter> _rootWriter;
         private readonly Mock<IColorStorage> _colorStorage;
         private readonly Mock<IServiceMessageParser> _serviceMessageParser;
+        private readonly Mock<IEventContext> _eventContext;
 
         public TeamCityHierarchicalMessageWriterTests()
         {
@@ -22,6 +23,7 @@
             _rootWriter = new Mock<ITeamCityWriter>();
             _colorStorage = new Mock<IColorStorage>();
             _serviceMessageParser = new Mock<IServiceMessageParser>();
+            _eventContext = new Mock<IEventContext>();
             Color? currentColor = null;
             _colorStorage.Setup(i => i.SetColor(It.IsAny<Color>())).Callback<Color>(i => currentColor = i);
             _colorStorage.Setup(i => i.ResetColor()).Callback(() => currentColor = null);
@@ -504,7 +506,8 @@
                 _colorTheme.Object,
                 _rootWriter.Object,
                 _serviceMessageParser.Object,
-                _colorStorage.Object);
+                _colorStorage.Object,
+                _eventContext.Object);
         }
     }
 }

@@ -7,12 +7,14 @@
     using JetBrains.TeamCity.ServiceMessages;
     using JetBrains.TeamCity.ServiceMessages.Read;
     using JetBrains.TeamCity.ServiceMessages.Write.Special;
+    using Microsoft.Build.Framework;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class TeamCityHierarchicalMessageWriter : IHierarchicalMessageWriter, ILogWriter, IDisposable
     {
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IColorStorage _colorStorage;
+        [NotNull] private readonly IEventContext _eventContext;
         [NotNull] private readonly Dictionary<int, Flow> _flows = new Dictionary<int, Flow>();
         [NotNull] private readonly IColorTheme _colorTheme;
         [NotNull] private readonly ITeamCityWriter _writer;
@@ -27,10 +29,12 @@
             [NotNull] IColorTheme colorTheme,
             [NotNull] ITeamCityWriter writer,
             [NotNull] IServiceMessageParser serviceMessageParser,
-            [NotNull] IColorStorage colorStorage)
+            [NotNull] IColorStorage colorStorage,
+            [NotNull] IEventContext eventContext)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _colorStorage = colorStorage ?? throw new ArgumentNullException(nameof(colorStorage));
+            _eventContext = eventContext;
             _colorTheme = colorTheme ?? throw new ArgumentNullException(nameof(colorTheme));
             _writer = writer ?? throw new ArgumentNullException(nameof(writer));
             _serviceMessageParser = serviceMessageParser ?? throw new ArgumentNullException(nameof(serviceMessageParser));
@@ -48,7 +52,7 @@
                 return false;
             }
 
-            flow = new Flow(_writer, flowId == HierarchicalContext.DefaultFlowId);
+            flow = new Flow(_writer, _eventContext, flowId == HierarchicalContext.DefaultFlowId);
             _flows.Add(FlowId, flow);
             return true;
         }
@@ -213,11 +217,13 @@
         {
             private ITeamCityWriter _writer;
             private readonly Stack<ITeamCityWriter> _blocks = new Stack<ITeamCityWriter>();
+            private readonly IEventContext _eventContext;
             private readonly bool _isMainFlow;
 
-            public Flow([NotNull] ITeamCityWriter writer, bool isMainFlow)
+            public Flow([NotNull] ITeamCityWriter writer, IEventContext eventContext, bool isMainFlow)
             {
                 if (writer == null) throw new ArgumentNullException(nameof(writer));
+                _eventContext = eventContext;
                 _isMainFlow = isMainFlow;
                 _writer = isMainFlow ? writer : writer.OpenFlow();
             }
@@ -249,7 +255,17 @@
                         break;
 
                     case MessageState.Error:
-                        _writer.WriteError(message);
+                        if (
+                            _eventContext.TryGetEvent(out var buildEventManager)
+                            && buildEventManager is BuildErrorEventArgs buildErrorEventArgs)
+                        {
+                            _writer.WriteBuildProblem(buildErrorEventArgs.Code ?? message.Substring(0, message.Length > 8 ? 8 : message.Length), message);
+                        }
+                        else
+                        {
+                            _writer.WriteError(message);
+                        }
+                        
                         break;
 
                     default:
