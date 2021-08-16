@@ -1,11 +1,13 @@
 ﻿namespace TeamCity.MSBuild.Logger.Tests
 {
+    using System;
     using System.Linq;
     using JetBrains.Annotations;
     using JetBrains.TeamCity.ServiceMessages;
     using JetBrains.TeamCity.ServiceMessages.Read;
     using JetBrains.TeamCity.ServiceMessages.Write;
     using JetBrains.TeamCity.ServiceMessages.Write.Special;
+    using Microsoft.Build.Framework;
     using Moq;
     using Xunit;
 
@@ -202,6 +204,23 @@
 
             // Then
             _rootWriter.Verify(i => i.WriteError("my error", null), Times.Once());
+        }
+        
+        [Fact]
+        public void ShouldSendBuildProblemWhenBuildErrorEvent()
+        {
+            // Given
+            var writer = CreateInstance();
+            writer.SetColor(Color.Error);
+            BuildEventArgs error = new BuildErrorEventArgs(string.Empty, "errorCode", string.Empty, 0, 0, 1, 1, string.Empty, string.Empty, string.Empty);
+            _eventContext.Setup(i => i.TryGetEvent(out error)).Returns(true);
+
+            // When
+            writer.Write("my");
+            writer.Write(" error\n");
+
+            // Then
+            _rootWriter.Verify(i => i.WriteBuildProblem("errorCode", "my error"), Times.Once());
         }
 
         [Fact]
