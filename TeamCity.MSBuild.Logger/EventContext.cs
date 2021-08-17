@@ -1,24 +1,25 @@
 namespace TeamCity.MSBuild.Logger
 {
     using System;
-    using System.Collections.Generic;
+    using JetBrains.Annotations;
     using Microsoft.Build.Framework;
 
     internal class EventContext : IEventRegistry, IEventContext
     {
-        private readonly LinkedList<BuildEventArgs> _events = new LinkedList<BuildEventArgs>();
+        [CanBeNull] private BuildEventArgs _event;
 
         public IDisposable Register(BuildEventArgs buildEventArgs)
         {
-            _events.AddLast(buildEventArgs);
-            return Disposable.Create(() => { _events.Remove(buildEventArgs); });
+            var prevEvent = _event;
+            _event = buildEventArgs;
+            return Disposable.Create(() => { _event = prevEvent; });
         }
 
         public bool TryGetEvent(out BuildEventArgs buildEventArgs)
         {
-            if (_events.Count > 0)
+            if (_event != null)
             {
-                buildEventArgs = _events.Last.Value;
+                buildEventArgs = _event;
                 return true;
             }
 
