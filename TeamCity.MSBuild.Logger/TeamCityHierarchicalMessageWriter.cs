@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using System.Text;
     using JetBrains.Annotations;
     using JetBrains.TeamCity.ServiceMessages;
@@ -255,11 +257,11 @@
                         break;
 
                     case MessageState.Error:
-                        if (
-                            _eventContext.TryGetEvent(out var buildEventManager)
-                            && buildEventManager is BuildErrorEventArgs buildErrorEventArgs)
+                        if ( _eventContext.TryGetEvent(out var buildEventManager)
+                             && buildEventManager is BuildErrorEventArgs buildErrorEventArgs)
                         {
-                            _writer.WriteBuildProblem(buildErrorEventArgs.Code ?? message.Substring(0, message.Length > 8 ? 8 : message.Length), message);
+                            var errorId = $"{GetProperty(buildErrorEventArgs.SenderName, string.Empty)}{GetProperty(buildErrorEventArgs.Code)},{buildErrorEventArgs.LineNumber},{buildErrorEventArgs.ColumnNumber}{GetProperty(GetFileName(buildErrorEventArgs.ProjectFile))}{GetProperty(GetFileName(buildErrorEventArgs.File))}";
+                            _writer.WriteBuildProblem(errorId,  message);
                         }
                         else
                         {
@@ -286,6 +288,22 @@
                 {
                     _writer.Dispose();
                 }
+            }
+            
+            [NotNull] private static string GetProperty([CanBeNull] string value, string prefix = ",") =>
+                string.IsNullOrWhiteSpace(value) ? string.Empty : $"{prefix}{value}";
+
+            [NotNull] private static string GetFileName([CanBeNull] string file)
+            {
+                try
+                {
+                    if (!string.IsNullOrWhiteSpace(file))
+                    {
+                        return Path.GetFileName(file);
+                    }
+                }
+                catch { }
+                return string.Empty;
             }
         }
     }

@@ -212,7 +212,7 @@
             // Given
             var writer = CreateInstance();
             writer.SetColor(Color.Error);
-            BuildEventArgs error = new BuildErrorEventArgs(string.Empty, "errorCode", string.Empty, 0, 0, 1, 1, string.Empty, string.Empty, string.Empty);
+            BuildEventArgs error = new BuildErrorEventArgs(string.Empty, "errorCode", "Abc/My.cs", 1, 3, 1, 1, "Aaabccc", string.Empty, "Csc");
             _eventContext.Setup(i => i.TryGetEvent(out error)).Returns(true);
 
             // When
@@ -220,7 +220,7 @@
             writer.Write(" error\n");
 
             // Then
-            _rootWriter.Verify(i => i.WriteBuildProblem("errorCode", "my error"), Times.Once());
+            _rootWriter.Verify(i => i.WriteBuildProblem("Csc,errorCode,1,3,My.cs", "my error"), Times.Once());
         }
         
         [Fact]
@@ -229,7 +229,7 @@
             // Given
             var writer = CreateInstance();
             writer.SetColor(Color.Error);
-            BuildEventArgs error = new BuildErrorEventArgs(string.Empty, null, string.Empty, 0, 0, 1, 1, string.Empty, string.Empty, string.Empty);
+            BuildEventArgs error = new BuildErrorEventArgs(string.Empty, null, "Abc/My.cs", 1, 3, 1, 1, "Aaabccc", string.Empty, "Csc");
             _eventContext.Setup(i => i.TryGetEvent(out error)).Returns(true);
 
             // When
@@ -237,7 +237,7 @@
             writer.Write(" error\n");
 
             // Then
-            _rootWriter.Verify(i => i.WriteBuildProblem("my error", "my error"), Times.Once());
+            _rootWriter.Verify(i => i.WriteBuildProblem("Csc,1,3,My.cs", "my error"), Times.Once());
         }
 
         [Fact]
