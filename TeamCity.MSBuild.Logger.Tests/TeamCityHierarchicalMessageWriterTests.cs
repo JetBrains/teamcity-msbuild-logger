@@ -1,4 +1,5 @@
-﻿namespace TeamCity.MSBuild.Logger.Tests
+﻿// ReSharper disable StringLiteralTypo
+namespace TeamCity.MSBuild.Logger.Tests
 {
     using System.Linq;
     using JetBrains.Annotations;

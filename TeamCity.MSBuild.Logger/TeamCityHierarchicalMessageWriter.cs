@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Text;
     using JetBrains.Annotations;
     using JetBrains.TeamCity.ServiceMessages;
@@ -303,6 +302,7 @@
                         return Path.GetFileName(file);
                     }
                 }
+                // ReSharper disable once EmptyGeneralCatchClause
                 catch { }
                 return string.Empty;
             }

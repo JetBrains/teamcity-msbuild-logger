@@ -20,8 +20,6 @@
             _out = Console.Out;
         }
         
-        public void Initialize() { }
-
         public void Write(string text)
         {
             if (string.IsNullOrEmpty(text))
