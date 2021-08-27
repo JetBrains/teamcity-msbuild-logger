@@ -1,6 +1,5 @@
 ﻿namespace TeamCity.MSBuild.Logger.Tests
 {
-    using System;
     using System.Linq;
     using JetBrains.Annotations;
     using JetBrains.TeamCity.ServiceMessages;
@@ -224,6 +223,23 @@
         }
         
         [Fact]
+        public void ShouldTrimBuildProblemIdWhenItGreater60()
+        {
+            // Given
+            var writer = CreateInstance();
+            writer.SetColor(Color.Error);
+            BuildEventArgs error = new BuildErrorEventArgs(string.Empty, "errorCode", "Abc/zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz_My.cs", 1, 3, 1, 1, "Aaabccc", string.Empty, "Csc");
+            _eventContext.Setup(i => i.TryGetEvent(out error)).Returns(true);
+
+            // When
+            writer.Write("my");
+            writer.Write(" error\n");
+
+            // Then
+            _rootWriter.Verify(i => i.WriteBuildProblem("Csc,errorCode,1,3,zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz", "my error"), Times.Once());
+        }
+        
+        [Fact]
         public void ShouldSendBuildProblemWhenBuildErrorEventAndCodeIsNull()
         {
             // Given
@@ -255,6 +271,7 @@
             // Then
             _rootWriter.Verify(i => i.WriteBuildProblem("msbuild", "my error"), Times.Once());
         }
+        
 
         [Fact]
         public void ShouldNotSendNullMessage()

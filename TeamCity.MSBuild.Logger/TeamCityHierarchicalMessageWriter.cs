@@ -261,6 +261,7 @@
                              && buildEventManager is BuildErrorEventArgs buildErrorEventArgs)
                         {
                             var errorId = $"{GetProperty(buildErrorEventArgs.SenderName, string.Empty)}{GetProperty(buildErrorEventArgs.Code)},{buildErrorEventArgs.LineNumber},{buildErrorEventArgs.ColumnNumber}{GetProperty(GetFileName(buildErrorEventArgs.ProjectFile))}{GetProperty(GetFileName(buildErrorEventArgs.File))}";
+                            errorId = errorId.Length >= 60 ? errorId.Substring(0, 59) : errorId;
                             _writer.WriteBuildProblem(errorId,  message);
                         }
                         else
