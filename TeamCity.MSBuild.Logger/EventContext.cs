@@ -1,3 +1,4 @@
+// ReSharper disable ClassNeverInstantiated.Global
 namespace TeamCity.MSBuild.Logger
 {
     using System;

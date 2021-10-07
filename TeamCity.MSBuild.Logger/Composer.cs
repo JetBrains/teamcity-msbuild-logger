@@ -1,4 +1,5 @@
-﻿namespace TeamCity.MSBuild.Logger
+﻿// ReSharper disable PartialTypeWithSinglePart
+namespace TeamCity.MSBuild.Logger
 {
     using System;
     using Microsoft.Build.Framework;
@@ -12,8 +13,7 @@
 
     internal static partial class Composer
     {
-        static Composer()
-        {
+        private static void Setup() =>
             DI.Setup()
                 .Default(Singleton)
                 .Bind<INodeLogger>().To<NodeLogger>()
@@ -36,24 +36,24 @@
 
                 // Colors
                 .Bind<IColorTheme>().To<ColorTheme>()
-                .Bind<IColorTheme>().Tag(ColorThemeMode.Default).To<DefaultColorTheme>()
-                .Bind<IColorTheme>().Tag(ColorThemeMode.TeamCity).To<TeamCityColorTheme>()
+                .Bind<IColorTheme>(ColorThemeMode.Default).To<DefaultColorTheme>()
+                .Bind<IColorTheme>(ColorThemeMode.TeamCity).To<TeamCityColorTheme>()
                 
                 // IStatistics
                 .Bind<IStatistics>().To<Statistics>()
-                .Bind<IStatistics>().Tag(StatisticsMode.Default).To<DefaultStatistics>()
-                .Bind<IStatistics>().Tag(StatisticsMode.TeamCity).To<TeamCityStatistics>()
+                .Bind<IStatistics>(StatisticsMode.Default).To<DefaultStatistics>()
+                .Bind<IStatistics>(StatisticsMode.TeamCity).To<TeamCityStatistics>()
                 
                 // ILogWriter
                 .Bind<ILogWriter>().To<LogWriter>()
-                .Bind<ILogWriter>().Tag(ColorMode.Default).To<DefaultLogWriter>()
-                .Bind<ILogWriter>().Bind<IHierarchicalMessageWriter>().Tag(ColorMode.TeamCity).Tag(TeamCityMode.SupportHierarchy).To<TeamCityHierarchicalMessageWriter>()
-                .Bind<ILogWriter>().Tag(ColorMode.NoColor).To<NoColorLogWriter>()
-                .Bind<ILogWriter>().Tag(ColorMode.AnsiColor).To<AnsiLogWriter>()
+                .Bind<ILogWriter>(ColorMode.Default).To<DefaultLogWriter>()
+                .Bind<ILogWriter>().Bind<IHierarchicalMessageWriter>().Tags(ColorMode.TeamCity, TeamCityMode.SupportHierarchy).To<TeamCityHierarchicalMessageWriter>()
+                .Bind<ILogWriter>(ColorMode.NoColor).To<NoColorLogWriter>()
+                .Bind<ILogWriter>(ColorMode.AnsiColor).To<AnsiLogWriter>()
                 
                 // IHierarchicalMessageWriter
                 .Bind<IHierarchicalMessageWriter>().To<HierarchicalMessageWriter>()
-                .Bind<IHierarchicalMessageWriter>().Tag(TeamCityMode.Off).To<DefaultHierarchicalMessageWriter>()
+                .Bind<IHierarchicalMessageWriter>(TeamCityMode.Off).To<DefaultHierarchicalMessageWriter>()
                 
                 // Build event handlers
                 .Bind<IBuildEventHandler<BuildFinishedEventArgs>>().To<BuildFinishedHandler>()
@@ -79,6 +79,5 @@
                     ctx => ctx.Resolve<ITeamCityServiceMessages>().CreateWriter(
                         str => ctx.Resolve<ILogWriter>(ColorMode.NoColor).Write(str + "\n")))
                 .Bind<IServiceMessageParser>().To<ServiceMessageParser>();
-        }
     }
 }
