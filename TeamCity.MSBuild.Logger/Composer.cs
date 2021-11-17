@@ -23,6 +23,7 @@ namespace TeamCity.MSBuild.Logger
                 .Bind<IConsole>().Bind<IInitializable>().To<DefaultConsole>()
                 .Bind<IStringService>().To<StringService>()
                 .Bind<IPathService>().To<PathService>()
+                .Bind<Parameters>().To<Parameters>()
                 .Bind<IParametersParser>().To<ParametersParser>()
                 .Bind<IPerformanceCounterFactory>().To<PerformanceCounterFactory>()
                 .Bind<ILogFormatter>().To<LogFormatter>()

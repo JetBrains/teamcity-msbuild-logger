@@ -6,7 +6,7 @@ namespace TeamCity.MSBuild.Logger
     // ReSharper disable once UnusedMember.Global
     public class TeamCityMsBuildLogger : INodeLogger
     {
-        private readonly INodeLogger _logger = Composer.Resolve<INodeLogger>();
+        private readonly INodeLogger _logger = Composer.ResolveINodeLogger();
 
         public string Parameters
         {
@@ -20,19 +20,10 @@ namespace TeamCity.MSBuild.Logger
             set => _logger.Verbosity = value;
         }
 
-        public void Initialize(IEventSource eventSource, int nodeCount)
-        {
-            _logger.Initialize(eventSource, nodeCount);
-        }
+        public void Initialize(IEventSource eventSource, int nodeCount) => _logger.Initialize(eventSource, nodeCount);
 
-        public void Initialize(IEventSource eventSource)
-        {
-            _logger.Initialize(eventSource);
-        }
+        public void Initialize(IEventSource eventSource) => _logger.Initialize(eventSource);
 
-        public void Shutdown()
-        {
-            _logger.Shutdown();
-        }
+        public void Shutdown() => _logger.Shutdown();
     }
 }

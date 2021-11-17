@@ -11,6 +11,7 @@
     // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     internal class NodeLogger : INodeLogger
     {
+        [NotNull] private readonly Parameters _parameters;
         [NotNull] private readonly ILoggerContext _context;
         [NotNull] private readonly IEnvironment _environment;
         [NotNull] private readonly IDiagnostics _diagnostics;
@@ -29,7 +30,6 @@
         [NotNull] private readonly IBuildEventHandler<BuildStartedEventArgs> _buildStartedEventHandler;
         [NotNull] private readonly IParametersParser _parametersParser;
         [NotNull] private readonly ILogWriter _logWriter;
-        [NotNull] private readonly Parameters _parameters = new Parameters();
         [NotNull] private readonly object _lockObject = new object();
         // ReSharper disable once IdentifierTypo
         private int _reentrancy;
@@ -37,6 +37,7 @@
         public NodeLogger(
             // ReSharper disable once UnusedParameter.Local
             // ReSharper disable once IdentifierTypo
+            [NotNull] Parameters parameters,
             [NotNull] IInitializable[] initializables,
             [NotNull] IParametersParser parametersParser,
             [NotNull] ILogWriter logWriter,
@@ -57,6 +58,7 @@
             [NotNull] IBuildEventHandler<BuildWarningEventArgs> warningHandler,
             [NotNull] IBuildEventHandler<CustomBuildEventArgs> customEventHandler)
         {
+            _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
             _diagnostics = diagnostics ?? throw new ArgumentNullException(nameof(diagnostics));

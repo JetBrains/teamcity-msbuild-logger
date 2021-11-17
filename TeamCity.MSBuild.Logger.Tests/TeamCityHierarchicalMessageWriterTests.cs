@@ -68,7 +68,7 @@ namespace TeamCity.MSBuild.Logger.Tests
         public void ShouldNotCreateNestedServiceMessage(string serviceMessage)
         {
             // Given
-            var writer = CreateInstance(new Parameters {PlainServiceMessage = true});
+            var writer = CreateInstance(new Parameters(Mock.Of<IEnvironment>()) {PlainServiceMessage = true});
             var serviceMessage1 = new ServiceMessage("message");
             var serviceMessage2 = new ServiceMessage("publishArtifacts");
             _serviceMessageParser.Setup(i => i.ParseServiceMessages(serviceMessage.Trim())).Returns(new IServiceMessage[] { serviceMessage1, serviceMessage2 });
@@ -554,7 +554,7 @@ namespace TeamCity.MSBuild.Logger.Tests
         private TeamCityHierarchicalMessageWriter CreateInstance([CanBeNull] Parameters parameters = null)
         {
             var loggerContext = new Mock<ILoggerContext>();
-            loggerContext.SetupGet(i => i.Parameters).Returns(parameters ?? new Parameters());
+            loggerContext.SetupGet(i => i.Parameters).Returns(parameters ?? new Parameters(Mock.Of<IEnvironment>()));
             return new TeamCityHierarchicalMessageWriter(
                 loggerContext.Object,
                 _colorTheme.Object,

@@ -193,10 +193,8 @@
             }
         }
 
-        private string FormatMessage(MessageState messageState, MessageInfo messageInfo, string text)
-        {
-            return messageState == MessageState.Normal && messageInfo.Color.HasValue ? $"\x001B[{_colorTheme.GetAnsiColor(messageInfo.Color.Value)}m{text}" : text;
-        }
+        private string FormatMessage(MessageState messageState, MessageInfo messageInfo, string text) =>
+            messageState == MessageState.Normal && !string.IsNullOrWhiteSpace(text) && messageInfo.Color.HasValue ? $"\x001B[{_colorTheme.GetAnsiColor(messageInfo.Color.Value)}m{text}" : text;
 
         private enum MessageState
         {
