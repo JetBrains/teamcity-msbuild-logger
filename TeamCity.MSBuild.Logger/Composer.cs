@@ -75,7 +75,10 @@ namespace TeamCity.MSBuild.Logger
                 .Bind<IServiceMessageFormatter>().To<ServiceMessageFormatter>()
                 .Bind<IFlowIdGenerator>().To<FlowIdGenerator>()
                 .Bind<DateTime>().As(Transient).To(_ => DateTime.Now)
-                .Bind<IServiceMessageUpdater>().To<TimestampUpdater>()
+                .Bind<IServiceMessageUpdater>(typeof(TimestampUpdater)).To<TimestampUpdater>()
+                .Bind<IServiceMessageUpdater>(typeof(BuildErrorMessageUpdater)).To<BuildErrorMessageUpdater>()
+                .Bind<IServiceMessageUpdater>(typeof(BuildWarningMessageUpdater)).To<BuildWarningMessageUpdater>()
+                .Bind<IServiceMessageUpdater>(typeof(BuildMessageMessageUpdater)).To<BuildMessageMessageUpdater>()
                 .Bind<ITeamCityWriter>().To(
                     ctx => ctx.Resolve<ITeamCityServiceMessages>().CreateWriter(
                         str => ctx.Resolve<ILogWriter>(ColorMode.NoColor).Write(str + "\n")))
