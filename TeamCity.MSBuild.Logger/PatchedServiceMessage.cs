@@ -1,18 +1,31 @@
 namespace TeamCity.MSBuild.Logger
 {
-    using System;
-    using System.Linq;
+    using System.Collections.Generic;
     using JetBrains.Annotations;
     using JetBrains.TeamCity.ServiceMessages;
-    using JetBrains.TeamCity.ServiceMessages.Write;
 
-    internal class PatchedServiceMessage : ServiceMessage
+    internal class PatchedServiceMessage : IServiceMessage
     {
+        [NotNull] private readonly IServiceMessage _message;
+        [NotNull] private readonly Dictionary<string, string> _values = new Dictionary<string, string>();
+
         public PatchedServiceMessage([NotNull] IServiceMessage message)
-            : base(message.Name)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            AddRange(message.Keys.ToDictionary(x => x, message.GetValue));
+            _message = message;
+            foreach (var key in _message.Keys)
+            {
+                _values[key] = message.GetValue(key);
+            }
         }
+
+        public string GetValue(string key) => _values.TryGetValue(key, out var value) ? value : default;
+
+        public string Name => _message.Name;
+
+        public string DefaultValue => _message.DefaultValue;
+
+        public IEnumerable<string> Keys => _values.Keys;
+
+        public void Add(string name, string value) => _values[name] = value;
     }
 }
