@@ -11,12 +11,13 @@ namespace TeamCity.MSBuild.Logger
     using Pure.DI;
     using static Pure.DI.Lifetime;
 
-    internal static partial class Composer
+    internal partial class Composition
     {
+        // ReSharper disable once UnusedMember.Local
         private static void Setup() =>
-            DI.Setup()
-                .Default(Singleton)
-                .Bind<INodeLogger>().To<NodeLogger>()
+            DI.Setup(nameof(Composition))
+                .DefaultLifetime(Singleton)
+                .Bind<INodeLogger>().To<NodeLogger>().Root<INodeLogger>("Logger")
                 .Bind<IEnvironment>().To<Environment>()
                 .Bind<IDiagnostics>().To<Diagnostics>()
                 .Bind<ILoggerContext>().To<LoggerContext>()
@@ -80,8 +81,13 @@ namespace TeamCity.MSBuild.Logger
                 .Bind<IServiceMessageUpdater>(typeof(BuildWarningMessageUpdater)).To<BuildWarningMessageUpdater>()
                 .Bind<IServiceMessageUpdater>(typeof(BuildMessageMessageUpdater)).To<BuildMessageMessageUpdater>()
                 .Bind<ITeamCityWriter>().To(
-                    ctx => ctx.Resolve<ITeamCityServiceMessages>().CreateWriter(
-                        str => ctx.Resolve<ILogWriter>(ColorMode.NoColor).Write(str + "\n")))
+                    ctx =>
+                    {
+                        ctx.Inject<ITeamCityServiceMessages>(out var teamCityServiceMessages);
+                        ctx.Inject<ILogWriter>(ColorMode.NoColor, out var logWriter);
+                        return teamCityServiceMessages.CreateWriter(
+                            str => { logWriter.Write(str + "\n"); });
+                    })
                 .Bind<IServiceMessageParser>().To<ServiceMessageParser>();
     }
 }
